@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP — Activity Log</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">CELPIP Practice</a>
+      <button class="navbar-burger" id="navbar-burger" aria-label="Open navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="navbar-menu" id="navbar-menu">
+        <a href="index.html" class="navbar-link">Tasks</a>
+        <a href="history.html" class="navbar-link">History</a>
+        <a href="logs.html" class="navbar-link active">Logs</a>
+        <span class="navbar-greeting" id="navbar-greeting"></span>
+      </div>
+    </div>
+  </nav>
+  <div class="navbar-overlay" id="navbar-overlay"></div>
+  <div id="name-gate" class="name-gate" style="display:none">
+    <div class="name-gate-box">
+      <div class="name-gate-title">Welcome to CELPIP Practice</div>
+      <p class="name-gate-sub">Enter your name to continue</p>
+      <input type="text" id="gate-name-input" class="name-gate-input" placeholder="Your name" maxlength="50" />
+      <button class="btn btn-primary" id="gate-submit" style="width:100%">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1>Activity Log</h1>
+    </header>
+    <div id="error-area" class="error-msg"></div>
+    <div id="log-feed"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    function dayLabel(isoString) {
+      const d = new Date(isoString);
+      const today     = new Date();
+      const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+      if (d.toDateString() === today.toDateString())     return "Today";
+      if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+      return d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric", year: "numeric" });
+    }
+
+    async function load() {
+      let logs;
+      try {
+        logs = await apiGet("/logs");
+      } catch (e) {
+        document.getElementById("error-area").textContent = `Failed to load logs: ${e.message}`;
+        return;
+      }
+
+      const feed = document.getElementById("log-feed");
+
+      if (!logs.length) {
+        feed.innerHTML = `<p class="empty-msg">No activity yet — go practice!</p>`;
+        return;
+      }
+
+      let html = `<div class="timeline">`;
+      let lastDay = null;
+
+      logs.forEach((entry) => {
+        const d = new Date(entry.timestamp);
+        const day = d.toDateString();
+
+        if (day !== lastDay) {
+          if (lastDay !== null) html += `</div>`; // close previous day group
+          html += `
+            <div class="timeline-day-group">
+              <div class="timeline-date-sep"><span>${escapeHtml(dayLabel(entry.timestamp))}</span></div>`;
+          lastDay = day;
+        }
+
+        const timeStr  = d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+        const userName = entry.user_name || "Unknown";
+        const sessionLink = entry.session_id
+          ? `<a href="record.html?session=${entry.session_id}">${escapeHtml(entry.session_name || "Session")}</a>`
+          : escapeHtml(entry.session_name || "—");
+
+        if (entry.type === "session_started") {
+          html += `
+            <div class="tl-entry tl-session">
+              <div class="tl-dot tl-dot-session"></div>
+              <div class="tl-card">
+                <div class="tl-card-header">
+                  <span class="tl-badge tl-badge-session">New Session</span>
+                  <span class="tl-time">${escapeHtml(timeStr)}</span>
+                </div>
+                <div class="tl-card-body">
+                  <span class="tl-actor">${escapeHtml(userName)}</span>
+                  started a session
+                  <span class="tl-card-detail">${sessionLink}</span>
+                </div>
+              </div>
+            </div>`;
+        } else {
+          const scoreClass = entry.score >= 10 ? "good" : entry.score >= 7 ? "mid" : "low";
+          const scoreBadge = entry.score != null
+            ? `<span class="score-pill ${scoreClass}">${entry.score}/12</span>`
+            : "";
+          html += `
+            <div class="tl-entry tl-attempt">
+              <div class="tl-dot tl-dot-attempt"></div>
+              <div class="tl-card">
+                <div class="tl-card-header">
+                  <span class="tl-badge tl-badge-attempt">Recording</span>
+                  <span class="tl-time">${escapeHtml(timeStr)}</span>
+                </div>
+                <div class="tl-card-body">
+                  <span class="tl-actor">${escapeHtml(userName)}</span>
+                  submitted a recording in
+                  <span class="tl-card-detail">${sessionLink}</span>
+                  ${scoreBadge}
+                </div>
+              </div>
+            </div>`;
+        }
+      });
+
+      if (lastDay !== null) html += `</div>`; // close last day group
+      html += `</div>`; // close timeline
+
+      feed.innerHTML = html;
+    }
+
+    load();
+    initNameUI();
+  </script>
+</body>
+</html>

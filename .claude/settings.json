@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 manage.py migrate)",
+      "Bash(venv/bin/python3 manage.py check)",
+      "Bash(venv/bin/python3 manage.py migrate)"
+    ]
+  }
+}

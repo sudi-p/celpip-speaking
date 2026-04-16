@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP — Attempt Detail</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 id="page-title">Loading…</h1>
+      <a href="history.html">&larr; History</a>
+    </header>
+
+    <div id="error-area" class="error-msg"></div>
+    <div id="content"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    async function load() {
+      const params    = new URLSearchParams(location.search);
+      const id        = params.get("id");
+      const sessionId = params.get("session");
+      const backHref  = sessionId ? `history.html?session=${sessionId}` : "history.html";
+      document.querySelector("header a").href = backHref;
+
+      if (!id) {
+        document.getElementById("error-area").textContent = "No attempt ID specified.";
+        return;
+      }
+
+      let attempt;
+      try {
+        attempt = await apiGet(`/attempts/${id}`);
+      } catch (e) {
+        document.getElementById("error-area").textContent = `Failed to load attempt: ${e.message}`;
+        return;
+      }
+
+      document.getElementById("page-title").textContent =
+        `Task ${attempt.task_id}: ${attempt.task_name}`;
+
+      const date = new Date(attempt.created_at).toLocaleString();
+      const duration = attempt.duration_sec != null ? `${attempt.duration_sec}s` : "—";
+
+      const questionBlock = attempt.question
+        ? `<div class="question-panel">
+             <div class="question-label">Question</div>
+             <div class="question-text">${escapeHtml(attempt.question)}</div>
+           </div>`
+        : "";
+
+      const content = document.getElementById("content");
+      content.innerHTML = `
+        <p class="meta">Recorded ${escapeHtml(date)} &middot; Duration: ${escapeHtml(duration)}</p>
+        ${questionBlock}
+        ${attempt.audio_url ? `<div style="margin-bottom:1.25rem"><audio controls src="${escapeHtml(attempt.audio_url)}" style="width:100%;border-radius:8px"></audio></div>` : ""}
+        <div class="panel">
+          <h2>Transcript</h2>
+          <p id="transcript-text" style="line-height:1.7;white-space:pre-wrap">${escapeHtml(attempt.transcript || "")}</p>
+        </div>
+        <div class="panel">
+          <h2>Evaluation</h2>
+          <div id="eval-container"></div>
+        </div>
+      `;
+
+      if (attempt.evaluation_json) {
+        renderEvaluation(document.getElementById("eval-container"), attempt.evaluation_json);
+      } else {
+        document.getElementById("eval-container").textContent = "No evaluation available.";
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

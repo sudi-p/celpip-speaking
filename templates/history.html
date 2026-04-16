@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP — History</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">CELPIP Practice</a>
+      <button class="navbar-burger" id="navbar-burger" aria-label="Open navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="navbar-menu" id="navbar-menu">
+        <a href="index.html" class="navbar-link">Tasks</a>
+        <a href="history.html" class="navbar-link active">History</a>
+        <a href="logs.html" class="navbar-link">Logs</a>
+        <span class="navbar-greeting" id="navbar-greeting"></span>
+      </div>
+    </div>
+  </nav>
+  <div class="navbar-overlay" id="navbar-overlay"></div>
+  <div id="name-gate" class="name-gate" style="display:none">
+    <div class="name-gate-box">
+      <div class="name-gate-title">Welcome to CELPIP Practice</div>
+      <p class="name-gate-sub">Enter your name to continue</p>
+      <input type="text" id="gate-name-input" class="name-gate-input" placeholder="Your name" maxlength="50" />
+      <button class="btn btn-primary" id="gate-submit" style="width:100%">Continue &rarr;</button>
+    </div>
+  </div>
+  <div class="container">
+    <header>
+      <h1>Practice History</h1>
+    </header>
+
+    <div id="error-area" class="error-msg"></div>
+    <div id="content"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    async function load() {
+      let sessions;
+      try {
+        sessions = await apiGet("/sessions");
+      } catch (e) {
+        document.getElementById("error-area").textContent = `Failed to load history: ${e.message}`;
+        return;
+      }
+
+      const content = document.getElementById("content");
+
+      if (sessions.length === 0) {
+        content.innerHTML = `<p class="empty-msg">No sessions yet — go practice!</p>`;
+        return;
+      }
+
+      const rows = sessions.map((s) => {
+        const scoreClass = s.avg_score >= 10 ? "good" : s.avg_score >= 7 ? "mid" : "low";
+        const scoreBadge = s.avg_score != null
+          ? `<span class="score-pill ${scoreClass}">${s.avg_score}/12</span>`
+          : `<span class="score-pill low">—</span>`;
+        const date    = new Date(s.created_at).toLocaleDateString();
+        const snippet = s.question
+          ? `<div class="session-question-snippet">${escapeHtml(s.question.length > 75 ? s.question.slice(0, 75) + "…" : s.question)}</div>`
+          : "";
+        const viewHref = `record.html?session=${s.id}`;
+
+        return `
+          <tr class="session-row" data-href="${viewHref}">
+            <td>
+              <div class="session-name">Task ${escapeHtml(String(s.task_id))}: ${escapeHtml(s.task_name)}</div>
+              <div style="font-size:.78rem;color:#888;margin-top:.1rem">${escapeHtml(s.name)}</div>
+              ${snippet}
+            </td>
+            <td>${escapeHtml(date)}</td>
+            <td>${escapeHtml(String(s.attempt_count))}</td>
+            <td>${scoreBadge}</td>
+            <td><a href="${viewHref}" class="btn btn-secondary" style="padding:.3rem .75rem;font-size:.8rem">Open</a></td>
+          </tr>
+        `;
+      }).join("");
+
+      content.innerHTML = `
+        <table class="sessions-table">
+          <thead>
+            <tr>
+              <th>Session</th>
+              <th>Started</th>
+              <th>Attempts</th>
+              <th>Avg Score</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      content.querySelectorAll(".session-row").forEach((row) => {
+        row.addEventListener("click", (e) => {
+          if (e.target.tagName === "A") return;
+          window.location.href = row.dataset.href;
+        });
+      });
+    }
+
+    load();
+    initNameUI();
+  </script>
+</body>
+</html>
