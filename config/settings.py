@@ -6,11 +6,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
-SECRET_KEY = "django-insecure-celpip-dev-key-change-in-production"
+# ── Security ──────────────────────────────────────────────────────────────────
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-celpip-dev-key-change-in-production",
+)
 
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
+ALLOWED_HOSTS_ENV = os.environ.get("ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = ALLOWED_HOSTS_ENV.split(",") if ALLOWED_HOSTS_ENV else ["*"]
+
+# ── Apps ──────────────────────────────────────────────────────────────────────
 INSTALLED_APPS = [
     "corsheaders",
     "django.contrib.admin",
@@ -22,9 +29,11 @@ INSTALLED_APPS = [
     "attempts",
 ]
 
+# ── Middleware ────────────────────────────────────────────────────────────────
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -53,6 +62,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+# ── Database — SQLite (data is ephemeral on Render free tier, that's fine) ───
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -60,19 +70,29 @@ DATABASES = {
     }
 }
 
+# ── CORS ──────────────────────────────────────────────────────────────────────
 CORS_ALLOW_ALL_ORIGINS = True
 
+# ── Internationalisation ──────────────────────────────────────────────────────
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
-USE_I18N = True
-USE_TZ = True
+TIME_ZONE     = "UTC"
+USE_I18N      = True
+USE_TZ        = True
 
-STATIC_URL = "static/"
-MEDIA_URL = "/media/"
+# ── Static files ──────────────────────────────────────────────────────────────
+STATIC_URL  = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# ── Media files ───────────────────────────────────────────────────────────────
+MEDIA_URL  = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# ── Frontend templates dir ────────────────────────────────────────────────────
 FRONTEND_DIR = BASE_DIR / "templates"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# ── API keys ──────────────────────────────────────────────────────────────────
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY", "")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_API_KEY   = os.environ.get("OPENAI_API_KEY", "")
