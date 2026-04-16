@@ -10,13 +10,16 @@ urlpatterns = [
     path("api/", include("attempts.urls")),
 
     # Frontend HTML pages — served through Django's template engine
-    path("", TemplateView.as_view(template_name="index.html"), name="index"),
-    path("index.html", TemplateView.as_view(template_name="index.html")),
-    path("record.html", TemplateView.as_view(template_name="record.html")),
-    path("history.html", TemplateView.as_view(template_name="history.html")),
-    path("detail.html", TemplateView.as_view(template_name="detail.html")),
-    path("logs.html", TemplateView.as_view(template_name="logs.html")),
+    path("", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"}), name="index"),
+    path("index.html", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"})),
+    path("record.html", TemplateView.as_view(template_name="record.html", extra_context={"active_page": "record"})),
+    path("history.html", TemplateView.as_view(template_name="history.html", extra_context={"active_page": "history"})),
+    path("detail.html", TemplateView.as_view(template_name="detail.html", extra_context={"active_page": "record"})),
+    path("logs.html", TemplateView.as_view(template_name="logs.html", extra_context={"active_page": "logs"})),
 
-    # Frontend static assets (CSS, JS) — must come after HTML routes
+    # Media files (audio recordings) — must come BEFORE the catch-all
+    re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
+
+    # Frontend static assets (CSS, JS) — catch-all, must be last
     re_path(r"^(?P<path>.*)$", serve, {"document_root": settings.FRONTEND_DIR}),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

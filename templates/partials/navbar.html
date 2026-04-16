@@ -1,0 +1,15 @@
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">CELPIP Practice</a>
+    <button class="navbar-burger" id="navbar-burger" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="navbar-menu" id="navbar-menu">
+      <a href="index.html" class="navbar-link{% if active_page == 'tasks' %} active{% endif %}">Tasks</a>
+      <a href="history.html" class="navbar-link{% if active_page == 'history' %} active{% endif %}">History</a>
+      <a href="logs.html" class="navbar-link{% if active_page == 'logs' %} active{% endif %}">Logs</a>
+      <span class="navbar-greeting" id="navbar-greeting"></span>
+    </div>
+  </div>
+</nav>
+<div class="navbar-overlay" id="navbar-overlay"></div>
