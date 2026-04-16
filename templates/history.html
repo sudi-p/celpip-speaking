@@ -38,12 +38,18 @@
       const snippet = s.question
         ? `<div class="session-question-snippet">${escapeHtml(s.question.length > 75 ? s.question.slice(0, 75) + "…" : s.question)}</div>`
         : "";
-      const viewHref = `record.html?session=${s.id}`;
+      const isWriting = WRITING_TASK_IDS.has(s.task_id);
+      const viewHref  = `${isWriting ? "write" : "record"}.html?session=${s.id}`;
 
       return `
         <tr class="session-row" data-href="${viewHref}">
           <td>
-            <div class="session-name">Task ${escapeHtml(String(s.task_id))}: ${escapeHtml(s.task_name)}</div>
+            <div class="session-name">
+            ${isWriting
+              ? `<span class="practice-section-label writing-label" style="font-size:.65rem;padding:.1rem .5rem;margin-right:.4rem">Writing</span>`
+              : ""}
+            ${escapeHtml(s.task_name)}
+          </div>
             <div style="font-size:.78rem;color:#888;margin-top:.1rem">${escapeHtml(s.name)}</div>
             ${snippet}
           </td>

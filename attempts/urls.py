@@ -12,9 +12,13 @@ urlpatterns = [
     path("generate-question", views.generate_question),
     path("evaluate", views.evaluate),
     path("submit", views.submit),
+    path("submit-writing", views.submit_writing),
     path("attempts", views.list_attempts),
     path("attempts/<int:pk>", views.attempt_detail),
     path("attempts/<int:pk>/reevaluate", views.reevaluate_attempt),
+
+    # Question bank
+    path("questions", views.list_questions),
 
     # Activity log
     path("logs", views.activity_logs),

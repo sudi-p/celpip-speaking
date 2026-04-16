@@ -67,6 +67,13 @@ const TASKS = {
   8: { name: "Unusual Situation", prep: 30, speak: 60 },
 };
 
+const WRITING_TASKS = {
+  9:  { name: "Writing Task 1", label: "Email Writing",    duration: 1680 },
+  10: { name: "Writing Task 2", label: "Survey Response",  duration: 1680 },
+};
+
+const WRITING_TASK_IDS = new Set([9, 10]);
+
 function fmtTime(s) {
   const m = Math.floor(s / 60);
   const sec = s % 60;
@@ -148,6 +155,86 @@ function renderEvaluation(containerEl, evalObj) {
       <h3>Example Better Response</h3>
       <p class="example-response">${escapeHtml(evalObj.example_better_response ?? "")}</p>
     </div>
+  `;
+}
+
+function renderWritingEvaluation(containerEl, evalObj) {
+  const listItems = (arr) =>
+    Array.isArray(arr) ? arr.map((x) => `<li>${escapeHtml(x)}</li>`).join("") : "";
+
+  const issueRows =
+    Array.isArray(evalObj.text_issues) && evalObj.text_issues.length
+      ? evalObj.text_issues
+          .map(
+            (it) => `
+        <div class="issue-row">
+          <div class="issue-type">${escapeHtml(it.type ?? "")}</div>
+          <div class="issue-body">
+            <div class="issue-quote">&ldquo;${escapeHtml(it.quote ?? "")}&rdquo;</div>
+            <div class="issue-problem">${escapeHtml(it.problem ?? "")}</div>
+            <div class="issue-fix"><span class="issue-fix-label">Fix:</span> ${escapeHtml(it.fix ?? "")}</div>
+          </div>
+        </div>`,
+          )
+          .join("")
+      : "<p class='eval-empty'>No specific issues found.</p>";
+
+  const comparisonBlock = evalObj.comparison
+    ? `<div class="eval-section">
+        <details class="attempt-comparison">
+          <summary>Progress vs Previous Attempt</summary>
+          <div class="comparison-body">
+            <div>
+              <div class="comparison-heading improved">Improved</div>
+              ${evalObj.comparison.improvements?.length
+                ? `<ul class="comparison-list improved">${listItems(evalObj.comparison.improvements)}</ul>`
+                : `<p class="comparison-empty">Nothing noted.</p>`}
+            </div>
+            <div>
+              <div class="comparison-heading regressed">Regressed</div>
+              ${evalObj.comparison.regressions?.length
+                ? `<ul class="comparison-list regressed">${listItems(evalObj.comparison.regressions)}</ul>`
+                : `<p class="comparison-empty">Nothing noted.</p>`}
+            </div>
+          </div>
+        </details>
+      </div>`
+    : "";
+
+  containerEl.innerHTML = `
+    <div class="eval-section">
+      <h3>Content &amp; Coherence</h3><p>${escapeHtml(evalObj.content ?? "")}</p>
+    </div>
+    <div class="eval-section">
+      <h3>Grammar</h3><p>${escapeHtml(evalObj.grammar ?? "")}</p>
+    </div>
+    <div class="eval-section">
+      <h3>Vocabulary</h3><p>${escapeHtml(evalObj.vocabulary ?? "")}</p>
+    </div>
+    <div class="eval-section">
+      <h3>Readability</h3><p>${escapeHtml(evalObj.readability ?? "")}</p>
+    </div>
+    <div class="eval-section">
+      <h3>Task Fulfillment</h3><p>${escapeHtml(evalObj.task_fulfillment ?? "")}</p>
+    </div>
+    <div class="eval-section">
+      <h3>Strengths</h3><ul>${listItems(evalObj.strengths)}</ul>
+    </div>
+    <div class="eval-section">
+      <h3>Weaknesses</h3><ul>${listItems(evalObj.weaknesses)}</ul>
+    </div>
+    <div class="eval-section issues-section">
+      <h3>Issues Found in Your Response</h3>
+      <div class="issues-list">${issueRows}</div>
+    </div>
+    <div class="eval-section">
+      <h3>Improvements</h3><ul>${listItems(evalObj.improvements)}</ul>
+    </div>
+    <div class="eval-section">
+      <h3>Example Better Response</h3>
+      <p class="example-response">${escapeHtml(evalObj.example_better_response ?? "")}</p>
+    </div>
+    ${comparisonBlock}
   `;
 }
 

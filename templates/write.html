@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+{% block title %}CELPIP Writing Practice{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <!-- Task header (matches record.html style) -->
+  <div class="task-header" id="task-header" style="display:none">
+    <div class="task-header-top">
+      <h1 id="task-title"></h1>
+      <a href="history.html">History &rarr;</a>
+    </div>
+    <div id="question-panel" style="display:none">
+      <div class="question-label">Question</div>
+      <div class="question-text" id="question-text"></div>
+    </div>
+  </div>
+
+  <div id="error-area" class="error-msg"></div>
+
+  <!-- Writing interface -->
+  <div class="writing-controls" id="writing-controls" style="display:none">
+    <!-- Timer -->
+    <div class="writing-timer-area">
+      <div class="phase-label" id="phase-label">TIME REMAINING</div>
+      <div class="timer" id="timer">28:00</div>
+    </div>
+
+    <!-- Word count + grammar status bar -->
+    <div class="writing-meta-row">
+      <span class="word-count" id="word-count">0 words</span>
+      <span class="grammar-status" id="grammar-status"></span>
+    </div>
+
+    <!-- Editor: textarea overlaid on a highlight div for red-underline grammar errors -->
+    <div class="editor-wrapper">
+      <div class="editor-highlight" id="editor-highlight" aria-hidden="true"></div>
+      <textarea id="editor" class="editor-textarea"
+        placeholder="Start writing your response here&#8230;"
+        spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
+    </div>
+
+    <div class="btn-row" style="margin-top:1rem">
+      <button class="btn btn-primary" id="btn-submit">Submit Response</button>
+    </div>
+    <div id="submit-error" class="error-msg"></div>
+  </div>
+
+  <!-- Attempt cards (newest on top) -->
+  <div id="attempts-list"></div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const WRITING_DURATION_SEC = 28 * 60;
+
+let state           = "loading";   // loading | writing | processing | done
+let countdownId     = null;
+let remainingSec    = WRITING_DURATION_SEC;
+let currentMatches  = [];
+let grammarTimer    = null;
+let sessionData     = null;
+let nextAttemptNum  = 1;
+
+const timerEl     = document.getElementById("timer");
+const phaseEl     = document.getElementById("phase-label");
+const wordCountEl = document.getElementById("word-count");
+const grammarEl   = document.getElementById("grammar-status");
+const editor      = document.getElementById("editor");
+const highlight   = document.getElementById("editor-highlight");
+const submitBtn   = document.getElementById("btn-submit");
+const submitError = document.getElementById("submit-error");
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+async function init() {
+  const params    = new URLSearchParams(location.search);
+  const sessionId = params.get("session");
+
+  if (!sessionId) {
+    document.getElementById("error-area").textContent = "No session specified.";
+    return;
+  }
+
+  try {
+    sessionData = await apiGet(`/sessions/${sessionId}`);
+  } catch (e) {
+    document.getElementById("error-area").textContent = `Failed to load session: ${e.message}`;
+    return;
+  }
+
+  // Show header
+  document.getElementById("task-title").textContent = sessionData.task_name;
+  document.getElementById("task-header").style.display = "block";
+
+  const question = sessionData.question || sessionStorage.getItem("celpip_question") || "";
+  sessionStorage.removeItem("celpip_question");
+  if (question) {
+    document.getElementById("question-text").textContent = question;
+    document.getElementById("question-panel").style.display = "block";
+  }
+
+  // Render pre-existing attempts (oldest first so newest ends up on top after prepend)
+  if (sessionData.attempts && sessionData.attempts.length > 0) {
+    const sorted = [...sessionData.attempts].reverse(); // oldest → newest
+    sorted.forEach((a, i) => {
+      const prevScore = i > 0 ? sorted[i - 1].score : null;
+      renderAttemptCard(a, i + 1, prevScore);
+    });
+    nextAttemptNum = sorted.length + 1;
+  }
+
+  document.getElementById("writing-controls").style.display = "block";
+  setState("writing");
+}
+
+// ── State machine ────────────────────────────────────────────────────────────
+function setState(next) {
+  state = next;
+
+  if (next === "writing") {
+    phaseEl.textContent  = "TIME REMAINING";
+    timerEl.style.color  = "";
+    editor.disabled      = false;
+    submitBtn.disabled   = false;
+    submitBtn.textContent = "Submit Response";
+    submitError.textContent = "";
+    editor.focus();
+
+    remainingSec = WRITING_DURATION_SEC;
+    if (countdownId) clearInterval(countdownId);
+    countdownId = countdown(WRITING_DURATION_SEC, (r) => {
+      remainingSec = r;
+      timerEl.textContent = fmtTime(r);
+      if (r <= 60)       timerEl.style.color = "#dc2626";
+      else if (r <= 300) timerEl.style.color = "#d97706";
+      else               timerEl.style.color = "";
+    }, () => {
+      // Auto-submit when timer reaches zero
+      if (editor.value.trim()) doSubmit();
+      else setState("done");
+    });
+
+  } else if (next === "processing") {
+    phaseEl.textContent   = "PROCESSING";
+    timerEl.style.color   = "";
+    editor.disabled       = true;
+    submitBtn.disabled    = true;
+    submitBtn.textContent = "Submitting\u2026";
+    if (countdownId) { clearInterval(countdownId); countdownId = null; }
+
+  } else if (next === "done") {
+    phaseEl.textContent   = "SUBMITTED";
+    timerEl.textContent   = "28:00";
+    timerEl.style.color   = "";
+    editor.disabled       = true;
+    submitBtn.disabled    = false;
+    submitBtn.textContent = "Try Again";
+  }
+}
+
+// ── Editor events ────────────────────────────────────────────────────────────
+editor.addEventListener("input", () => {
+  updateWordCount();
+  updateHighlight();
+
+  clearTimeout(grammarTimer);
+  grammarEl.textContent = "Checking\u2026";
+  grammarEl.className   = "grammar-status";
+  grammarTimer = setTimeout(() => runGrammarCheck(editor.value), 900);
+});
+
+editor.addEventListener("scroll", () => {
+  highlight.scrollTop = editor.scrollTop;
+});
+
+function updateWordCount() {
+  const n = editor.value.trim() ? editor.value.trim().split(/\s+/).length : 0;
+  wordCountEl.textContent = `${n} word${n !== 1 ? "s" : ""}`;
+}
+
+// ── Grammar check (LanguageTool public API) ───────────────────────────────────
+async function runGrammarCheck(text) {
+  if (!text.trim()) {
+    currentMatches = [];
+    updateHighlight();
+    grammarEl.textContent = "";
+    return;
+  }
+  try {
+    const resp = await fetch("https://api.languagetool.org/v2/check", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ text, language: "en-US" }).toString(),
+    });
+    const data = await resp.json();
+    currentMatches = data.matches || [];
+    updateHighlight();
+    const n = currentMatches.length;
+    if (n === 0) {
+      grammarEl.textContent = "No issues";
+      grammarEl.className   = "grammar-status grammar-ok";
+    } else {
+      grammarEl.textContent = `${n} issue${n !== 1 ? "s" : ""}`;
+      grammarEl.className   = "grammar-status grammar-issues";
+    }
+  } catch {
+    grammarEl.textContent = "";
+    grammarEl.className   = "grammar-status";
+  }
+}
+
+// ── Highlight overlay ─────────────────────────────────────────────────────────
+function buildHighlightHTML(text, matches) {
+  const sorted = [...matches].sort((a, b) => a.offset - b.offset);
+  let html = "", pos = 0;
+  for (const m of sorted) {
+    if (m.offset >= text.length) continue;
+    if (m.offset > pos) html += escapeHtml(text.slice(pos, m.offset));
+    const end = Math.min(m.offset + m.length, text.length);
+    html += `<span class="grammar-error">${escapeHtml(text.slice(m.offset, end))}</span>`;
+    pos = end;
+  }
+  if (pos < text.length) html += escapeHtml(text.slice(pos));
+  return html + "\n"; // trailing newline matches textarea bottom line height
+}
+
+function updateHighlight() {
+  highlight.innerHTML    = buildHighlightHTML(editor.value, currentMatches);
+  highlight.scrollTop    = editor.scrollTop;
+}
+
+// ── Submit ───────────────────────────────────────────────────────────────────
+submitBtn.addEventListener("click", () => {
+  if (state === "done") {
+    // Try again: clear editor and restart
+    editor.value      = "";
+    currentMatches    = [];
+    updateHighlight();
+    updateWordCount();
+    grammarEl.textContent = "";
+    grammarEl.className   = "grammar-status";
+    setState("writing");
+    return;
+  }
+  const text = editor.value.trim();
+  if (!text) {
+    submitError.textContent = "Please write a response before submitting.";
+    return;
+  }
+  submitError.textContent = "";
+  doSubmit();
+});
+
+async function doSubmit() {
+  setState("processing");
+
+  const text      = editor.value.trim();
+  const elapsed   = WRITING_DURATION_SEC - remainingSec;
+  const question  = document.getElementById("question-text").textContent || "";
+  const sessionId = new URLSearchParams(location.search).get("session");
+
+  try {
+    const result = await apiPost("/submit-writing", {
+      task_id:       sessionData.task_id,
+      question,
+      response_text: text,
+      duration_sec:  elapsed > 0 ? elapsed : null,
+      session_id:    sessionId,
+      user_name:     getUserName(),
+    });
+
+    renderAttemptCard(
+      {
+        id:              result.id,
+        score:           result.score,
+        created_at:      new Date().toISOString(),
+        response_text:   text,
+        evaluation_json: result,
+        duration_sec:    elapsed > 0 ? elapsed : null,
+        user_name:       getUserName(),
+      },
+      nextAttemptNum,
+      result.prev_score,
+    );
+    nextAttemptNum++;
+    setState("done");
+  } catch (e) {
+    submitError.textContent = `Submission failed: ${e.message}`;
+    // Restore writing state; restart timer from remaining seconds, not full 28 min
+    state = "writing"; // set directly to avoid re-triggering full restart
+    phaseEl.textContent  = "TIME REMAINING";
+    editor.disabled      = false;
+    submitBtn.disabled   = false;
+    submitBtn.textContent = "Submit Response";
+    if (countdownId) clearInterval(countdownId);
+    countdownId = countdown(remainingSec, (r) => {
+      remainingSec = r;
+      timerEl.textContent = fmtTime(r);
+      if (r <= 60)       timerEl.style.color = "#dc2626";
+      else if (r <= 300) timerEl.style.color = "#d97706";
+      else               timerEl.style.color = "";
+    }, () => {
+      if (editor.value.trim()) doSubmit();
+      else setState("done");
+    });
+  }
+}
+
+// ── Render attempt card ───────────────────────────────────────────────────────
+function scoreClass(s) {
+  return s >= 10 ? "good" : s >= 7 ? "mid" : "low";
+}
+
+function renderAttemptCard(attempt, num, prevScore) {
+  const list  = document.getElementById("attempts-list");
+  const card  = document.createElement("div");
+  card.className = "attempt-card";
+  card.id = `attempt-card-${attempt.id}`;
+
+  const score     = attempt.score;
+  const cls       = score != null ? scoreClass(score) : "low";
+  const badgeHtml = score != null
+    ? `<span class="score-badge ${cls}">${score}<span>/12</span></span>`
+    : `<span class="score-badge low">?<span>/12</span></span>`;
+
+  const words = attempt.response_text
+    ? attempt.response_text.trim().split(/\s+/).filter(Boolean).length : 0;
+  const date  = new Date(attempt.created_at).toLocaleString();
+  const sessionId = new URLSearchParams(location.search).get("session");
+
+  let deltaHtml = "";
+  if (prevScore != null && score != null) {
+    const diff = score - prevScore;
+    if      (diff > 0) deltaHtml = `<span class="score-delta up">&uarr; +${diff}</span>`;
+    else if (diff < 0) deltaHtml = `<span class="score-delta down">&darr; ${diff}</span>`;
+    else               deltaHtml = `<span class="score-delta same">= same</span>`;
+  }
+
+  const evalId = `eval-${attempt.id}`;
+
+  card.innerHTML = `
+    <div class="attempt-card-header">
+      <span class="attempt-num">Attempt ${num}</span>
+      <div class="attempt-card-meta">
+        ${badgeHtml}
+        ${deltaHtml}
+        ${attempt.user_name ? `<span class="attempt-user-name">${escapeHtml(attempt.user_name)}</span>` : ""}
+      </div>
+    </div>
+    <div class="attempt-progress">
+      <span>${words} words</span>
+      ${attempt.duration_sec ? `<span>&middot; ${fmtTime(attempt.duration_sec)} used</span>` : ""}
+      <span>&middot; ${escapeHtml(date)}</span>
+    </div>
+
+    <details class="attempt-details">
+      <summary>Written Response</summary>
+      <div class="attempt-transcript">${escapeHtml(attempt.response_text || "")}</div>
+    </details>
+
+    <details class="attempt-details" open>
+      <summary>Evaluation</summary>
+      <div class="attempt-eval" id="${evalId}"></div>
+    </details>
+
+    <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-secondary"
+        style="font-size:.82rem;padding:.35rem .85rem"
+        onclick="doReevaluate(${attempt.id}, this)">Re-evaluate</button>
+      <a href="detail.html?id=${attempt.id}&session=${sessionId}"
+         class="btn btn-secondary"
+         style="font-size:.82rem;padding:.35rem .85rem">View Detail</a>
+    </div>
+  `;
+
+  // Insert newest at top
+  list.insertBefore(card, list.firstChild);
+
+  if (attempt.evaluation_json) {
+    renderWritingEvaluation(document.getElementById(evalId), attempt.evaluation_json);
+  } else {
+    document.getElementById(evalId).textContent = "No evaluation available.";
+  }
+}
+
+// ── Re-evaluate ───────────────────────────────────────────────────────────────
+async function doReevaluate(id, btn) {
+  btn.disabled      = true;
+  btn.textContent   = "Re-evaluating\u2026";
+  try {
+    const result = await apiPost(`/attempts/${id}/reevaluate`, {});
+    const card   = document.getElementById(`attempt-card-${id}`);
+    if (card) {
+      const badgeEl = card.querySelector(".score-badge");
+      if (badgeEl && result.score != null) {
+        badgeEl.className = `score-badge ${scoreClass(result.score)}`;
+        badgeEl.innerHTML = `${result.score}<span>/12</span>`;
+      }
+      const evalEl = card.querySelector(".attempt-eval");
+      if (evalEl) renderWritingEvaluation(evalEl, result);
+    }
+    btn.textContent = "Re-evaluate";
+    btn.disabled    = false;
+  } catch (e) {
+    btn.textContent = "Failed — retry";
+    btn.disabled    = false;
+  }
+}
+
+init();
+</script>
+{% endblock %}

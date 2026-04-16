@@ -1,10 +1,19 @@
 {% extends "base.html" %}
-{% block title %}CELPIP Speaking Practice{% endblock %}
+{% block title %}CELPIP Practice{% endblock %}
 
 {% block body %}
   <div class="container">
-    <p style="color:#555;margin-bottom:1.5rem;">Choose a task to begin. You will have preparation time before recording.</p>
+    <div class="practice-section-header">
+      <span class="practice-section-label speaking-label">Speaking</span>
+      <p class="practice-section-sub">Choose a task to begin. You will have preparation time before recording.</p>
+    </div>
     <div id="task-grid"></div>
+
+    <div class="practice-section-header" style="margin-top:2.5rem">
+      <span class="practice-section-label writing-label">Writing</span>
+      <p class="practice-section-sub">28-minute timed writing session with live grammar highlighting.</p>
+    </div>
+    <div id="writing-grid"></div>
   </div>
 
   <!-- ── Modal ───────────────────────────────────────────────────────────── -->
@@ -61,9 +70,9 @@
 
 {% block scripts %}
 <script>
-  const QUESTION_TASKS = new Set([1, 2, 6, 7]);
+  const QUESTION_TASKS = new Set([1, 2, 6, 7, 9, 10]);
 
-  // ── Render task grid ────────────────────────────────────────────────────
+  // ── Render speaking task grid ───────────────────────────────────────────
   const grid = document.getElementById("task-grid");
   Object.entries(TASKS).forEach(([id, task]) => {
     const card = document.createElement("div");
@@ -77,6 +86,20 @@
     grid.appendChild(card);
   });
 
+  // ── Render writing task grid ────────────────────────────────────────────
+  const writingGrid = document.getElementById("writing-grid");
+  Object.entries(WRITING_TASKS).forEach(([id, task]) => {
+    const card = document.createElement("div");
+    card.className = "task-card writing-task-card";
+    card.innerHTML = `
+      <div class="task-num writing-task-num">W${Number(id) - 8}</div>
+      <div class="task-name">${escapeHtml(task.name)}</div>
+      <div class="meta" style="margin-top:.5rem">28 min &middot; ${escapeHtml(task.label)}</div>
+    `;
+    card.addEventListener("click", () => openModal(Number(id)));
+    writingGrid.appendChild(card);
+  });
+
   // ── Modal state ─────────────────────────────────────────────────────────
   let mState = { taskId: null, lastSession: null, sessionId: null, pendingQuestion: "" };
 
@@ -86,7 +109,11 @@
 
   async function openModal(taskId) {
     mState = { taskId, lastSession: null, sessionId: null, pendingQuestion: "" };
-    document.getElementById("modal-title").textContent = `Task ${taskId}: ${TASKS[taskId].name}`;
+    const isWriting = WRITING_TASK_IDS.has(taskId);
+    const taskInfo  = isWriting ? WRITING_TASKS[taskId] : TASKS[taskId];
+    document.getElementById("modal-title").textContent = isWriting
+      ? taskInfo.name
+      : `Task ${taskId}: ${taskInfo.name}`;
     clearErrors();
 
     try { mState.lastSession = await apiGet(`/sessions/latest?task_id=${taskId}`); }
@@ -226,7 +253,8 @@
   function navigate() {
     if (mState.pendingQuestion) sessionStorage.setItem("celpip_question", mState.pendingQuestion);
     else sessionStorage.removeItem("celpip_question");
-    window.location.href = `record.html?session=${mState.sessionId}`;
+    const dest = WRITING_TASK_IDS.has(mState.taskId) ? "write.html" : "record.html";
+    window.location.href = `${dest}?session=${mState.sessionId}`;
   }
 
   function clearErrors() {

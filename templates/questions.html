@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}CELPIP — Question Bank{% endblock %}
+
+{% block body %}
+<div class="container">
+  <header>
+    <h1>Question Bank</h1>
+  </header>
+
+  <!-- Filter bar -->
+  <div class="qbank-filters">
+    <button class="qbank-filter-btn active" data-filter="all">All</button>
+    <button class="qbank-filter-btn" data-filter="speaking">Speaking</button>
+    <button class="qbank-filter-btn" data-filter="writing">Writing</button>
+  </div>
+
+  <div id="error-area" class="error-msg"></div>
+  <div id="content"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const PAGE_SIZE = 5;
+
+// ── Order tasks should appear ─────────────────────────────────────────────────
+const TASK_ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+let allQuestions  = [];
+let activeFilter  = "all";
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function taskLabel(q) {
+  return WRITING_TASK_IDS.has(q.task_id)
+    ? q.task_name
+    : `Task ${q.task_id}: ${q.task_name}`;
+}
+
+function sourceBadge(source) {
+  return source === "ai"
+    ? `<span class="q-source-badge q-source-ai">AI</span>`
+    : `<span class="q-source-badge q-source-manual">Manual</span>`;
+}
+
+async function copyText(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const orig = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  } catch {
+    btn.textContent = "Failed";
+    setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+  }
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  const content = document.getElementById("content");
+
+  const filtered = activeFilter === "all"
+    ? allQuestions
+    : allQuestions.filter(q => q.task_type === activeFilter);
+
+  if (filtered.length === 0) {
+    content.innerHTML = `<p class="empty-msg">No questions yet — generate one from the Tasks page.</p>`;
+    return;
+  }
+
+  // Group by task_id
+  const groups = {};
+  for (const q of filtered) {
+    if (!groups[q.task_id]) groups[q.task_id] = [];
+    groups[q.task_id].push(q);
+  }
+
+  // Sort task groups in TASK_ORDER, then any extras numerically
+  const orderedTaskIds = TASK_ORDER
+    .filter(id => groups[id])
+    .concat(Object.keys(groups).map(Number).filter(id => !TASK_ORDER.includes(id)).sort((a, b) => a - b));
+
+  let html = "";
+  for (const taskId of orderedTaskIds) {
+    const qs     = groups[taskId];
+    const isWriting = WRITING_TASK_IDS.has(taskId);
+    const label  = isWriting ? qs[0].task_name : `Task ${taskId}: ${qs[0].task_name}`;
+    const typeTag = isWriting
+      ? `<span class="practice-section-label writing-label" style="font-size:.65rem;padding:.1rem .5rem">Writing</span>`
+      : `<span class="practice-section-label speaking-label" style="font-size:.65rem;padding:.1rem .5rem">Speaking</span>`;
+    const visible  = qs.slice(0, PAGE_SIZE);
+    const hidden   = qs.slice(PAGE_SIZE);
+    const groupId  = `group-${taskId}`;
+
+    html += `
+      <div class="qbank-group" id="${groupId}">
+        <div class="qbank-group-header">
+          <div class="qbank-group-title">${escapeHtml(label)} ${typeTag}</div>
+          <span class="qbank-group-count">${qs.length} question${qs.length !== 1 ? "s" : ""}</span>
+        </div>
+        <div class="qbank-list">
+          ${visible.map(q => questionRow(q)).join("")}
+        </div>
+        ${hidden.length > 0 ? `
+          <div class="qbank-hidden" id="hidden-${taskId}" style="display:none">
+            ${hidden.map(q => questionRow(q)).join("")}
+          </div>
+          <button class="qbank-show-more" id="show-more-${taskId}"
+            onclick="toggleMore(${taskId}, ${hidden.length})">
+            Show ${hidden.length} more &darr;
+          </button>
+        ` : ""}
+      </div>
+    `;
+  }
+
+  content.innerHTML = html;
+
+  // Bind copy buttons
+  content.querySelectorAll(".qbank-copy-btn").forEach(btn => {
+    btn.addEventListener("click", () => copyText(btn.dataset.text, btn));
+  });
+}
+
+function questionRow(q) {
+  const date = new Date(q.created_at).toLocaleDateString();
+  return `
+    <div class="qbank-row">
+      <div class="qbank-row-body">
+        <p class="qbank-text">${escapeHtml(q.text)}</p>
+        <div class="qbank-row-meta">
+          ${sourceBadge(q.source)}
+          <span class="qbank-date">${escapeHtml(date)}</span>
+        </div>
+      </div>
+      <button class="btn btn-secondary qbank-copy-btn"
+        style="white-space:nowrap;font-size:.8rem;padding:.3rem .8rem;align-self:flex-start"
+        data-text="${escapeHtml(q.text)}">Copy</button>
+    </div>
+  `;
+}
+
+function toggleMore(taskId, hiddenCount) {
+  const hiddenEl  = document.getElementById(`hidden-${taskId}`);
+  const btn       = document.getElementById(`show-more-${taskId}`);
+  if (hiddenEl.style.display === "none") {
+    hiddenEl.style.display = "block";
+    btn.textContent = "Show less \u2191";
+
+    // Bind copy buttons inside the newly revealed section
+    hiddenEl.querySelectorAll(".qbank-copy-btn").forEach(b => {
+      b.addEventListener("click", () => copyText(b.dataset.text, b));
+    });
+  } else {
+    hiddenEl.style.display = "none";
+    btn.textContent = `Show ${hiddenCount} more \u2193`;
+  }
+}
+
+// ── Filter buttons ────────────────────────────────────────────────────────────
+document.querySelectorAll(".qbank-filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".qbank-filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+// ── Load ──────────────────────────────────────────────────────────────────────
+async function load() {
+  try {
+    allQuestions = await apiGet("/questions");
+  } catch (e) {
+    document.getElementById("error-area").textContent = `Failed to load questions: ${e.message}`;
+    return;
+  }
+  render();
+}
+
+load();
+</script>
+{% endblock %}

@@ -6,7 +6,7 @@ from django.db.models import Avg, Count
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from .models import Attempt, Session
+from .models import Attempt, Question, Session
 
 TASK_NAMES = {
     1: "Giving Advice",
@@ -17,7 +17,11 @@ TASK_NAMES = {
     6: "Difficult Situation",
     7: "Expressing Opinions",
     8: "Unusual Situation",
+    9: "Writing Task 1",
+    10: "Writing Task 2",
 }
+
+WRITING_TASKS = {9, 10}
 
 # Tasks where a scenario is inferred from the first transcript
 SCENARIO_TASKS = {3, 4, 5, 8}
@@ -49,6 +53,25 @@ QUESTION_PROMPTS = {
         "The format is: present a debatable statement about society, technology, education, work, or lifestyle. "
         "Ask whether the test-taker agrees or disagrees, and to support their view with reasons. "
         "Write only the question text, no labels or explanations."
+    ),
+    9: (
+        "Write a single CELPIP Writing Task 1 question. "
+        "Task 1 is an email writing task. The test-taker must write a formal or semi-formal email of approximately 150–200 words. "
+        "Create a realistic everyday scenario involving one of: a complaint, a request, an apology, an invitation, an inquiry, or a thank-you. "
+        "Start with 1–2 sentences beginning with 'You are...' to set the context. "
+        "Include 3–4 bullet points describing the key information that must be addressed in the email, "
+        "but vary the number slightly when appropriate to keep the task natural and realistic. "
+        "Topics should come from everyday situations such as workplace communication, housing issues, public services, travel, education, or community events. "
+        "Write only the task text, with no labels, no word count instructions, and no extra explanations."
+    ),
+    10: (
+        "Write a single CELPIP Writing Task 2 question. "
+        "Task 2 is a survey-response writing task. The test-taker must write approximately 150–200 words expressing an opinion. "
+        "Format: Begin with a 1–2 sentence survey-style context introducing a real-life situation or public opinion debate, "
+        "followed by a clear opinion question asking the test-taker to express their view. "
+        "Topics should be relatable: technology and daily life, remote work, urban vs. rural living, education systems, environmental habits, or community involvement. "
+        "The question must not include bullet-point prompts, structure guidance, or suggestions for how many reasons or examples to provide. "
+        "Write only the task text, no labels, no word count instructions, and no formatting guidance."
     ),
 }
 
@@ -125,6 +148,59 @@ EVAL_SYSTEM_PROMPT = (
     "comparison (object with keys: improvements (array of strings describing what the candidate did better "
     "than the previous attempt), regressions (array of strings describing what got worse or hurt the score "
     "compared to the previous attempt)). Reference specific language from both transcripts. "
+    "If nothing clearly improved or regressed, use empty arrays.\n\n"
+
+    "Be specific, constructive, and consistent with the rubric."
+)
+
+WRITING_EVAL_SYSTEM_PROMPT = (
+    "You are a certified CELPIP writing examiner with strict but fair grading standards. "
+    "Evaluate the candidate's written response using the official CELPIP 12-point scale.\n\n"
+
+    "CELPIP Writing Task 1 is a formal or semi-formal email (~150–200 words). "
+    "CELPIP Writing Task 2 is a written opinion or survey response (~150–200 words).\n\n"
+
+    "Scoring guide:\n"
+    "Band 10–12: Fully addresses all required points; excellent organization; wide vocabulary range; "
+    "very few grammar errors; natural, fluent prose.\n"
+    "Band 8–9: Adequately addresses the task; generally well-organized; good vocabulary; "
+    "some grammar errors that do not impede understanding.\n"
+    "Band 6–7: Partially addresses the task; basic organization; limited but adequate vocabulary; "
+    "noticeable grammar errors that occasionally affect clarity.\n"
+    "Band 4–5: Partially addresses the task; weak organization; restricted vocabulary; "
+    "frequent errors that impede understanding.\n"
+    "Band 1–3: Barely addresses the task; very weak or no organization; very restricted vocabulary; "
+    "pervasive errors that severely impede understanding.\n\n"
+
+    "Evaluation rules:\n"
+    "- Task Fulfillment is the primary criterion — verify ALL required bullet points are addressed.\n"
+    "- Grade holistically; do not count errors mechanically.\n"
+    "- A clear, organized response that addresses all points should typically be Band 8–9.\n"
+    "- Only deduct to Band 6–7 if grammar issues noticeably affect readability or task completion.\n\n"
+
+    "Return ONLY a valid JSON object with these keys:\n"
+    "score (integer 1–12),\n"
+    "content (string — assessment of ideas, development, and coherence),\n"
+    "grammar (string — assessment of grammatical accuracy),\n"
+    "vocabulary (string — assessment of vocabulary range and precision),\n"
+    "readability (string — assessment of organization, sentence variety, and overall flow),\n"
+    "task_fulfillment (string — how well the candidate addressed all required points in the prompt),\n"
+    "strengths (array of strings),\n"
+    "weaknesses (array of strings — high-level weakness categories),\n"
+    "text_issues (array of objects — detailed issues found in the written response; "
+    "each object has: quote (exact problematic phrase copied verbatim from the response), "
+    "type (one of: Grammar, Vocabulary, Readability, Coherence), "
+    "problem (concise explanation of what is wrong), "
+    "fix (the corrected version of that phrase). "
+    "Include ALL notable issues — aim for thoroughness. "
+    "If the response is strong, still include at least 2–3 minor improvements.),\n"
+    "improvements (array of strings),\n"
+    "example_better_response (string).\n\n"
+
+    "When a previous attempt response is provided, also include:\n"
+    "comparison (object with keys: improvements (array of strings describing what the candidate did better), "
+    "regressions (array of strings describing what got worse)). "
+    "Reference specific language from both responses. "
     "If nothing clearly improved or regressed, use empty arrays.\n\n"
 
     "Be specific, constructive, and consistent with the rubric."
@@ -216,6 +292,48 @@ def _openai_evaluate(task_id, task_name, transcript, duration_sec, question,
     return evaluation
 
 
+def _openai_evaluate_writing(task_id, task_name, response_text, duration_sec, question,
+                              prev_response=None, session_summary=None):
+    if not settings.OPENAI_API_KEY:
+        raise ValueError("OPENAI_API_KEY not configured")
+    word_count = len(response_text.split())
+    question_line = f"Task prompt given to candidate:\n{question}\n\n" if question else ""
+    user_prompt = (
+        f"CELPIP {task_name}\n\n"
+        f"{question_line}"
+        f"Candidate's written response ({word_count} words):\n{response_text}\n\n"
+    )
+    if session_summary:
+        user_prompt += (
+            f"Session history summary (candidate's patterns across prior attempts):\n"
+            f"{session_summary}\n\n"
+        )
+    if prev_response:
+        user_prompt += (
+            f"Previous attempt response:\n{prev_response}\n\n"
+            "Compare the current response to the previous attempt and include a 'comparison' key in your JSON."
+        )
+    else:
+        user_prompt += "Provide your evaluation as a JSON object."
+
+    completion = _openai_client().chat.completions.create(
+        model="gpt-4o",
+        temperature=0.4,
+        response_format={"type": "json_object"},
+        messages=[
+            {"role": "system", "content": WRITING_EVAL_SYSTEM_PROMPT},
+            {"role": "user", "content": user_prompt},
+        ],
+    )
+    evaluation = json.loads(completion.choices[0].message.content)
+    required = {"score", "content", "grammar", "vocabulary", "readability",
+                "task_fulfillment", "strengths", "weaknesses", "improvements", "example_better_response"}
+    missing = required - evaluation.keys()
+    if missing:
+        raise ValueError(f"OpenAI response missing keys: {missing}")
+    return evaluation
+
+
 def _update_session_summary(session, transcript, score, evaluation):
     """Synthesize a rolling plain-text summary of all attempts in the session."""
     existing = session.response_summary.strip()
@@ -298,12 +416,24 @@ def sessions_list_create(request):
             return JsonResponse({"error": "Invalid task_id"}, status=400)
 
         task_name = TASK_NAMES[task_id]
+        task_type = "writing" if task_id in WRITING_TASKS else "speaking"
         n = Session.objects.filter(task_id=task_id).count() + 1
+
+        question_ref = None
+        if question:
+            question_ref, _ = Question.objects.get_or_create(
+                task_id=task_id,
+                text=question,
+                defaults={"task_name": task_name, "task_type": task_type, "source": "manual"},
+            )
+
         session = Session.objects.create(
             task_id=task_id,
             task_name=task_name,
+            task_type=task_type,
             name=f"{task_name} — Session {n}",
             question=question,
+            question_ref=question_ref,
         )
         return JsonResponse({
             "id": session.id,
@@ -354,13 +484,16 @@ def session_detail(request, pk):
     attempts = session.attempts.all()
     return JsonResponse({
         **_session_payload(session),
+        "task_type": session.task_type,
         "attempts": [
             {
                 "id": a.id,
                 "created_at": a.created_at.isoformat(),
                 "score": a.score,
                 "duration_sec": a.duration_sec,
+                "task_type": a.task_type,
                 "transcript": a.transcript,
+                "response_text": a.response_text,
                 "question": a.question,
                 "user_name": a.user_name,
                 "evaluation_json": a.evaluation_json,
@@ -482,6 +615,89 @@ def submit(request):
     })
 
 
+# ── Writing submit ────────────────────────────────────────────────────────────
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def submit_writing(request):
+    try:
+        body = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({"error": "Invalid JSON body"}, status=400)
+
+    task_id    = body.get("task_id")
+    question   = body.get("question", "").strip()
+    response_text = body.get("response_text", "").strip()
+    duration_sec  = body.get("duration_sec")
+    session_id    = body.get("session_id", "")
+    user_name     = body.get("user_name", "").strip()
+
+    if not task_id:
+        return JsonResponse({"error": "task_id is required"}, status=400)
+    try:
+        task_id = int(task_id)
+    except (ValueError, TypeError):
+        return JsonResponse({"error": "task_id must be an integer"}, status=400)
+    if task_id not in WRITING_TASKS:
+        return JsonResponse({"error": "Invalid task_id for writing (must be 9 or 10)"}, status=400)
+    if not response_text:
+        return JsonResponse({"error": "Response text is empty"}, status=400)
+
+    session = None
+    if session_id:
+        try:
+            session = Session.objects.get(pk=int(session_id))
+            if not question and session.question:
+                question = session.question
+        except (Session.DoesNotExist, ValueError):
+            pass
+
+    prev_score    = None
+    prev_response = None
+    session_summary = None
+    if session and session.attempts.count() > 0:
+        last = session.attempts.order_by("-created_at").first()
+        if last:
+            prev_score = last.score
+            if last.response_text:
+                prev_response = last.response_text
+        if session.response_summary:
+            session_summary = session.response_summary
+
+    task_name = TASK_NAMES[task_id]
+
+    try:
+        evaluation = _openai_evaluate_writing(
+            task_id, task_name, response_text, duration_sec, question,
+            prev_response=prev_response,
+            session_summary=session_summary,
+        )
+    except Exception as e:
+        return JsonResponse({"error": f"Evaluation failed: {e}"}, status=502)
+
+    attempt = Attempt.objects.create(
+        task_id=task_id,
+        task_name=task_name,
+        task_type="writing",
+        response_text=response_text,
+        score=evaluation.get("score"),
+        evaluation_json=evaluation,
+        duration_sec=int(duration_sec) if duration_sec else None,
+        question=question,
+        user_name=user_name,
+        session=session,
+    )
+
+    if session:
+        _update_session_summary(session, response_text, evaluation.get("score"), evaluation)
+
+    return JsonResponse({
+        "id": attempt.id,
+        "prev_score": prev_score,
+        **evaluation,
+    })
+
+
 # ── Legacy endpoints (kept for compatibility) ─────────────────────────────────
 
 @csrf_exempt
@@ -542,7 +758,7 @@ def generate_question(request):
 
     task_id = body.get("task_id")
     if task_id not in QUESTION_PROMPTS:
-        return JsonResponse({"error": "Question generation is only available for tasks 1, 2, 6, and 7"}, status=400)
+        return JsonResponse({"error": "Question generation is not available for this task"}, status=400)
     if not settings.OPENAI_API_KEY:
         return JsonResponse({"error": "OPENAI_API_KEY not configured"}, status=500)
 
@@ -555,7 +771,33 @@ def generate_question(request):
     except Exception as e:
         return JsonResponse({"error": f"OpenAI request failed: {e}"}, status=502)
 
-    return JsonResponse({"question": completion.choices[0].message.content.strip()})
+    text = completion.choices[0].message.content.strip()
+    task_name = TASK_NAMES[task_id]
+    task_type = "writing" if task_id in WRITING_TASKS else "speaking"
+    Question.objects.get_or_create(
+        task_id=task_id,
+        text=text,
+        defaults={"task_name": task_name, "task_type": task_type, "source": "ai"},
+    )
+    return JsonResponse({"question": text})
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def list_questions(request):
+    qs = Question.objects.all()
+    return JsonResponse([
+        {
+            "id": q.id,
+            "task_id": q.task_id,
+            "task_name": q.task_name,
+            "task_type": q.task_type,
+            "text": q.text,
+            "source": q.source,
+            "created_at": q.created_at.isoformat(),
+        }
+        for q in qs
+    ], safe=False)
 
 
 @csrf_exempt
@@ -608,6 +850,7 @@ def list_attempts(request):
             "created_at": a.created_at.isoformat(),
             "task_id": a.task_id,
             "task_name": a.task_name,
+            "task_type": a.task_type,
             "score": a.score,
             "duration_sec": a.duration_sec,
             "question": a.question,
@@ -626,13 +869,15 @@ def reevaluate_attempt(request, pk):
     except Attempt.DoesNotExist:
         return JsonResponse({"error": "Not found"}, status=404)
 
-    if not attempt.transcript.strip():
-        return JsonResponse({"error": "No transcript to evaluate"}, status=400)
+    is_writing = attempt.task_type == "writing"
+    response_content = attempt.response_text if is_writing else attempt.transcript
+
+    if not response_content.strip():
+        return JsonResponse({"error": "No response to evaluate"}, status=400)
 
     old_score = attempt.score
 
-    # Find the attempt that came just before this one in the same session
-    prev_transcript = None
+    prev_content = None
     session_summary = None
     if attempt.session_id:
         prev = (
@@ -641,22 +886,27 @@ def reevaluate_attempt(request, pk):
             .order_by("-created_at")
             .first()
         )
-        if prev and prev.transcript:
-            prev_transcript = prev.transcript
+        if prev:
+            prev_content = prev.response_text if is_writing else prev.transcript
         session = attempt.session
         if session and session.response_summary:
             session_summary = session.response_summary
 
     try:
-        evaluation = _openai_evaluate(
-            attempt.task_id,
-            attempt.task_name,
-            attempt.transcript,
-            attempt.duration_sec,
-            attempt.question,
-            prev_transcript=prev_transcript,
-            session_summary=session_summary,
-        )
+        if is_writing:
+            evaluation = _openai_evaluate_writing(
+                attempt.task_id, attempt.task_name, response_content,
+                attempt.duration_sec, attempt.question,
+                prev_response=prev_content,
+                session_summary=session_summary,
+            )
+        else:
+            evaluation = _openai_evaluate(
+                attempt.task_id, attempt.task_name, response_content,
+                attempt.duration_sec, attempt.question,
+                prev_transcript=prev_content,
+                session_summary=session_summary,
+            )
     except Exception as e:
         return JsonResponse({"error": f"Evaluation failed: {e}"}, status=502)
 
@@ -680,7 +930,9 @@ def attempt_detail(request, pk):
             "created_at": attempt.created_at.isoformat(),
             "task_id": attempt.task_id,
             "task_name": attempt.task_name,
+            "task_type": attempt.task_type,
             "transcript": attempt.transcript,
+            "response_text": attempt.response_text,
             "score": attempt.score,
             "evaluation_json": attempt.evaluation_json,
             "duration_sec": attempt.duration_sec,

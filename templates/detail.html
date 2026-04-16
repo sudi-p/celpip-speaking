@@ -39,28 +39,41 @@
         return;
       }
 
-      document.getElementById("page-title").textContent =
-        `Task ${attempt.task_id}: ${attempt.task_name}`;
+      document.getElementById("page-title").textContent = attempt.task_name;
 
-      const date = new Date(attempt.created_at).toLocaleString();
-      const duration = attempt.duration_sec != null ? `${attempt.duration_sec}s` : "—";
+      const isWriting = attempt.task_type === "writing";
+      const date      = new Date(attempt.created_at).toLocaleString();
+      const duration  = attempt.duration_sec != null ? fmtTime(attempt.duration_sec) : "—";
 
       const questionBlock = attempt.question
-        ? `<div class="question-panel">
+        ? `<div style="margin-bottom:1.25rem">
              <div class="question-label">Question</div>
              <div class="question-text">${escapeHtml(attempt.question)}</div>
            </div>`
         : "";
 
+      const metaLine = isWriting
+        ? `Submitted ${escapeHtml(date)} &middot; Time used: ${escapeHtml(duration)}`
+        : `Recorded ${escapeHtml(date)} &middot; Duration: ${escapeHtml(duration)}`;
+
+      const responseBlock = isWriting
+        ? `<div class="panel">
+             <h2>Written Response</h2>
+             <p style="line-height:1.75;white-space:pre-wrap;font-size:.97rem">${escapeHtml(attempt.response_text || "")}</p>
+           </div>`
+        : `${attempt.audio_url
+             ? `<div style="margin-bottom:1.25rem"><audio controls src="${escapeHtml(attempt.audio_url)}" style="width:100%;border-radius:8px"></audio></div>`
+             : ""}
+           <div class="panel">
+             <h2>Transcript</h2>
+             <p style="line-height:1.7;white-space:pre-wrap">${escapeHtml(attempt.transcript || "")}</p>
+           </div>`;
+
       const content = document.getElementById("content");
       content.innerHTML = `
-        <p class="meta">Recorded ${escapeHtml(date)} &middot; Duration: ${escapeHtml(duration)}</p>
+        <p class="meta">${metaLine}</p>
         ${questionBlock}
-        ${attempt.audio_url ? `<div style="margin-bottom:1.25rem"><audio controls src="${escapeHtml(attempt.audio_url)}" style="width:100%;border-radius:8px"></audio></div>` : ""}
-        <div class="panel">
-          <h2>Transcript</h2>
-          <p id="transcript-text" style="line-height:1.7;white-space:pre-wrap">${escapeHtml(attempt.transcript || "")}</p>
-        </div>
+        ${responseBlock}
         <div class="panel">
           <h2>Evaluation</h2>
           <div id="eval-container"></div>
@@ -68,7 +81,11 @@
       `;
 
       if (attempt.evaluation_json) {
-        renderEvaluation(document.getElementById("eval-container"), attempt.evaluation_json);
+        if (isWriting) {
+          renderWritingEvaluation(document.getElementById("eval-container"), attempt.evaluation_json);
+        } else {
+          renderEvaluation(document.getElementById("eval-container"), attempt.evaluation_json);
+        }
       } else {
         document.getElementById("eval-container").textContent = "No evaluation available.";
       }
