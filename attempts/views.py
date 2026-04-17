@@ -26,52 +26,107 @@ WRITING_TASKS = {9, 10}
 # Tasks where a scenario is inferred from the first transcript
 SCENARIO_TASKS = {3, 4, 5, 8}
 
+_TASK1_DOMAINS = (
+    "finances, health, career change, starting a business, returning to school, "
+    "parenting, aging parents, immigration, housing, marriage, friendship conflict, "
+    "fitness goals, social media habits, volunteering, learning a new skill, "
+    "dealing with a difficult coworker, managing debt, adopting a pet, "
+    "long-distance relationship, work-life balance, retirement planning"
+)
+
+_TASK2_DOMAINS = (
+    "overcoming fear, dealing with failure, unexpected kindness from a stranger, "
+    "learning something the hard way, a time you changed your mind, "
+    "a difficult conversation you had, a risk that paid off, "
+    "adapting to a new culture or city, a mentor who influenced you, "
+    "a moment you felt proud, handling an embarrassing situation, "
+    "a time you had to make a quick decision, working on a team challenge"
+)
+
+_TASK6_DOMAINS = (
+    "billing dispute with a service provider, misunderstanding with a landlord, "
+    "conflict with a classmate over a group project, a neighbour complaint, "
+    "receiving incorrect information from an official, a coworker taking credit for your work, "
+    "being double-charged at a store, a miscommunication with a manager, "
+    "a damaged package delivery, being left off an important email chain, "
+    "a scheduling conflict with a client, noise complaint in an apartment building"
+)
+
+_TASK7_TOPICS = (
+    "mandatory physical education in high school, four-day work weeks, "
+    "banning single-use plastics, social media age limits, "
+    "remote work as a permanent option, public surveillance cameras, "
+    "gap years before university, universal basic income, "
+    "smartphones in classrooms, electric vehicles replacing gas cars, "
+    "standardized testing in schools, free public transit in cities"
+)
+
+_WRITING1_SCENARIOS = (
+    "workplace complaint, noise complaint to a landlord, requesting a refund, "
+    "apologizing to a client, inviting a colleague to an event, "
+    "inquiring about a community program, requesting a schedule change from a manager, "
+    "reporting a billing error to a utility company, asking a professor for an extension, "
+    "thanking a volunteer coordinator, following up on a job application, "
+    "reporting a safety concern to building management"
+)
+
+_WRITING2_TOPICS = (
+    "screen time limits for adults, mandatory volunteering in schools, "
+    "open-plan offices vs. private workspaces, reducing car use in cities, "
+    "online shopping vs. local businesses, homework policies in elementary school, "
+    "universal healthcare funding, social media's effect on self-esteem, "
+    "merit-based vs. seniority-based promotions, reducing meat consumption, "
+    "retraining programs for workers displaced by automation"
+)
+
 QUESTION_PROMPTS = {
     1: (
         "Write a single CELPIP Speaking Task 1 (Giving Advice) question. "
-        "The format is: a friend or family member is in a realistic life situation and has asked the test-taker for advice. "
-        "The scenario should involve a concrete everyday dilemma (e.g. job change, moving city, relationship, education). "
-        "End with 'What advice would you give?' or similar. "
+        "A friend or family member is in a realistic life situation and has asked the test-taker for advice. "
+        f"Choose a domain randomly from this list and build a unique, specific scenario around it: {_TASK1_DOMAINS}. "
+        "Do NOT use job offers in another city or any scenario about moving for work — those are overused. "
+        "End with 'What advice would you give?' or a natural equivalent. "
         "Write only the question text, no labels or explanations."
     ),
     2: (
         "Write a single CELPIP Speaking Task 2 (Describing a Personal Experience) question. "
-        "The format is: ask the test-taker to talk about a specific personal memory or experience "
-        "(e.g. a challenge they overcame, an important decision, a memorable event). "
+        "Ask the test-taker to talk about a specific personal memory or experience. "
+        f"Pick a fresh angle from this list: {_TASK2_DOMAINS}. "
         "Use natural prompting language such as 'Describe a time when…' or 'Talk about an experience where…'. "
+        "Each question must feel distinct — avoid generic prompts about 'a challenge' or 'an important decision'. "
         "Write only the question text, no labels or explanations."
     ),
     6: (
         "Write a single CELPIP Speaking Task 6 (Dealing with a Difficult Situation) question. "
-        "The format is: place the test-taker in an awkward or stressful real-life scenario "
-        "(e.g. a misunderstanding with a colleague, an unexpected problem at work or home, a conflict with a neighbour). "
-        "Ask how they would handle it. "
+        "Place the test-taker in an awkward or stressful real-life scenario and ask how they would handle it. "
+        f"Draw from this list of domains: {_TASK6_DOMAINS}. "
+        "Be specific — name a concrete situation, not a vague one. "
         "Write only the question text, no labels or explanations."
     ),
     7: (
         "Write a single CELPIP Speaking Task 7 (Expressing an Opinion) question. "
-        "The format is: present a debatable statement about society, technology, education, work, or lifestyle. "
-        "Ask whether the test-taker agrees or disagrees, and to support their view with reasons. "
+        "Present a debatable statement and ask whether the test-taker agrees or disagrees, with reasons. "
+        f"Pick one topic from this list: {_TASK7_TOPICS}. "
+        "Rotate through topics — do not keep returning to technology or education. "
         "Write only the question text, no labels or explanations."
     ),
     9: (
-        "Write a single CELPIP Writing Task 1 question. "
-        "Task 1 is an email writing task. The test-taker must write a formal or semi-formal email of approximately 150–200 words. "
-        "Create a realistic everyday scenario involving one of: a complaint, a request, an apology, an invitation, an inquiry, or a thank-you. "
-        "Start with 1–2 sentences beginning with 'You are...' to set the context. "
-        "Include 3–4 bullet points describing the key information that must be addressed in the email, "
-        "but vary the number slightly when appropriate to keep the task natural and realistic. "
-        "Topics should come from everyday situations such as workplace communication, housing issues, public services, travel, education, or community events. "
+        "Write a single CELPIP Writing Task 1 (Email) question. "
+        "The test-taker must write a formal or semi-formal email of approximately 150–200 words. "
+        f"Build a scenario around one of these: {_WRITING1_SCENARIOS}. "
+        "Start with 1–2 sentences beginning with 'You are...' to set the context, "
+        "then include 3–4 bullet points of key information to address. "
+        "Vary the scenario — do not reuse workplaces or landlord disputes repeatedly. "
         "Write only the task text, with no labels, no word count instructions, and no extra explanations."
     ),
     10: (
-        "Write a single CELPIP Writing Task 2 question. "
-        "Task 2 is a survey-response writing task. The test-taker must write approximately 150–200 words expressing an opinion. "
-        "Format: Begin with a 1–2 sentence survey-style context introducing a real-life situation or public opinion debate, "
-        "followed by a clear opinion question asking the test-taker to express their view. "
-        "Topics should be relatable: technology and daily life, remote work, urban vs. rural living, education systems, environmental habits, or community involvement. "
-        "The question must not include bullet-point prompts, structure guidance, or suggestions for how many reasons or examples to provide. "
-        "Write only the task text, no labels, no word count instructions, and no formatting guidance."
+        "Write a single CELPIP Writing Task 2 (Survey Response) question. "
+        "The test-taker must write approximately 150–200 words expressing an opinion. "
+        "Begin with 1–2 survey-style context sentences, then ask a clear opinion question. "
+        f"Pick a topic from this varied list: {_WRITING2_TOPICS}. "
+        "Rotate topics — avoid reusing technology or environment themes back-to-back. "
+        "Do not include bullet-point prompts, structure guidance, or word count instructions. "
+        "Write only the task text, no labels, no formatting guidance."
     ),
 }
 
