@@ -98,6 +98,12 @@ FRONTEND_DIR = BASE_DIR / "templates"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# ── Authentication ────────────────────────────────────────────────────────────
+AUTH_USER_MODEL = 'attempts.User'
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = not DEBUG   # True on Render (DEBUG=False), False locally
+
 # ── API keys ──────────────────────────────────────────────────────────────────
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY", "")
 OPENAI_API_KEY   = os.environ.get("OPENAI_API_KEY", "")

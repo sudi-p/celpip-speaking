@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — CELPIP Practice</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-container {
+      background: #fff;
+      border-radius: 14px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .auth-title { font-size: 1.25rem; font-weight: 800; color: #1a1a2e; }
+    .auth-input {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      font-size: 1rem;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+    .auth-input:focus { border-color: #4f46e5; }
+    .auth-input.input-error { border-color: #dc2626; }
+    .auth-error {
+      padding: 0.75rem;
+      background: #fee2e2;
+      border-radius: 8px;
+      color: #991b1b;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .auth-error.show { display: block; }
+    .auth-button { width: 100%; }
+    .auth-divider { text-align: center; color: #9ca3af; font-size: 0.9rem; margin-top: 0.5rem; }
+    .auth-link { color: #4f46e5; text-decoration: none; font-weight: 600; }
+    .auth-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h1 class="auth-title">Sign Up</h1>
+    <div class="auth-error" id="error-message"></div>
+    <input
+      type="email"
+      class="auth-input"
+      id="email"
+      placeholder="Email address"
+      required
+      autofocus
+    />
+    <input
+      type="text"
+      class="auth-input"
+      id="display-name"
+      placeholder="Display name (optional)"
+      maxlength="100"
+    />
+    <input
+      type="password"
+      class="auth-input"
+      id="password"
+      placeholder="Password (min 8 characters)"
+      required
+    />
+    <input
+      type="password"
+      class="auth-input"
+      id="confirm-password"
+      placeholder="Confirm password"
+      required
+    />
+    <button class="btn btn-primary auth-button" id="register-btn">Create Account</button>
+    <div class="auth-divider">
+      Already have an account? <a href="login.html" class="auth-link">Log in</a>
+    </div>
+  </div>
+
+  <script>
+    const emailInput = document.getElementById('email');
+    const displayNameInput = document.getElementById('display-name');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const registerBtn = document.getElementById('register-btn');
+    const errorDiv = document.getElementById('error-message');
+
+    function showError(msg) {
+      errorDiv.textContent = msg;
+      errorDiv.classList.add('show');
+    }
+
+    function hideError() {
+      errorDiv.classList.remove('show');
+    }
+
+    async function handleRegister() {
+      hideError();
+      const email = emailInput.value.trim();
+      const displayName = displayNameInput.value.trim();
+      const password = passwordInput.value.trim();
+      const confirmPassword = confirmPasswordInput.value.trim();
+
+      if (!email || !password || !confirmPassword) {
+        showError('Email and password are required');
+        return;
+      }
+
+      if (password.length < 8) {
+        showError('Password must be at least 8 characters');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showError('Passwords do not match');
+        return;
+      }
+
+      registerBtn.disabled = true;
+      try {
+        const resp = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            password,
+            display_name: displayName,
+          }),
+          credentials: 'include',
+        });
+
+        if (!resp.ok) {
+          const data = await resp.json().catch(() => ({}));
+          throw new Error(data.error || 'Registration failed');
+        }
+
+        window.location.href = '/';
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        registerBtn.disabled = false;
+      }
+    }
+
+    registerBtn.addEventListener('click', handleRegister);
+    emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+    passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+    confirmPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+  </script>
+</body>
+</html>

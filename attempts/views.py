@@ -1,12 +1,28 @@
 import json
 import requests
+from functools import wraps
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from .models import Attempt, Question, Session
+from .models import Attempt, Question, Session, User, CompanionRequest
+
+
+def require_auth(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Authentication required'}, status=401)
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+def _get_accepted_companions(user):
+    sent = CompanionRequest.objects.filter(from_user=user, status='accepted').values_list('to_user_id', flat=True)
+    received = CompanionRequest.objects.filter(to_user=user, status='accepted').values_list('from_user_id', flat=True)
+    return User.objects.filter(pk__in=list(sent) + list(received))
 
 TASK_NAMES = {
     1: "Giving Advice",
@@ -476,10 +492,16 @@ def _generate_scenario(task_id, task_name, transcript):
 # ── Session endpoints ─────────────────────────────────────────────────────────
 
 @csrf_exempt
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+@require_auth
 def sessions_list_create(request):
     if request.method == "GET":
         from django.db.models import Max
-        qs = Session.objects.annotate(
+        companions = _get_accepted_companions(request.user).filter(companion_visibility=True)
+        qs = Session.objects.filter(
+            Q(user=request.user) | Q(user__in=companions)
+        ).annotate(
             attempt_count=Count("attempts"),
             avg_score=Avg("attempts__score"),
             latest_attempt=Max("attempts__created_at"),
@@ -500,7 +522,7 @@ def sessions_list_create(request):
 
         task_name = TASK_NAMES[task_id]
         task_type = "writing" if task_id in WRITING_TASKS else "speaking"
-        n = Session.objects.filter(task_id=task_id).count() + 1
+        n = Session.objects.filter(user=request.user, task_id=task_id).count() + 1
 
         question_ref = None
         if question:
@@ -511,6 +533,7 @@ def sessions_list_create(request):
             )
 
         session = Session.objects.create(
+            user=request.user,
             task_id=task_id,
             task_name=task_name,
             task_type=task_type,
@@ -532,6 +555,7 @@ def sessions_list_create(request):
 
 @csrf_exempt
 @require_http_methods(["GET"])
+@require_auth
 def latest_session(request):
     task_id = request.GET.get("task_id")
     if not task_id:
@@ -543,7 +567,7 @@ def latest_session(request):
 
     session = (
         Session.objects
-        .filter(task_id=task_id)
+        .filter(user=request.user, task_id=task_id)
         .annotate(attempt_count=Count("attempts"), avg_score=Avg("attempts__score"))
         .first()
     )
@@ -554,6 +578,7 @@ def latest_session(request):
 
 @csrf_exempt
 @require_http_methods(["GET"])
+@require_auth
 def session_detail(request, pk):
     try:
         session = (
@@ -562,6 +587,10 @@ def session_detail(request, pk):
             .get(pk=pk)
         )
     except Session.DoesNotExist:
+        return JsonResponse({"error": "Not found"}, status=404)
+
+    companions = _get_accepted_companions(request.user).filter(companion_visibility=True).values_list('id', flat=True)
+    if session.user != request.user and session.user_id not in companions:
         return JsonResponse({"error": "Not found"}, status=404)
 
     attempts = session.attempts.all()
@@ -591,6 +620,7 @@ def session_detail(request, pk):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@require_auth
 def submit(request):
     task_id = request.POST.get("task_id")
     duration_sec = request.POST.get("duration_sec")
@@ -598,6 +628,9 @@ def submit(request):
     session_id = request.POST.get("session_id", "").strip()
     user_name = request.POST.get("user_name", "").strip()
     audio = request.FILES.get("audio")
+
+    if not user_name:
+        user_name = request.user.display_name or request.user.email
 
     if not task_id:
         return JsonResponse({"error": "task_id is required"}, status=400)
@@ -659,6 +692,7 @@ def submit(request):
         return JsonResponse({"error": f"Evaluation failed: {e}"}, status=502)
 
     attempt = Attempt.objects.create(
+        user=request.user,
         task_id=task_id,
         task_name=task_name,
         transcript=transcript,
@@ -703,6 +737,7 @@ def submit(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@require_auth
 def submit_writing(request):
     try:
         body = json.loads(request.body)
@@ -715,6 +750,9 @@ def submit_writing(request):
     duration_sec  = body.get("duration_sec")
     session_id    = body.get("session_id", "")
     user_name     = body.get("user_name", "").strip()
+
+    if not user_name:
+        user_name = request.user.display_name or request.user.email
 
     if not task_id:
         return JsonResponse({"error": "task_id is required"}, status=400)
@@ -760,6 +798,7 @@ def submit_writing(request):
         return JsonResponse({"error": f"Evaluation failed: {e}"}, status=502)
 
     attempt = Attempt.objects.create(
+        user=request.user,
         task_id=task_id,
         task_name=task_name,
         task_type="writing",
@@ -786,6 +825,7 @@ def submit_writing(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@require_auth
 def transcribe(request):
     audio_data = request.body
     if not audio_data:
@@ -802,6 +842,7 @@ def transcribe(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@require_auth
 def evaluate(request):
     try:
         body = json.loads(request.body)
@@ -825,6 +866,7 @@ def evaluate(request):
         return JsonResponse({"error": str(e)}, status=502)
 
     attempt = Attempt.objects.create(
+        user=request.user,
         task_id=task_id, task_name=task_name, transcript=transcript,
         score=evaluation.get("score"), evaluation_json=evaluation,
         duration_sec=duration_sec, question=question,
@@ -834,6 +876,7 @@ def evaluate(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@require_auth
 def generate_question(request):
     try:
         body = json.loads(request.body)
@@ -869,6 +912,8 @@ def generate_question(request):
 @csrf_exempt
 def list_questions(request):
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Authentication required'}, status=401)
         try:
             body = json.loads(request.body)
         except (json.JSONDecodeError, ValueError):
@@ -915,16 +960,23 @@ def list_questions(request):
 
 @csrf_exempt
 @require_http_methods(["GET"])
+@require_auth
 def activity_logs(request):
+    if request.user.is_staff:
+        companions = User.objects.all()
+    else:
+        companions = _get_accepted_companions(request.user).filter(companion_visibility=True)
+    user_ids = [request.user.id] + list(companions.values_list('id', flat=True))
+
     logs = []
 
     # Index first attempt per session to derive user_name for session_started events
     first_attempt_by_session = {}
-    for a in Attempt.objects.filter(session__isnull=False).order_by("created_at"):
+    for a in Attempt.objects.filter(session__isnull=False, user_id__in=user_ids).order_by("created_at"):
         if a.session_id not in first_attempt_by_session:
             first_attempt_by_session[a.session_id] = a
 
-    for s in Session.objects.all():
+    for s in Session.objects.filter(user_id__in=user_ids):
         fa = first_attempt_by_session.get(s.id)
         logs.append({
             "type": "session_started",
@@ -936,7 +988,7 @@ def activity_logs(request):
             "user_name": fa.user_name if fa else "",
         })
 
-    for a in Attempt.objects.select_related("session").all():
+    for a in Attempt.objects.filter(user_id__in=user_ids).select_related("session"):
         logs.append({
             "type": "attempt_submitted",
             "timestamp": a.created_at.isoformat(),
@@ -955,8 +1007,9 @@ def activity_logs(request):
 
 @csrf_exempt
 @require_http_methods(["GET"])
+@require_auth
 def list_attempts(request):
-    qs = Attempt.objects.all()[:100]
+    qs = Attempt.objects.filter(user=request.user)[:100]
     return JsonResponse([
         {
             "id": a.id,
@@ -976,10 +1029,14 @@ def list_attempts(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@require_auth
 def reevaluate_attempt(request, pk):
     try:
         attempt = Attempt.objects.get(pk=pk)
     except Attempt.DoesNotExist:
+        return JsonResponse({"error": "Not found"}, status=404)
+
+    if attempt.user != request.user:
         return JsonResponse({"error": "Not found"}, status=404)
 
     is_writing = attempt.task_type == "writing"
@@ -1031,6 +1088,7 @@ def reevaluate_attempt(request, pk):
 
 
 @csrf_exempt
+@require_auth
 def attempt_detail(request, pk):
     try:
         attempt = Attempt.objects.get(pk=pk)
@@ -1038,6 +1096,9 @@ def attempt_detail(request, pk):
         return JsonResponse({"error": "Not found"}, status=404)
 
     if request.method == "GET":
+        companions = _get_accepted_companions(request.user).filter(companion_visibility=True).values_list('id', flat=True)
+        if attempt.user != request.user and attempt.user_id not in companions:
+            return JsonResponse({"error": "Not found"}, status=404)
         return JsonResponse({
             "id": attempt.id,
             "created_at": attempt.created_at.isoformat(),
@@ -1054,6 +1115,8 @@ def attempt_detail(request, pk):
             "session_id": attempt.session_id,
         })
     elif request.method == "DELETE":
+        if attempt.user != request.user:
+            return JsonResponse({"error": "Not found"}, status=404)
         attempt.delete()
         return JsonResponse({"ok": True})
     return JsonResponse({"error": "Method not allowed"}, status=405)

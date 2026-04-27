@@ -9,19 +9,13 @@
 <body>
   {% include "partials/navbar.html" %}
 
-  <div id="name-gate" class="name-gate" style="display:none">
-    <div class="name-gate-box">
-      <div class="name-gate-title">Welcome to CELPIP Practice</div>
-      <p class="name-gate-sub">Enter your name to continue</p>
-      <input type="text" id="gate-name-input" class="name-gate-input" placeholder="Your name" maxlength="50" />
-      <button class="btn btn-primary" id="gate-submit" style="width:100%">Continue &rarr;</button>
-    </div>
-  </div>
+  <!-- minimal gate shown while JS auth check runs -->
+  <div id="auth-gate" style="display:none"></div>
 
   {% block body %}{% endblock %}
 
   <script src="app.js"></script>
   {% block scripts %}{% endblock %}
-  <script>initNameUI();</script>
+  <script>initAuthUI();</script>
 </body>
 </html>

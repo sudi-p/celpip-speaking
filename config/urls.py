@@ -9,6 +9,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("attempts.urls")),
 
+    # Auth pages
+    path("login.html", TemplateView.as_view(template_name="login.html")),
+    path("register.html", TemplateView.as_view(template_name="register.html")),
+
     # Frontend HTML pages — served through Django's template engine
     path("", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"}), name="index"),
     path("index.html", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"})),
@@ -18,6 +22,7 @@ urlpatterns = [
     path("logs.html", TemplateView.as_view(template_name="logs.html", extra_context={"active_page": "logs"})),
     path("write.html", TemplateView.as_view(template_name="write.html", extra_context={"active_page": "write"})),
     path("questions.html", TemplateView.as_view(template_name="questions.html", extra_context={"active_page": "questions"})),
+    path("settings.html", TemplateView.as_view(template_name="settings.html", extra_context={"active_page": "settings"})),
 
     # Media files (audio recordings) — must come BEFORE the catch-all
     re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
