@@ -82,6 +82,11 @@ class Session(models.Model):
         related_name="sessions",
     )
     response_summary = models.TextField(blank=True, default="")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name="sessions"
+    )
 
     class Meta:
         ordering = ["-created_at"]
@@ -107,6 +112,11 @@ class Attempt(models.Model):
         Session, null=True, blank=True,
         on_delete=models.SET_NULL,
         related_name="attempts",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name="attempts"
     )
 
     class Meta:
