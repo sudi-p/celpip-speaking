@@ -7,25 +7,40 @@
       <h1>Practice History</h1>
     </header>
     <div id="error-area" class="error-msg"></div>
+
+    <!-- Filter buttons -->
+    <div id="filter-area" style="display:none;margin-bottom:1.5rem">
+      <div style="margin-bottom:.75rem;font-size:.9rem;color:#666">Filter by task:</div>
+      <div id="filter-buttons" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
+    </div>
+
     <div id="content"></div>
   </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  async function load() {
-    let sessions;
-    try {
-      sessions = await apiGet("/sessions");
-    } catch (e) {
-      document.getElementById("error-area").textContent = `Failed to load history: ${e.message}`;
-      return;
-    }
+  let allSessions = [];
+  let selectedFilter = "all";
 
+  const TASK_LABELS = {
+    1: "Task 1: Advice",
+    2: "Task 2: Experience",
+    3: "Task 3: Scene",
+    4: "Task 4: Predictions",
+    5: "Task 5: Comparing",
+    6: "Task 6: Difficult",
+    7: "Task 7: Opinions",
+    8: "Task 8: Unusual",
+    9: "Task 9: Writing (Email)",
+    10: "Task 10: Writing (Opinion)",
+  };
+
+  function renderTable(sessions) {
     const content = document.getElementById("content");
 
     if (sessions.length === 0) {
-      content.innerHTML = `<p class="empty-msg">No sessions yet — go practice!</p>`;
+      content.innerHTML = `<p class="empty-msg">No sessions for this filter — go practice!</p>`;
       return;
     }
 
@@ -82,6 +97,70 @@
         window.location.href = row.dataset.href;
       });
     });
+  }
+
+  function setupFilters() {
+    const filterArea = document.getElementById("filter-area");
+    const filterButtons = document.getElementById("filter-buttons");
+
+    // Create "All" button
+    const allBtn = document.createElement("button");
+    allBtn.className = "btn btn-secondary";
+    allBtn.textContent = "All";
+    allBtn.style.cssText = "font-size:.85rem;padding:.4rem .75rem";
+    allBtn.classList.add("filter-active");
+    allBtn.addEventListener("click", () => {
+      selectedFilter = "all";
+      updateFilterButtons();
+      renderTable(allSessions);
+    });
+    filterButtons.appendChild(allBtn);
+
+    // Create task filter buttons
+    for (let taskId = 1; taskId <= 10; taskId++) {
+      const btn = document.createElement("button");
+      btn.className = "btn btn-secondary";
+      btn.textContent = TASK_LABELS[taskId];
+      btn.style.cssText = "font-size:.85rem;padding:.4rem .75rem";
+      btn.dataset.taskId = taskId;
+      btn.addEventListener("click", () => {
+        selectedFilter = taskId;
+        updateFilterButtons();
+        const filtered = allSessions.filter(s => s.task_id === taskId);
+        renderTable(filtered);
+      });
+      filterButtons.appendChild(btn);
+    }
+
+    filterArea.style.display = "block";
+  }
+
+  function updateFilterButtons() {
+    document.querySelectorAll("#filter-buttons button").forEach(btn => {
+      btn.classList.remove("filter-active");
+      if (selectedFilter === "all" && btn.textContent === "All") {
+        btn.classList.add("filter-active");
+      } else if (selectedFilter !== "all" && parseInt(btn.dataset.taskId) === selectedFilter) {
+        btn.classList.add("filter-active");
+      }
+    });
+  }
+
+  async function load() {
+    try {
+      allSessions = await apiGet("/sessions");
+    } catch (e) {
+      document.getElementById("error-area").textContent = `Failed to load history: ${e.message}`;
+      return;
+    }
+
+    if (allSessions.length === 0) {
+      document.getElementById("content").innerHTML = `<p class="empty-msg">No sessions yet — go practice!</p>`;
+      return;
+    }
+
+    setupFilters();
+    renderTable(allSessions);
   }
 
   load();

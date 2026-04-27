@@ -151,10 +151,16 @@ function renderEvaluation(containerEl, evalObj) {
     <div class="eval-section">
       <h3>Improvements</h3><ul>${listItems(evalObj.improvements)}</ul>
     </div>
-    <div class="eval-section">
-      <h3>Example Better Response</h3>
-      <p class="example-response">${escapeHtml(evalObj.example_better_response ?? "")}</p>
-    </div>
+    ${(evalObj.enhanced_user_response || evalObj.example_better_response) ? `
+    <div class="eval-section example-response-section">
+      <h3>Your Response — Enhanced to 12/12</h3>
+      <p class="example-response enhanced">${escapeHtml(evalObj.enhanced_user_response || evalObj.example_better_response || "")}</p>
+    </div>` : ""}
+    ${evalObj.ideal_response ? `
+    <div class="eval-section example-response-section ideal">
+      <h3>Ideal 12/12 Response</h3>
+      <p class="example-response ideal">${escapeHtml(evalObj.ideal_response)}</p>
+    </div>` : ""}
   `;
 }
 
@@ -230,10 +236,16 @@ function renderWritingEvaluation(containerEl, evalObj) {
     <div class="eval-section">
       <h3>Improvements</h3><ul>${listItems(evalObj.improvements)}</ul>
     </div>
-    <div class="eval-section">
-      <h3>Example Better Response</h3>
-      <p class="example-response">${escapeHtml(evalObj.example_better_response ?? "")}</p>
-    </div>
+    ${(evalObj.enhanced_user_response || evalObj.example_better_response) ? `
+    <div class="eval-section example-response-section">
+      <h3>Your Response — Enhanced to 12/12</h3>
+      <p class="example-response enhanced">${escapeHtml(evalObj.enhanced_user_response || evalObj.example_better_response || "")}</p>
+    </div>` : ""}
+    ${evalObj.ideal_response ? `
+    <div class="eval-section example-response-section ideal">
+      <h3>Ideal 12/12 Response</h3>
+      <p class="example-response ideal">${escapeHtml(evalObj.ideal_response)}</p>
+    </div>` : ""}
     ${comparisonBlock}
   `;
 }

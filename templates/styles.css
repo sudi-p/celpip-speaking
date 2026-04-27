@@ -387,6 +387,9 @@ header h1 { font-size: 1.5rem; }
 .btn-danger { background: #ef4444; color: #fff; }
 .btn-danger:hover:not(:disabled) { background: #dc2626; }
 
+.filter-active { background: #4f46e5 !important; color: #fff !important; }
+.filter-active:hover { background: #4338ca !important; }
+
 .btn-row {
   display: flex;
   gap: 0.75rem;
@@ -489,6 +492,9 @@ header h1 { font-size: 1.5rem; }
 .eval-section ul { padding-left: 1.2rem; }
 .eval-section li { margin-bottom: 0.25rem; }
 .example-response { background: #f6f7f9; border-left: 3px solid #4f46e5; padding: 0.75rem 1rem; border-radius: 4px; font-style: italic; }
+.example-response.enhanced { background: #eef2ff; border-left-color: #6366f1; }
+.example-response-section.ideal h3 { color: #059669; }
+.example-response.ideal { background: #f0fdf4; border-left-color: #059669; font-style: normal; }
 .eval-empty { font-size: 0.85rem; color: #9ca3af; font-style: italic; }
 
 /* ── Transcript issues section ── */
@@ -610,6 +616,13 @@ header h1 { font-size: 1.5rem; }
   font-size: 1rem;
   font-weight: 700;
   color: #4f46e5;
+}
+
+.attempt-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .attempt-card-meta {

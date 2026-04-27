@@ -247,9 +247,16 @@
   function createPlaceholderCard(n, blobUrl) {
     const card = document.createElement("div");
     card.className = "attempt-card";
+    const name = getUserName();
+    const nameLabel = name
+      ? `<span class="attempt-user-name">by ${escapeHtml(name)}</span>`
+      : "";
     card.innerHTML = `
       <div class="attempt-card-header">
-        <span class="attempt-num">Attempt #${n}</span>
+        <div class="attempt-header-left">
+          <span class="attempt-num">Attempt #${n}</span>
+          ${nameLabel}
+        </div>
         <audio class="attempt-audio" controls src="${blobUrl}"></audio>
       </div>
       <p class="attempt-status">Transcribing and evaluating… please wait.</p>
@@ -290,20 +297,23 @@
     const dateLabel  = createdAt
       ? `<span class="meta" style="margin-left:.5rem">${new Date(createdAt).toLocaleString()}</span>`
       : "";
-    const nameLabel  = result.user_name
-      ? `<span class="attempt-user-name">by ${escapeHtml(result.user_name)}</span>`
+    const displayName = result.user_name || getUserName();
+    const nameLabel  = displayName
+      ? `<span class="attempt-user-name">by ${escapeHtml(displayName)}</span>`
       : "";
     const deltaHtml  = scoreDeltaHtml(score, prevScore);
 
     card.innerHTML = `
       <div class="attempt-card-header">
-        <span class="attempt-num">Attempt #${n}</span>
+        <div class="attempt-header-left">
+          <span class="attempt-num">Attempt #${n}</span>
+          ${nameLabel}
+        </div>
         <div class="attempt-card-meta">
           <span class="score-badge ${scoreClass} js-score-badge">${escapeHtml(String(score))}<span>/12</span></span>
           ${result.id ? `<button class="btn btn-secondary js-reeval" data-id="${result.id}" style="font-size:.78rem;padding:.3rem .8rem">Re-evaluate</button>
           <span class="js-reeval-msg" style="font-size:.78rem;color:#888"></span>` : ""}
           ${durLabel ? `<span class="meta">${durLabel}</span>` : ""}
-          ${nameLabel}
           ${dateLabel}
         </div>
       </div>

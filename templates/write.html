@@ -20,8 +20,14 @@
 
   <!-- Writing interface -->
   <div class="writing-controls" id="writing-controls" style="display:none">
+    <!-- Ready state: show start button -->
+    <div id="ready-state" style="text-align:center;padding:2rem">
+      <p style="margin-bottom:1.5rem;color:#666">Click below to begin your 28-minute writing task.</p>
+      <button class="btn btn-primary" id="btn-start" style="font-size:1.1rem;padding:.75rem 2rem">Start Writing</button>
+    </div>
+
     <!-- Timer -->
-    <div class="writing-timer-area">
+    <div class="writing-timer-area" id="timer-area" style="display:none">
       <div class="phase-label" id="phase-label">TIME REMAINING</div>
       <div class="timer" id="timer">28:00</div>
     </div>
@@ -56,22 +62,26 @@
 <script>
 const WRITING_DURATION_SEC = 28 * 60;
 
-let state           = "loading";   // loading | writing | processing | done
+let state           = "loading";   // loading | ready | writing | processing | done
 let countdownId     = null;
 let remainingSec    = WRITING_DURATION_SEC;
 let currentMatches  = [];
 let grammarTimer    = null;
 let sessionData     = null;
 let nextAttemptNum  = 1;
+let startTime       = null;
 
-const timerEl     = document.getElementById("timer");
-const phaseEl     = document.getElementById("phase-label");
-const wordCountEl = document.getElementById("word-count");
-const grammarEl   = document.getElementById("grammar-status");
-const editor      = document.getElementById("editor");
-const highlight   = document.getElementById("editor-highlight");
-const submitBtn   = document.getElementById("btn-submit");
-const submitError = document.getElementById("submit-error");
+const timerEl      = document.getElementById("timer");
+const timerArea    = document.getElementById("timer-area");
+const readyState   = document.getElementById("ready-state");
+const phaseEl      = document.getElementById("phase-label");
+const wordCountEl  = document.getElementById("word-count");
+const grammarEl    = document.getElementById("grammar-status");
+const editor       = document.getElementById("editor");
+const highlight    = document.getElementById("editor-highlight");
+const submitBtn    = document.getElementById("btn-submit");
+const submitError  = document.getElementById("submit-error");
+const startBtn     = document.getElementById("btn-start");
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
@@ -112,14 +122,29 @@ async function init() {
   }
 
   document.getElementById("writing-controls").style.display = "block";
-  setState("writing");
+  setState("ready");
 }
 
 // ── State machine ────────────────────────────────────────────────────────────
 function setState(next) {
   state = next;
 
-  if (next === "writing") {
+  if (next === "ready") {
+    readyState.style.display = "block";
+    timerArea.style.display = "none";
+    editor.disabled = true;
+    editor.value = "";
+    submitBtn.disabled = true;
+    currentMatches = [];
+    updateHighlight();
+    updateWordCount();
+    grammarEl.textContent = "";
+    grammarEl.className = "grammar-status";
+    if (countdownId) { clearInterval(countdownId); countdownId = null; }
+
+  } else if (next === "writing") {
+    readyState.style.display = "none";
+    timerArea.style.display = "block";
     phaseEl.textContent  = "TIME REMAINING";
     timerEl.style.color  = "";
     editor.disabled      = false;
@@ -128,6 +153,7 @@ function setState(next) {
     submitError.textContent = "";
     editor.focus();
 
+    startTime = Date.now();
     remainingSec = WRITING_DURATION_SEC;
     if (countdownId) clearInterval(countdownId);
     countdownId = countdown(WRITING_DURATION_SEC, (r) => {
@@ -231,17 +257,16 @@ function updateHighlight() {
   highlight.scrollTop    = editor.scrollTop;
 }
 
+// ── Start button ────────────────────────────────────────────────────────────
+startBtn.addEventListener("click", () => {
+  setState("writing");
+});
+
 // ── Submit ───────────────────────────────────────────────────────────────────
 submitBtn.addEventListener("click", () => {
   if (state === "done") {
-    // Try again: clear editor and restart
-    editor.value      = "";
-    currentMatches    = [];
-    updateHighlight();
-    updateWordCount();
-    grammarEl.textContent = "";
-    grammarEl.className   = "grammar-status";
-    setState("writing");
+    // Try again: reset to ready state
+    setState("ready");
     return;
   }
   const text = editor.value.trim();
@@ -257,7 +282,7 @@ async function doSubmit() {
   setState("processing");
 
   const text      = editor.value.trim();
-  const elapsed   = WRITING_DURATION_SEC - remainingSec;
+  const elapsed   = startTime ? Math.round((Date.now() - startTime) / 1000) : null;
   const question  = document.getElementById("question-text").textContent || "";
   const sessionId = new URLSearchParams(location.search).get("session");
 

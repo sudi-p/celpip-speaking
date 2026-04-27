@@ -40,7 +40,10 @@ _TASK2_DOMAINS = (
     "a difficult conversation you had, a risk that paid off, "
     "adapting to a new culture or city, a mentor who influenced you, "
     "a moment you felt proud, handling an embarrassing situation, "
-    "a time you had to make a quick decision, working on a team challenge"
+    "a time you had to make a quick decision, working on a team challenge, "
+    "traveling to an unfamiliar place, learning a new skill unexpectedly, "
+    "making peace after a conflict, receiving helpful feedback, "
+    "overcoming self-doubt, helping someone in need, discovering a hidden talent"
 )
 
 _TASK6_DOMAINS = (
@@ -49,7 +52,12 @@ _TASK6_DOMAINS = (
     "receiving incorrect information from an official, a coworker taking credit for your work, "
     "being double-charged at a store, a miscommunication with a manager, "
     "a damaged package delivery, being left off an important email chain, "
-    "a scheduling conflict with a client, noise complaint in an apartment building"
+    "a scheduling conflict with a client, noise complaint in an apartment building, "
+    "a friend borrowing money and not repaying, a family member overstaying their welcome, "
+    "a rental agreement dispute, receiving poor quality service from a business, "
+    "someone spreading rumors about you, missing an important deadline due to miscommunication, "
+    "a roommate conflict over household chores, being blamed for someone else's mistake at work, "
+    "a travel booking error costing you money, a personal item being damaged by a friend"
 )
 
 _TASK7_TOPICS = (
@@ -58,7 +66,12 @@ _TASK7_TOPICS = (
     "remote work as a permanent option, public surveillance cameras, "
     "gap years before university, universal basic income, "
     "smartphones in classrooms, electric vehicles replacing gas cars, "
-    "standardized testing in schools, free public transit in cities"
+    "standardized testing in schools, free public transit in cities, "
+    "early retirement age for employees, zoning laws for high-rise buildings, "
+    "companies requiring office presence full-time, animal testing for cosmetics, "
+    "limiting social media use for teens under 16, subsidizing renewable energy, "
+    "shorter work weeks with same pay, banning fast food in schools, "
+    "making video games less realistic and violent"
 )
 
 _WRITING1_SCENARIOS = (
@@ -98,9 +111,12 @@ QUESTION_PROMPTS = {
     ),
     6: (
         "Write a single CELPIP Speaking Task 6 (Dealing with a Difficult Situation) question. "
-        "Place the test-taker in an awkward or stressful real-life scenario and ask how they would handle it. "
-        f"Draw from this list of domains: {_TASK6_DOMAINS}. "
-        "Be specific — name a concrete situation, not a vague one. "
+        "Present a realistic, stressful scenario that requires the test-taker to make a decision. "
+        "The format MUST be: describe the situation, then present TWO options: 'You decide to talk to [Person A] and [action]' OR 'You decide to talk to [Person B] and [action]'. "
+        "The test-taker chooses one option and explains their decision and reasoning. "
+        f"Draw from this list of difficult situations: {_TASK6_DOMAINS}. "
+        "Be specific and realistic — name concrete people (friend, manager, family member, service provider, etc.) and specific actions. "
+        "Example format: 'You were charged twice at a store. You decide to talk to the store manager and request a refund, OR you decide to talk to your friend who witnessed it and ask for advice on how to handle it.' "
         "Write only the question text, no labels or explanations."
     ),
     7: (
@@ -197,7 +213,12 @@ EVAL_SYSTEM_PROMPT = (
     "Include ALL notable issues you find — aim for thoroughness, not brevity. "
     "If the transcript is strong, still include at least 2–3 minor issues.),\n"
     "improvements (array of strings),\n"
-    "example_better_response (string).\n\n"
+    "enhanced_user_response (string — the candidate's own response rewritten and improved to score "
+    "12/12, preserving their original ideas and structure as much as possible. "
+    "If the candidate's response is clearly irrelevant to the question or makes no sense in context, "
+    "set this to an empty string),\n"
+    "ideal_response (string — a completely independent, high-quality 12/12 model response to the "
+    "question, written from scratch regardless of what the candidate said).\n\n"
 
     "When a previous attempt transcript is provided, also include:\n"
     "comparison (object with keys: improvements (array of strings describing what the candidate did better "
@@ -250,7 +271,11 @@ WRITING_EVAL_SYSTEM_PROMPT = (
     "Include ALL notable issues — aim for thoroughness. "
     "If the response is strong, still include at least 2–3 minor improvements.),\n"
     "improvements (array of strings),\n"
-    "example_better_response (string).\n\n"
+    "enhanced_user_response (string — the candidate's own response rewritten and improved to score "
+    "12/12, preserving their original ideas and structure where possible. "
+    "If the response is clearly irrelevant to the task, set this to an empty string),\n"
+    "ideal_response (string — a completely independent, high-quality 12/12 model response to the "
+    "task, written from scratch regardless of what the candidate wrote).\n\n"
 
     "When a previous attempt response is provided, also include:\n"
     "comparison (object with keys: improvements (array of strings describing what the candidate did better), "
@@ -340,7 +365,7 @@ def _openai_evaluate(task_id, task_name, transcript, duration_sec, question,
     )
     evaluation = json.loads(completion.choices[0].message.content)
     required = {"score", "fluency", "grammar", "vocabulary", "coherence",
-                "strengths", "weaknesses", "improvements", "example_better_response"}
+                "strengths", "weaknesses", "improvements", "enhanced_user_response", "ideal_response"}
     missing = required - evaluation.keys()
     if missing:
         raise ValueError(f"OpenAI response missing keys: {missing}")
@@ -382,7 +407,8 @@ def _openai_evaluate_writing(task_id, task_name, response_text, duration_sec, qu
     )
     evaluation = json.loads(completion.choices[0].message.content)
     required = {"score", "content", "grammar", "vocabulary", "readability",
-                "task_fulfillment", "strengths", "weaknesses", "improvements", "example_better_response"}
+                "task_fulfillment", "strengths", "weaknesses", "improvements",
+                "enhanced_user_response", "ideal_response"}
     missing = required - evaluation.keys()
     if missing:
         raise ValueError(f"OpenAI response missing keys: {missing}")
@@ -452,10 +478,12 @@ def _generate_scenario(task_id, task_name, transcript):
 @csrf_exempt
 def sessions_list_create(request):
     if request.method == "GET":
+        from django.db.models import Max
         qs = Session.objects.annotate(
             attempt_count=Count("attempts"),
             avg_score=Avg("attempts__score"),
-        )
+            latest_attempt=Max("attempts__created_at"),
+        ).order_by("-latest_attempt")
         return JsonResponse([_session_payload(s) for s in qs], safe=False)
 
     if request.method == "POST":
@@ -666,6 +694,7 @@ def submit(request):
         "audio_url": _audio_url(request, attempt),
         "session_question": session_question,
         "prev_score": prev_score,
+        "user_name": attempt.user_name,
         **evaluation,
     })
 
@@ -838,8 +867,37 @@ def generate_question(request):
 
 
 @csrf_exempt
-@require_http_methods(["GET"])
 def list_questions(request):
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body)
+        except (json.JSONDecodeError, ValueError):
+            return JsonResponse({"error": "Invalid JSON body"}, status=400)
+        task_id = body.get("task_id")
+        text    = (body.get("text") or "").strip()
+        if task_id not in TASK_NAMES:
+            return JsonResponse({"error": "Invalid task_id"}, status=400)
+        if not text:
+            return JsonResponse({"error": "Question text is required"}, status=400)
+        task_name = TASK_NAMES[task_id]
+        task_type = "writing" if task_id in WRITING_TASKS else "speaking"
+        q, _ = Question.objects.get_or_create(
+            task_id=task_id, text=text,
+            defaults={"task_name": task_name, "task_type": task_type, "source": "manual"},
+        )
+        return JsonResponse({
+            "id": q.id,
+            "task_id": q.task_id,
+            "task_name": q.task_name,
+            "task_type": q.task_type,
+            "text": q.text,
+            "source": q.source,
+            "created_at": q.created_at.isoformat(),
+        }, status=201)
+
+    if request.method != "GET":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
     qs = Question.objects.all()
     return JsonResponse([
         {
