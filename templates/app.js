@@ -5,11 +5,13 @@ let _currentUser = null;
 async function getUser() {
   if (_currentUser) return _currentUser;
   try {
-    const resp = await fetch(`${API}/auth/me`, { credentials: 'include' });
+    const resp = await fetch(`${API}/auth/me`, { credentials: "include" });
     if (!resp.ok) return null;
     _currentUser = await resp.json();
     return _currentUser;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 function getUserName() {
@@ -18,19 +20,25 @@ function getUserName() {
 
 async function initAuthUI() {
   // Wire logout button
-  document.getElementById('navbar-logout')?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
-    window.location.href = '/login.html';
-  });
+  document
+    .getElementById("navbar-logout")
+    ?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await fetch(`${API}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+      window.location.href = "/login.html";
+    });
 
   const user = await getUser();
   const greeting = document.getElementById("navbar-greeting");
-  if (greeting && user) greeting.textContent = `Hello, ${user.display_name || user.email}`;
+  if (greeting && user)
+    greeting.textContent = `Hello, ${user.display_name || user.email}`;
 
   // Burger / drawer toggle
-  const burger  = document.getElementById("navbar-burger");
-  const menu    = document.getElementById("navbar-menu");
+  const burger = document.getElementById("navbar-burger");
+  const menu = document.getElementById("navbar-menu");
   const overlay = document.getElementById("navbar-overlay");
   if (burger && menu) {
     const openDrawer = () => {
@@ -47,13 +55,18 @@ async function initAuthUI() {
       menu.classList.contains("is-open") ? closeDrawer() : openDrawer();
     });
     if (overlay) overlay.addEventListener("click", closeDrawer);
-    menu.querySelectorAll(".navbar-link").forEach((l) => l.addEventListener("click", closeDrawer));
+    menu
+      .querySelectorAll(".navbar-link")
+      .forEach((l) => l.addEventListener("click", closeDrawer));
   }
 
   // Auth gate: redirect to login if not authenticated (except on auth pages)
-  const isAuthPage = window.location.pathname.includes('login') || window.location.pathname.includes('register');
+  const isAuthPage =
+    window.location.pathname.includes("login") ||
+    window.location.pathname.includes("register");
   if (!user && !isAuthPage) {
-    window.location.href = '/login.html?next=' + encodeURIComponent(window.location.pathname);
+    window.location.href =
+      "/login.html?next=" + encodeURIComponent(window.location.pathname);
   }
 }
 
@@ -69,8 +82,8 @@ const TASKS = {
 };
 
 const WRITING_TASKS = {
-  9:  { name: "Writing Task 1", label: "Email Writing",    duration: 1680 },
-  10: { name: "Writing Task 2", label: "Survey Response",  duration: 1680 },
+  9: { name: "Writing Task 1", label: "Email Writing", duration: 1680 },
+  10: { name: "Writing Task 2", label: "Survey Response", duration: 1680 },
 };
 
 const WRITING_TASK_IDS = new Set([9, 10]);
@@ -152,22 +165,32 @@ function renderEvaluation(containerEl, evalObj) {
     <div class="eval-section">
       <h3>Improvements</h3><ul>${listItems(evalObj.improvements)}</ul>
     </div>
-    ${(evalObj.enhanced_user_response || evalObj.example_better_response) ? `
+    ${
+      evalObj.enhanced_user_response || evalObj.example_better_response
+        ? `
     <div class="eval-section example-response-section">
       <h3>Your Response — Enhanced to 12/12</h3>
       <p class="example-response enhanced">${escapeHtml(evalObj.enhanced_user_response || evalObj.example_better_response || "")}</p>
-    </div>` : ""}
-    ${evalObj.ideal_response ? `
+    </div>`
+        : ""
+    }
+    ${
+      evalObj.ideal_response
+        ? `
     <div class="eval-section example-response-section ideal">
       <h3>Ideal 12/12 Response</h3>
       <p class="example-response ideal">${escapeHtml(evalObj.ideal_response)}</p>
-    </div>` : ""}
+    </div>`
+        : ""
+    }
   `;
 }
 
 function renderWritingEvaluation(containerEl, evalObj) {
   const listItems = (arr) =>
-    Array.isArray(arr) ? arr.map((x) => `<li>${escapeHtml(x)}</li>`).join("") : "";
+    Array.isArray(arr)
+      ? arr.map((x) => `<li>${escapeHtml(x)}</li>`).join("")
+      : "";
 
   const issueRows =
     Array.isArray(evalObj.text_issues) && evalObj.text_issues.length
@@ -193,15 +216,19 @@ function renderWritingEvaluation(containerEl, evalObj) {
           <div class="comparison-body">
             <div>
               <div class="comparison-heading improved">Improved</div>
-              ${evalObj.comparison.improvements?.length
-                ? `<ul class="comparison-list improved">${listItems(evalObj.comparison.improvements)}</ul>`
-                : `<p class="comparison-empty">Nothing noted.</p>`}
+              ${
+                evalObj.comparison.improvements?.length
+                  ? `<ul class="comparison-list improved">${listItems(evalObj.comparison.improvements)}</ul>`
+                  : `<p class="comparison-empty">Nothing noted.</p>`
+              }
             </div>
             <div>
               <div class="comparison-heading regressed">Regressed</div>
-              ${evalObj.comparison.regressions?.length
-                ? `<ul class="comparison-list regressed">${listItems(evalObj.comparison.regressions)}</ul>`
-                : `<p class="comparison-empty">Nothing noted.</p>`}
+              ${
+                evalObj.comparison.regressions?.length
+                  ? `<ul class="comparison-list regressed">${listItems(evalObj.comparison.regressions)}</ul>`
+                  : `<p class="comparison-empty">Nothing noted.</p>`
+              }
             </div>
           </div>
         </details>
@@ -237,24 +264,32 @@ function renderWritingEvaluation(containerEl, evalObj) {
     <div class="eval-section">
       <h3>Improvements</h3><ul>${listItems(evalObj.improvements)}</ul>
     </div>
-    ${(evalObj.enhanced_user_response || evalObj.example_better_response) ? `
+    ${
+      evalObj.enhanced_user_response || evalObj.example_better_response
+        ? `
     <div class="eval-section example-response-section">
       <h3>Your Response — Enhanced to 12/12</h3>
       <p class="example-response enhanced">${escapeHtml(evalObj.enhanced_user_response || evalObj.example_better_response || "")}</p>
-    </div>` : ""}
-    ${evalObj.ideal_response ? `
+    </div>`
+        : ""
+    }
+    ${
+      evalObj.ideal_response
+        ? `
     <div class="eval-section example-response-section ideal">
       <h3>Ideal 12/12 Response</h3>
       <p class="example-response ideal">${escapeHtml(evalObj.ideal_response)}</p>
-    </div>` : ""}
+    </div>`
+        : ""
+    }
     ${comparisonBlock}
   `;
 }
 
 async function apiGet(path) {
-  const resp = await fetch(`${API}${path}`, { credentials: 'include' });
+  const resp = await fetch(`${API}${path}`, { credentials: "include" });
   if (resp.status === 401) {
-    window.location.href = '/login.html';
+    window.location.href = "/login.html";
     return;
   }
   if (!resp.ok) {
@@ -267,25 +302,25 @@ async function apiGet(path) {
 async function apiPost(path, body, isBlob = false) {
   let opts;
   if (body instanceof FormData) {
-    opts = { method: "POST", body, credentials: 'include' };
+    opts = { method: "POST", body, credentials: "include" };
   } else if (isBlob) {
     opts = {
       method: "POST",
       body,
       headers: { "X-Audio-Type": body.type || "audio/webm" },
-      credentials: 'include',
+      credentials: "include",
     };
   } else {
     opts = {
       method: "POST",
       body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
-      credentials: 'include',
+      credentials: "include",
     };
   }
   const resp = await fetch(`${API}${path}`, opts);
   if (resp.status === 401) {
-    window.location.href = '/login.html';
+    window.location.href = "/login.html";
     return;
   }
   if (!resp.ok) {
@@ -296,9 +331,12 @@ async function apiPost(path, body, isBlob = false) {
 }
 
 async function apiDelete(path) {
-  const resp = await fetch(`${API}${path}`, { method: "DELETE", credentials: 'include' });
+  const resp = await fetch(`${API}${path}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
   if (resp.status === 401) {
-    window.location.href = '/login.html';
+    window.location.href = "/login.html";
     return;
   }
   if (!resp.ok) {
