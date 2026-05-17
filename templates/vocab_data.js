@@ -1,6 +1,10 @@
 window.VOCAB = [
   // ── Emotions & Reactions ──
   { word: "Exhilarating", meaning: "Thrilling and exciting", type: "Emotions & Reactions", task: "2" },
+  { word: "Humbling", meaning: "Making you feel small in a meaningful way", type: "Emotions & Reactions", task: "2" },
+  { word: "Apprehensive", meaning: "Slightly anxious, unsure of what's coming", type: "Emotions & Reactions", task: "2" },
+  { word: "Awestruck", meaning: "Overwhelmed by something impressive or beautiful", type: "Emotions & Reactions", task: "2" },
+  { word: "Relieved", meaning: "Free from worry after something resolves", type: "Emotions & Reactions", task: "2" },
   { word: "Profound", meaning: "Very deep or intense; showing great knowledge", type: "Emotions & Reactions", task: "2" },
   { word: "Contentious", meaning: "Causing or likely to cause heated debate; controversial", type: "Emotions & Reactions", task: "7" },
 
@@ -10,11 +14,20 @@ window.VOCAB = [
   { word: "Serene", meaning: "Calm, peaceful, and undisturbed", type: "Describing Places & Scenes", task: "3" },
   { word: "Adjacent", meaning: "Next to or adjoining something else", type: "Describing Places & Scenes", task: "3" },
 
+  // ── Describing the Experience ──
+  { word: "Immersive", meaning: "Completely surrounding you; an immersive environment", type: "Describing the Experience", task: "2" },
+  { word: "Spontaneous", meaning: "Unplanned, happening naturally in the moment", type: "Describing the Experience", task: "2" },
+  { word: "Daunting", meaning: "Intimidating but not impossible", type: "Describing the Experience", task: "6" },
+  { word: "Surreal", meaning: "Felt strange, almost too good or odd to be real", type: "Describing the Experience", task: "2" },
+
   // ── Transition & Discourse Markers ──
+  { word: "Initially", meaning: "At first; replaces the overused at the beginning", type: "Transition & Discourse Markers", task: "2" },
+  { word: "Gradually", meaning: "Slowly over time; shows a process unfolding", type: "Transition & Discourse Markers", task: "2" },
   { word: "Whereas", meaning: "In contrast to; on the other hand", type: "Transition & Discourse Markers", task: "5" },
   { word: "Moreover", meaning: "In addition; furthermore", type: "Transition & Discourse Markers", task: "5" },
-  { word: "Nevertheless", meaning: "In spite of that; however", type: "Transition & Discourse Markers", task: "7" },
-  { word: "Subsequently", meaning: "After; later in time", type: "Transition & Discourse Markers", task: "4" },
+  { word: "Subsequently", meaning: "After that; more formal than then", type: "Transition & Discourse Markers", task: "4" },
+  { word: "Nevertheless", meaning: "Despite that; stronger contrast than but", type: "Transition & Discourse Markers", task: "7" },
+  { word: "In hindsight", meaning: "Looking back now; great for closing reflections", type: "Transition & Discourse Markers", task: "2" },
 
   // ── Cause & Effect ──
   { word: "Mitigate", meaning: "To make something less severe or serious", type: "Cause & Effect", task: "1" },
@@ -28,8 +41,13 @@ window.VOCAB = [
 
   // ── Reflection & Lessons ──
   { word: "Reminisce", meaning: "To recall and think about past experiences", type: "Reflection & Lessons", task: "2" },
-  { word: "Pivotal", meaning: "Critically important; forming a turning point", type: "Reflection & Lessons", task: "2" },
+  { word: "Pivotal", meaning: "A turning point; a pivotal moment for me", type: "Reflection & Lessons", task: "2" },
   { word: "Poignant", meaning: "Evoking sadness or regret; deeply moving", type: "Reflection & Lessons", task: "2" },
+  { word: "Resilience", meaning: "Ability to recover and keep going", type: "Reflection & Lessons", task: "6" },
+  { word: "Perspective", meaning: "New way of seeing; gave me a new perspective", type: "Reflection & Lessons", task: "7" },
+  { word: "Transformative", meaning: "Changed you in a meaningful way", type: "Reflection & Lessons", task: "2" },
+  { word: "Perseverance", meaning: "Continuing despite difficulty", type: "Reflection & Lessons", task: "6" },
+  { word: "Gratifying", meaning: "Deeply satisfying and rewarding", type: "Reflection & Lessons", task: "2" },
 
   // ── Opinion & Persuasion ──
   { word: "Advocate", meaning: "To recommend or support publicly; a supporter", type: "Opinion & Persuasion", task: "7" },
