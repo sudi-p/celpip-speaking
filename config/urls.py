@@ -22,6 +22,7 @@ urlpatterns = [
     path("logs.html", TemplateView.as_view(template_name="logs.html", extra_context={"active_page": "logs"})),
     path("write.html", TemplateView.as_view(template_name="write.html", extra_context={"active_page": "write"})),
     path("questions.html", TemplateView.as_view(template_name="questions.html", extra_context={"active_page": "questions"})),
+    path("vocab.html", TemplateView.as_view(template_name="vocab.html", extra_context={"active_page": "vocab"})),
     path("settings.html", TemplateView.as_view(template_name="settings.html", extra_context={"active_page": "settings"})),
 
     # Media files (audio recordings) — must come BEFORE the catch-all
