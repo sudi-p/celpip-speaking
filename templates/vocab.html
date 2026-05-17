@@ -46,20 +46,21 @@
     <div id="quiz-setup" class="quiz-setup">
       <h2>Start a Quiz</h2>
       <p>Choose which tasks to practice:</p>
-      <div class="quiz-filter-buttons">
-        <button class="quiz-filter-btn active" data-quiz-task="all">All Tasks</button>
-        <button class="quiz-filter-btn" data-quiz-task="0">General</button>
-        <button class="quiz-filter-btn" data-quiz-task="1">Task 1</button>
-        <button class="quiz-filter-btn" data-quiz-task="2">Task 2</button>
-        <button class="quiz-filter-btn" data-quiz-task="3">Task 3</button>
-        <button class="quiz-filter-btn" data-quiz-task="4">Task 4</button>
-        <button class="quiz-filter-btn" data-quiz-task="5">Task 5</button>
-        <button class="quiz-filter-btn" data-quiz-task="6">Task 6</button>
-        <button class="quiz-filter-btn" data-quiz-task="7">Task 7</button>
-        <button class="quiz-filter-btn" data-quiz-task="8">Task 8</button>
-        <button class="quiz-filter-btn" data-quiz-task="9">Writing Task 1</button>
-        <button class="quiz-filter-btn" data-quiz-task="10">Writing Task 2</button>
+      <div class="quiz-filter-buttons" id="quiz-filter-buttons">
+        <button class="quiz-filter-btn active" data-quiz-task="all" hx-get="/api/vocab-quiz-count?task=all" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">All Tasks</button>
+        <button class="quiz-filter-btn" data-quiz-task="0" hx-get="/api/vocab-quiz-count?task=0" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">General</button>
+        <button class="quiz-filter-btn" data-quiz-task="1" hx-get="/api/vocab-quiz-count?task=1" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 1</button>
+        <button class="quiz-filter-btn" data-quiz-task="2" hx-get="/api/vocab-quiz-count?task=2" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 2</button>
+        <button class="quiz-filter-btn" data-quiz-task="3" hx-get="/api/vocab-quiz-count?task=3" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 3</button>
+        <button class="quiz-filter-btn" data-quiz-task="4" hx-get="/api/vocab-quiz-count?task=4" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 4</button>
+        <button class="quiz-filter-btn" data-quiz-task="5" hx-get="/api/vocab-quiz-count?task=5" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 5</button>
+        <button class="quiz-filter-btn" data-quiz-task="6" hx-get="/api/vocab-quiz-count?task=6" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 6</button>
+        <button class="quiz-filter-btn" data-quiz-task="7" hx-get="/api/vocab-quiz-count?task=7" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 7</button>
+        <button class="quiz-filter-btn" data-quiz-task="8" hx-get="/api/vocab-quiz-count?task=8" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 8</button>
+        <button class="quiz-filter-btn" data-quiz-task="9" hx-get="/api/vocab-quiz-count?task=9" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Writing Task 1</button>
+        <button class="quiz-filter-btn" data-quiz-task="10" hx-get="/api/vocab-quiz-count?task=10" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Writing Task 2</button>
       </div>
+      <div id="quiz-question-count" class="quiz-question-count" hx-get="/api/vocab-quiz-count?task=all" hx-trigger="load" hx-swap="innerHTML"></div>
       <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
     </div>
 
@@ -357,13 +358,15 @@
     });
   });
 
-  // Quiz task filtering
+  // Quiz task filtering with HTMX integration
   document.querySelectorAll(".quiz-filter-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const task = btn.dataset.quizTask;
       document.querySelectorAll(".quiz-filter-btn").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       quizState.selectedTask = task;
+
+      // HTMX will handle the API call, just ensure event propagates
     });
   });
 

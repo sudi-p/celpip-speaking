@@ -36,4 +36,7 @@ urlpatterns = [
 
     # Activity log
     path("logs", views.activity_logs),
+
+    # Vocab quiz
+    path("vocab-quiz-count", views.vocab_quiz_count),
 ]

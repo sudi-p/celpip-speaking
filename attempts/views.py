@@ -1120,3 +1120,49 @@ def attempt_detail(request, pk):
         attempt.delete()
         return JsonResponse({"ok": True})
     return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
+# Vocab count endpoint for HTMX quiz question counter
+VOCAB_COUNT = {
+    "0": 10,   # General
+    "1": 6,    # Task 1
+    "2": 13,   # Task 2
+    "3": 8,    # Task 3
+    "4": 8,    # Task 4
+    "5": 9,    # Task 5
+    "6": 8,    # Task 6
+    "7": 8,    # Task 7
+    "8": 8,    # Task 8
+    "9": 10,   # Writing Task 1
+    "10": 10,  # Writing Task 2
+}
+
+@csrf_exempt
+def vocab_quiz_count(request):
+    """Return quiz question count for selected task via HTMX"""
+    from django.http import HttpResponse
+
+    task = request.GET.get('task', 'all')
+
+    if task == 'all':
+        total = sum(VOCAB_COUNT.values())
+        task_label = "All Tasks"
+    else:
+        total = VOCAB_COUNT.get(task, 0)
+        task_labels = {
+            "0": "General",
+            "1": "Task 1",
+            "2": "Task 2",
+            "3": "Task 3",
+            "4": "Task 4",
+            "5": "Task 5",
+            "6": "Task 6",
+            "7": "Task 7",
+            "8": "Task 8",
+            "9": "Writing Task 1",
+            "10": "Writing Task 2",
+        }
+        task_label = task_labels.get(task, "Unknown")
+
+    html = f'<p style="font-size: 1.1rem; color: #4f46e5; font-weight: 600; margin-top: 1rem; margin-bottom: 1rem;"><span style="font-size: 1.5rem;">{total}</span> questions for <strong>{task_label}</strong></p>'
+    return HttpResponse(html)
