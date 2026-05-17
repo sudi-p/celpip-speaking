@@ -26,12 +26,12 @@
           <button class="filter-btn" data-filter-type="task" data-filter-value="6">Task 6</button>
           <button class="filter-btn" data-filter-type="task" data-filter-value="7">Task 7</button>
           <button class="filter-btn" data-filter-type="task" data-filter-value="8">Task 8</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="9">Task 9 (Email)</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="10">Task 10 (Survey)</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="9">Writing Task 1</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="10">Writing Task 2</button>
         </div>
       </div>
 
-      <div class="filter-group">
+      <div class="filter-group hidden" id="type-filter-group">
         <label class="filter-label">Filter by Type:</label>
         <div class="filter-buttons" id="type-filters">
           <button class="filter-btn active" data-filter-type="type" data-filter-value="all">All Types</button>
@@ -65,8 +65,8 @@
         <button class="quiz-filter-btn" data-quiz-task="6">Task 6</button>
         <button class="quiz-filter-btn" data-quiz-task="7">Task 7</button>
         <button class="quiz-filter-btn" data-quiz-task="8">Task 8</button>
-        <button class="quiz-filter-btn" data-quiz-task="9">Task 9 (Email)</button>
-        <button class="quiz-filter-btn" data-quiz-task="10">Task 10 (Survey)</button>
+        <button class="quiz-filter-btn" data-quiz-task="9">Writing Task 1</button>
+        <button class="quiz-filter-btn" data-quiz-task="10">Writing Task 2</button>
       </div>
       <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
     </div>
@@ -375,6 +375,12 @@
       document.querySelectorAll(".tab-content").forEach((c) => c.classList.add("hidden"));
       btn.classList.add("active");
       document.getElementById(tab).classList.remove("hidden");
+
+      // Auto-start quiz when Quiz tab is clicked
+      if (tab === "quiz") {
+        quizState.selectedTask = "all";
+        startQuiz();
+      }
     });
   });
 
