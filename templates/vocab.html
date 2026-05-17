@@ -12,32 +12,37 @@
 
   <!-- Word List Tab -->
   <div id="word-list" class="tab-content active">
-    <div class="filter-buttons">
-      <button class="filter-btn active" data-task="all">All</button>
-      <button class="filter-btn" data-task="1">Task 1</button>
-      <button class="filter-btn" data-task="2">Task 2</button>
-      <button class="filter-btn" data-task="3">Task 3</button>
-      <button class="filter-btn" data-task="4">Task 4</button>
-      <button class="filter-btn" data-task="5">Task 5</button>
-      <button class="filter-btn" data-task="6">Task 6</button>
-      <button class="filter-btn" data-task="7">Task 7</button>
-      <button class="filter-btn" data-task="8">Task 8</button>
+    <div class="filter-section">
+      <div class="filter-group">
+        <label class="filter-label">Filter by Task:</label>
+        <div class="filter-buttons" id="task-filters">
+          <button class="filter-btn active" data-filter-type="task" data-filter-value="all">All Tasks</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="1">Task 1</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="2">Task 2</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="3">Task 3</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="4">Task 4</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="5">Task 5</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="6">Task 6</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="7">Task 7</button>
+          <button class="filter-btn" data-filter-type="task" data-filter-value="8">Task 8</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Filter by Type:</label>
+        <div class="filter-buttons" id="type-filters">
+          <button class="filter-btn active" data-filter-type="type" data-filter-value="all">All Types</button>
+          <!-- Types will be populated by JS -->
+        </div>
+      </div>
     </div>
 
-    <table class="vocab-table" id="vocab-table">
-      <thead>
-        <tr>
-          <th>Word</th>
-          <th>Meaning</th>
-          <th>Task</th>
-        </tr>
-      </thead>
-      <tbody id="vocab-tbody">
-      </tbody>
-    </table>
+    <div id="vocab-content" class="vocab-content">
+      <!-- Words will be grouped by type here -->
+    </div>
 
     <div id="empty-state" class="empty-state hidden">
-      <p>No words found for this task.</p>
+      <p>No words found for the selected filters.</p>
     </div>
   </div>
 
@@ -108,29 +113,97 @@
     8: "Unusual Situation",
   };
 
+  let listFilters = { task: "all", type: "all" };
+
+  // ===== Extract unique types =====
+  function getUniqueTypes() {
+    const types = [...new Set(window.VOCAB.map(v => v.type))].sort();
+    return types;
+  }
+
+  // ===== Populate type filter buttons =====
+  function initializeTypeFilters() {
+    const typeFiltersContainer = document.getElementById("type-filters");
+    const types = getUniqueTypes();
+
+    const typeButtons = types.map(type =>
+      `<button class="filter-btn" data-filter-type="type" data-filter-value="${escapeHtml(type)}">${escapeHtml(type)}</button>`
+    ).join("");
+
+    typeFiltersContainer.innerHTML = `<button class="filter-btn active" data-filter-type="type" data-filter-value="all">All Types</button>${typeButtons}`;
+
+    // Re-wire type filter buttons
+    document.querySelectorAll('[data-filter-type="type"]').forEach(btn => {
+      btn.addEventListener("click", () => {
+        const value = btn.dataset.filterValue;
+        document.querySelectorAll('[data-filter-type="type"]').forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        listFilters.type = value;
+        renderWordList();
+      });
+    });
+  }
+
   // ===== Word List Tab =====
-  function renderWordList(filteredVocab = window.VOCAB) {
-    const tbody = document.getElementById("vocab-tbody");
+  function renderWordList() {
+    const content = document.getElementById("vocab-content");
     const emptyState = document.getElementById("empty-state");
 
-    if (filteredVocab.length === 0) {
-      tbody.innerHTML = "";
+    // Filter vocab
+    let filtered = window.VOCAB.filter(v => {
+      const taskMatch = listFilters.task === "all" || v.task === listFilters.task;
+      const typeMatch = listFilters.type === "all" || v.type === listFilters.type;
+      return taskMatch && typeMatch;
+    });
+
+    if (filtered.length === 0) {
+      content.innerHTML = "";
       emptyState.classList.remove("hidden");
       return;
     }
 
     emptyState.classList.add("hidden");
-    tbody.innerHTML = filteredVocab
-      .map(
-        (vocab) => `
-      <tr>
-        <td class="word-col">${escapeHtml(vocab.word)}</td>
-        <td class="meaning-col">${escapeHtml(vocab.meaning)}</td>
-        <td class="task-col">${vocab.task}</td>
-      </tr>
-    `
-      )
+
+    // Group by type
+    const grouped = {};
+    filtered.forEach(vocab => {
+      if (!grouped[vocab.type]) {
+        grouped[vocab.type] = [];
+      }
+      grouped[vocab.type].push(vocab);
+    });
+
+    // Render grouped sections
+    const html = Object.keys(grouped)
+      .sort()
+      .map(typeKey => {
+        const words = grouped[typeKey];
+        const rows = words
+          .map(
+            v => `
+          <tr>
+            <td class="word-col">${escapeHtml(v.word)}</td>
+            <td class="meaning-col">${escapeHtml(v.meaning)}</td>
+            <td class="task-col">Task ${v.task}</td>
+          </tr>
+        `
+          )
+          .join("");
+
+        return `
+        <div class="vocab-type-group">
+          <h3 class="vocab-type-heading">${escapeHtml(typeKey)}</h3>
+          <table class="vocab-table">
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+      `;
+      })
       .join("");
+
+    content.innerHTML = html;
   }
 
   // ===== Quiz Logic =====
@@ -299,15 +372,14 @@
     });
   });
 
-  // Word list filtering
-  document.querySelectorAll(".filter-btn").forEach((btn) => {
+  // Task filter buttons
+  document.querySelectorAll('[data-filter-type="task"]').forEach((btn) => {
     btn.addEventListener("click", () => {
-      const task = btn.dataset.task;
-      document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+      const value = btn.dataset.filterValue;
+      document.querySelectorAll('[data-filter-type="task"]').forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-
-      const filtered = task === "all" ? window.VOCAB : window.VOCAB.filter((v) => v.task === task);
-      renderWordList(filtered);
+      listFilters.task = value;
+      renderWordList();
     });
   });
 
@@ -337,6 +409,7 @@
   });
 
   // Initial render
+  initializeTypeFilters();
   renderWordList();
 </script>
 {% endblock %}

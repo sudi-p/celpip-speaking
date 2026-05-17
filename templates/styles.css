@@ -1212,12 +1212,36 @@ header h1 { font-size: 1.5rem; }
   to { opacity: 1; }
 }
 
+/* ── Filter section ── */
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 /* ── Filter buttons ── */
 .filter-buttons, .quiz-filter-buttons {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
 }
 
 .filter-btn, .quiz-filter-btn {
@@ -1241,14 +1265,39 @@ header h1 { font-size: 1.5rem; }
   color: #fff;
 }
 
+/* ── Vocab content & grouping ── */
+.vocab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.vocab-type-group {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.vocab-type-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4f46e5;
+  background: #eef2ff;
+  padding: 0.9rem 1rem;
+  margin: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
 /* ── Vocab table ── */
 .vocab-table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  overflow: hidden;
+}
+
+.vocab-table thead {
+  display: none;
 }
 
 .vocab-table th {
@@ -1498,13 +1547,22 @@ header h1 { font-size: 1.5rem; }
     font-size: 0.85rem;
   }
 
+  .filter-section {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
   .filter-buttons, .quiz-filter-buttons {
-    margin-bottom: 1rem;
+    flex-wrap: wrap;
   }
 
   .filter-btn, .quiz-filter-btn {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
+  }
+
+  .vocab-content {
+    gap: 1.5rem;
   }
 
   .vocab-table th, .vocab-table td {
