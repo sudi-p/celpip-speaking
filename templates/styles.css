@@ -1331,7 +1331,7 @@ header h1 { font-size: 1.5rem; }
 .meaning-col {
   color: #555;
   font-size: 0.9rem;
-  width: 200px;
+  width: 300px;
   min-width: 200px;
 }
 
@@ -1340,6 +1340,143 @@ header h1 { font-size: 1.5rem; }
   font-size: 0.88rem;
   line-height: 1.5;
   font-style: italic;
+}
+
+/* Responsive tables for smaller screens */
+@media (max-width: 900px) {
+  .vocab-table {
+    font-size: 0.9rem;
+  }
+
+  .vocab-table td {
+    padding: 0.7rem 0.8rem;
+  }
+
+  .word-col {
+    width: auto;
+    min-width: auto;
+  }
+
+  .meaning-col {
+    width: auto;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .vocab-content {
+    gap: 1.5rem;
+  }
+
+  .vocab-type-group {
+    border-radius: 6px;
+  }
+
+  .vocab-type-heading {
+    font-size: 0.95rem;
+    padding: 0.75rem 0.9rem;
+  }
+
+  /* Stack table as cards on mobile */
+  .vocab-table {
+    display: block;
+  }
+
+  .vocab-table thead {
+    display: none;
+  }
+
+  .vocab-table tbody {
+    display: block;
+  }
+
+  .vocab-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem;
+    page-break-inside: avoid;
+  }
+
+  .vocab-table tbody tr:hover td {
+    background: transparent;
+  }
+
+  .vocab-table td {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: none;
+    text-align: left;
+  }
+
+  .vocab-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #4f46e5;
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+
+  .word-col::before { content: "Word"; }
+  .meaning-col::before { content: "Meaning"; }
+  .example-col::before { content: "Example"; }
+
+  .word-col {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 0.5rem;
+  }
+
+  .meaning-col {
+    color: #555;
+    font-size: 0.9rem;
+  }
+
+  .example-col {
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .vocab-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .vocab-content {
+    gap: 1rem;
+  }
+
+  .vocab-type-heading {
+    font-size: 0.9rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .vocab-table tr {
+    margin-bottom: 0.9rem;
+    padding: 0.65rem;
+  }
+
+  .word-col {
+    font-size: 1rem;
+  }
+
+  .meaning-col {
+    font-size: 0.85rem;
+  }
+
+  .example-col {
+    font-size: 0.8rem;
+  }
 }
 
 /* ── Empty state ── */

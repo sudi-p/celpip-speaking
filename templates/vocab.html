@@ -60,7 +60,6 @@
         <button class="quiz-filter-btn" data-quiz-task="9" hx-get="/api/vocab-quiz-count?task=9" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Writing Task 1</button>
         <button class="quiz-filter-btn" data-quiz-task="10" hx-get="/api/vocab-quiz-count?task=10" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Writing Task 2</button>
       </div>
-      <div id="quiz-question-count" class="quiz-question-count" hx-get="/api/vocab-quiz-count?task=all" hx-trigger="load" hx-swap="innerHTML"></div>
       <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
     </div>
 
@@ -151,9 +150,9 @@
           .map(
             v => `
           <tr>
-            <td class="word-col">${escapeHtml(v.word)}</td>
-            <td class="meaning-col">${escapeHtml(v.meaning)}</td>
-            <td class="example-col"><em>${escapeHtml(v.example)}</em></td>
+            <td class="word-col" data-label="Word">${escapeHtml(v.word)}</td>
+            <td class="meaning-col" data-label="Meaning">${escapeHtml(v.meaning)}</td>
+            <td class="example-col" data-label="Example"><em>${escapeHtml(v.example)}</em></td>
           </tr>
         `
           )
