@@ -94,4 +94,28 @@ window.VOCAB = [
   { word: "Bewildering", meaning: "Confusing and disorienting", example: "The situation was bewildering at first.", type: "Emotions & Reactions", task: "8" },
   { word: "Volatile", meaning: "Liable to change rapidly; unstable", example: "The situation was volatile and unpredictable.", type: "Difficulty & Challenges", task: "8" },
   { word: "Catastrophic", meaning: "Involving sudden great damage or disaster", example: "The failure would have been catastrophic.", type: "Difficulty & Challenges", task: "8" },
+
+  // ── Task 9: Email Writing ──
+  { word: "Sincerely", meaning: "In a genuine and honest way; formal closing", example: "Thank you for your help. Sincerely, John.", type: "Email Structure & Tone", task: "9" },
+  { word: "Appreciate", meaning: "To recognize the value or quality of something", example: "I appreciate your quick response to my inquiry.", type: "Politeness & Courtesy", task: "9" },
+  { word: "Apologies", meaning: "Expression of regret or saying sorry", example: "My apologies for the confusion in my previous message.", type: "Politeness & Courtesy", task: "9" },
+  { word: "Clarify", meaning: "To make something clear or easier to understand", example: "Could you clarify what you meant by that statement?", type: "Email Communication", task: "9" },
+  { word: "Formally", meaning: "In an official or ceremonial way", example: "I am writing to formally request your assistance.", type: "Email Structure & Tone", task: "9" },
+  { word: "Request", meaning: "To ask for something politely or formally", example: "I request your feedback on this proposal.", type: "Email Communication", task: "9" },
+  { word: "Prompt", meaning: "Done without delay; quick and efficient", example: "Thank you for your prompt attention to this matter.", type: "Politeness & Courtesy", task: "9" },
+  { word: "Regarding", meaning: "Concerning; with respect to", example: "Regarding your inquiry, I can provide more details.", type: "Email Communication", task: "9" },
+  { word: "Convey", meaning: "To communicate or make known", example: "I wanted to convey my sincere gratitude.", type: "Email Communication", task: "9" },
+  { word: "Accommodate", meaning: "To provide lodging or adjust to suit someone's needs", example: "We can accommodate your request for a later deadline.", type: "Email Communication", task: "9" },
+
+  // ── Task 10: Survey Response ──
+  { word: "Concur", meaning: "To agree with someone or something", example: "I concur with your assessment of the situation.", type: "Agreement & Disagreement", task: "10" },
+  { word: "Disagree", meaning: "To have a different opinion; not agree", example: "I respectfully disagree with that conclusion.", type: "Agreement & Disagreement", task: "10" },
+  { word: "Justified", meaning: "Having good or sufficient reason; warranted", example: "Your concerns are completely justified.", type: "Reasoning & Logic", task: "10" },
+  { word: "Applicable", meaning: "Relevant or suitable for a particular purpose", example: "These findings are applicable to our industry.", type: "Relevance & Importance", task: "10" },
+  { word: "Constructive", meaning: "Helpful and leading to improvement", example: "The feedback was constructive and valuable.", type: "Feedback & Evaluation", task: "10" },
+  { word: "Comprehensive", meaning: "Complete and thorough; covering everything", example: "The survey provided a comprehensive view of customer satisfaction.", type: "Feedback & Evaluation", task: "10" },
+  { word: "Efficacy", meaning: "The ability to produce a desired result", example: "The study measured the efficacy of the new treatment.", type: "Evaluation & Results", task: "10" },
+  { word: "Viable", meaning: "Capable of working successfully; feasible", example: "The proposed solution is viable and cost-effective.", type: "Evaluation & Results", task: "10" },
+  { word: "Quantify", meaning: "To express in numbers or measurable terms", example: "It's difficult to quantify the impact of this change.", type: "Reasoning & Logic", task: "10" },
+  { word: "Notable", meaning: "Worthy of attention; striking or remarkable", example: "There were several notable trends in the survey results.", type: "Feedback & Evaluation", task: "10" },
 ];
