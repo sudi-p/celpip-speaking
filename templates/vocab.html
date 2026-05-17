@@ -30,14 +30,6 @@
           <button class="filter-btn" data-filter-type="task" data-filter-value="10">Writing Task 2</button>
         </div>
       </div>
-
-      <div class="filter-group hidden" id="type-filter-group">
-        <label class="filter-label">Filter by Type:</label>
-        <div class="filter-buttons" id="type-filters">
-          <button class="filter-btn active" data-filter-type="type" data-filter-value="all">All Types</button>
-          <!-- Types will be populated by JS -->
-        </div>
-      </div>
     </div>
 
     <div id="vocab-content" class="vocab-content">
@@ -119,18 +111,7 @@
     8: "Unusual Situation",
   };
 
-  let listFilters = { task: "all", type: "all" };
-
-  // ===== Extract unique types =====
-  function getUniqueTypes() {
-    const types = [...new Set(window.VOCAB.map(v => v.type))].sort();
-    return types;
-  }
-
-  // ===== Type filter disabled - kept for potential future use =====
-  // function initializeTypeFilters() {
-  //   (Type filtering code hidden/disabled)
-  // }
+  let listFilters = { task: "all" };
 
   // ===== Word List Tab =====
   function renderWordList() {
@@ -402,7 +383,6 @@
   });
 
   // Initial render
-  // initializeTypeFilters(); // Type filtering disabled
   renderWordList();
 </script>
 {% endblock %}
