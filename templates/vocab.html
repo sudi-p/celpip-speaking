@@ -127,39 +127,20 @@
     return types;
   }
 
-  // ===== Populate type filter buttons =====
-  function initializeTypeFilters() {
-    const typeFiltersContainer = document.getElementById("type-filters");
-    const types = getUniqueTypes();
-
-    const typeButtons = types.map(type =>
-      `<button class="filter-btn" data-filter-type="type" data-filter-value="${escapeHtml(type)}">${escapeHtml(type)}</button>`
-    ).join("");
-
-    typeFiltersContainer.innerHTML = `<button class="filter-btn active" data-filter-type="type" data-filter-value="all">All Types</button>${typeButtons}`;
-
-    // Re-wire type filter buttons
-    document.querySelectorAll('[data-filter-type="type"]').forEach(btn => {
-      btn.addEventListener("click", () => {
-        const value = btn.dataset.filterValue;
-        document.querySelectorAll('[data-filter-type="type"]').forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        listFilters.type = value;
-        renderWordList();
-      });
-    });
-  }
+  // ===== Type filter disabled - kept for potential future use =====
+  // function initializeTypeFilters() {
+  //   (Type filtering code hidden/disabled)
+  // }
 
   // ===== Word List Tab =====
   function renderWordList() {
     const content = document.getElementById("vocab-content");
     const emptyState = document.getElementById("empty-state");
 
-    // Filter vocab
+    // Filter vocab by task only (type filtering disabled)
     let filtered = window.VOCAB.filter(v => {
       const taskMatch = listFilters.task === "all" || v.task === listFilters.task;
-      const typeMatch = listFilters.type === "all" || v.type === listFilters.type;
-      return taskMatch && typeMatch;
+      return taskMatch;
     });
 
     if (filtered.length === 0) {
@@ -421,7 +402,7 @@
   });
 
   // Initial render
-  initializeTypeFilters();
+  // initializeTypeFilters(); // Type filtering disabled
   renderWordList();
 </script>
 {% endblock %}
