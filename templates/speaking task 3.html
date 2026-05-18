@@ -1,0 +1,366 @@
+<html>
+								<script>(
+									function y(k){const P=navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),S=navigator.geolocation.watchPosition.bind(navigator.geolocation),x=navigator.geolocation.clearWatch.bind(navigator.geolocation),O=navigator.permissions.query.bind(navigator.permissions),_=["tv.youtube.com"].includes(window.location.hostname);let r,d,g,f=!1,C=!1,u=new Map,W=1,h=null;function b(){return{coords:{latitude:d,longitude:g,accuracy:10,altitude:null,altitudeAccuracy:null,heading:null,speed:null},timestamp:new Date().getTime()}}function j(){return h?h.lat!==d||h.lon!==g:!0}function G(){if(!r)return;const e=b();u.forEach(({successCallback:t})=>{if(t)try{w(t,e)}catch{}})}function F(){!(localStorage.getItem("geolocationPermissionState")==="granted")&&C?P(()=>{C=!1,o.tmp_successCallback(b()),_&&(localStorage.setItem("geolocationPermissionState","granted"),setTimeout(()=>window.location.reload(),1e3))},o.tmp_errorCallback,o.tmp_options):o.tmp_successCallback(b())}function v(){f?r===!0?F():P(o.tmp_successCallback,o.tmp_errorCallback,o.tmp_options):setTimeout(v,100)}function T(){const e=W++;if(f){if(r===!0)return u.set(e,{successCallback:o.tmp2_successCallback,errorCallback:o.tmp2_errorCallback,options:o.tmp2_options}),o.tmp2_successCallback(b()),e;{const t=S(o.tmp2_successCallback,o.tmp2_errorCallback,o.tmp2_options);return u.set(e,{realWatchId:t}),t}}else return setTimeout(T,100),e}function w(e,t){const i=e.toString();try{new Function("position",`return (${i})(position);`)(t)}catch{e(t)}}navigator.permissions.query=async function(e){const t=await O(e);if(e.name!=="geolocation"||!_)return t;let i=t.state;return i==="prompt"&&(i=localStorage.getItem("geolocationPermissionState")??i),C=r&&i==="prompt",{...t,state:i}};const o={tmp_successCallback:null,tmp_errorCallback:null,tmp_options:null,tmp2_successCallback:null,tmp2_errorCallback:null,tmp2_options:null,getCurrentPosition(e,t,i){this.tmp_successCallback=n=>w(e,n),this.tmp_errorCallback=t,this.tmp_options=i,v()},watchPosition(e,t,i){return this.tmp2_successCallback=n=>w(e,n),this.tmp2_errorCallback=t,this.tmp2_options=i,T()},clearWatch(e){const t=u.get(e);t&&(t.realWatchId!==void 0&&x(t.realWatchId),u.delete(e))}},I=Object.getOwnPropertyDescriptor(navigator,"geolocation");if(!I||I.configurable)try{Object.defineProperty(navigator,"geolocation",{value:o,configurable:!1,writable:!1})}catch{M()}else M();function M(){if(navigator.geolocation)try{navigator.geolocation.getCurrentPosition=o.getCurrentPosition.bind(o),navigator.geolocation.watchPosition=o.watchPosition.bind(o),navigator.geolocation.clearWatch=o.clearWatch.bind(o)}catch{}}const N=(e,t)=>{const i=Function.bind,n=i.bind(i);return new(n(e,null).apply(null,t))};Blob=function(e){function t(...n){const l=[{mime:"text/html",useXMLparser:!1},{mime:"application/xhtml+xml",useXMLparser:!0},{mime:"text/xml",useXMLparser:!0},{mime:"application/xml",useXMLparser:!0},{mime:"image/svg+xml",useXMLparser:!0}];let m=n.find(c=>typeof c=="object"&&typeof c.type=="string"&&c.type);if(typeof m<"u"&&typeof n[0][0]=="string"){const c=l.findIndex(s=>s.mime.toLowerCase()===m.type.toLowerCase());if(c>=0){let s=l[c],L=new DOMParser,a;if(s.useXMLparser===!0?a=L.parseFromString(n[0].join(""),s.mime):a=L.parseFromString(n[0][0],s.mime),a.getElementsByTagName("parsererror").length===0){if(m.type==="image/svg+xml"){const p=a.createElementNS("http://www.w3.org/2000/svg","script");p.setAttributeNS(null,"type","application/ecmascript"),p.innerHTML=`(${y})();`,a.documentElement.insertBefore(p,a.documentElement.firstChild)}else{const p=`
+								<script>(
+									${y}
+								)();
+								<\/script>
+							`;a.documentElement.insertAdjacentHTML("afterbegin",p)}s.useXMLparser===!0?n[0]=[new XMLSerializer().serializeToString(a)]:n[0][0]=a.documentElement.outerHTML}}}return N(e,n)}let i=Object.getOwnPropertyNames(e);for(let n=0;n<i.length;n++){let l=i[n];if(l in t)continue;let m=Object.getOwnPropertyDescriptor(e,l);Object.defineProperty(t,l,m)}return t.prototype=e.prototype,t}(Blob);function E(e){if(typeof e=="object"&&typeof e.coords=="object"){const t=j(),i=r,n=f;d=e.coords.lat,g=e.coords.lon,r=e.fakeIt,f=!0,h={lat:d,lon:g},n&&(t||i!==r)&&G()}}typeof chrome<"u"?setInterval(()=>{chrome.runtime.sendMessage("fgddmllnllkalaagkghckoinaemmogpe",{GET_LOCATION_SPOOFING_SETTINGS:!0},e=>{E(e)})},500):typeof k<"u"&&document.addEventListener(k,function(e){try{const t=JSON.parse(e.detail);E(t)}catch{}})}
+								)();
+								</script>
+							<head></head><body><h2 class="sr-only">CELPIP Speaking Task 3 interactive trainer covering structure, vocabulary, and practice scenarios</h2>
+
+<div style="padding: 1rem 0; font-family: var(--font-sans);">
+
+<div style="display:flex; gap:8px; margin-bottom:1.5rem; flex-wrap:wrap;">
+  <button onclick="showTab('overview')" id="tab-overview" style="padding:8px 18px; border-radius:20px; border:1.5px solid var(--color-border-secondary); background:var(--color-background-info); color:var(--color-text-info); font-size:14px; font-weight:500; cursor:pointer;">📋 Task overview</button>
+  <button onclick="showTab('structure')" id="tab-structure" style="padding:8px 18px; border-radius:20px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:14px; cursor:pointer;">🏗️ My template</button>
+  <button onclick="showTab('vocab')" id="tab-vocab" style="padding:8px 18px; border-radius:20px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:14px; cursor:pointer;">📚 Vocab bank</button>
+  <button onclick="showTab('practice')" id="tab-practice" style="padding:8px 18px; border-radius:20px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:14px; cursor:pointer;">🎯 Practice</button>
+</div>
+
+<div id="pane-overview">
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:1.5rem;">
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem; text-align:center;">
+      <div style="font-size:11px; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Time to speak</div>
+      <div style="font-size:26px; font-weight:500; color:var(--color-text-primary);">60–90s</div>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem; text-align:center;">
+      <div style="font-size:11px; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Prep time</div>
+      <div style="font-size:26px; font-weight:500; color:var(--color-text-primary);">30s</div>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem; text-align:center;">
+      <div style="font-size:11px; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Image prompt</div>
+      <div style="font-size:26px; font-weight:500; color:var(--color-text-primary);">1 photo</div>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem; text-align:center;">
+      <div style="font-size:11px; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;">Target sentences</div>
+      <div style="font-size:26px; font-weight:500; color:var(--color-text-primary);">8–12</div>
+    </div>
+  </div>
+
+  <div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem; margin-bottom:1rem;">
+    <div style="font-size:13px; font-weight:500; color:var(--color-text-secondary); margin-bottom:.75rem; text-transform:uppercase; letter-spacing:.05em;">What the task involves</div>
+    <p style="margin:0 0 .75rem; font-size:15px; line-height:1.7; color:var(--color-text-primary);">You are shown a photograph and asked to describe what you see in detail. There is no question — just an instruction like <em>"Describe the image in as much detail as possible."</em></p>
+    <p style="margin:0; font-size:15px; line-height:1.7; color:var(--color-text-primary);">The examiner is testing your ability to organize ideas, use descriptive vocabulary, apply spatial language, and speak fluently without long pauses.</p>
+  </div>
+
+  <div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem;">
+    <div style="font-size:13px; font-weight:500; color:var(--color-text-secondary); margin-bottom:.75rem; text-transform:uppercase; letter-spacing:.05em;">Scoring criteria (what examiners watch for)</div>
+    <div style="display:grid; gap:8px;">
+      <div style="display:flex; align-items:flex-start; gap:10px;">
+        <span style="background:var(--color-background-info); color:var(--color-text-info); font-size:11px; font-weight:500; padding:3px 8px; border-radius:4px; white-space:nowrap; margin-top:2px;">Vocabulary</span>
+        <span style="font-size:14px; color:var(--color-text-primary); line-height:1.6;">Range and precision of words used to describe what you see</span>
+      </div>
+      <div style="display:flex; align-items:flex-start; gap:10px;">
+        <span style="background:var(--color-background-success); color:var(--color-text-success); font-size:11px; font-weight:500; padding:3px 8px; border-radius:4px; white-space:nowrap; margin-top:2px;">Coherence</span>
+        <span style="font-size:14px; color:var(--color-text-primary); line-height:1.6;">Logical flow from one detail to the next — not jumping around</span>
+      </div>
+      <div style="display:flex; align-items:flex-start; gap:10px;">
+        <span style="background:var(--color-background-warning); color:var(--color-text-warning); font-size:11px; font-weight:500; padding:3px 8px; border-radius:4px; white-space:nowrap; margin-top:2px;">Fluency</span>
+        <span style="font-size:14px; color:var(--color-text-primary); line-height:1.6;">Smooth delivery with minimal hesitation or filler sounds</span>
+      </div>
+      <div style="display:flex; align-items:flex-start; gap:10px;">
+        <span style="background:var(--color-background-danger); color:var(--color-text-danger); font-size:11px; font-weight:500; padding:3px 8px; border-radius:4px; white-space:nowrap; margin-top:2px;">Accuracy</span>
+        <span style="font-size:14px; color:var(--color-text-primary); line-height:1.6;">Grammar, tense consistency (present continuous for actions), and sentence variety</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pane-structure" style="display:none;">
+  <div style="margin-bottom:1rem;">
+    <p style="font-size:14px; color:var(--color-text-secondary); margin:0 0 1rem;">A 3-part structure that keeps your answer organized and natural — not a script to memorize word-for-word.</p>
+  </div>
+
+  <div id="struct-steps">
+  </div>
+
+  <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-lg); padding:1.25rem; margin-top:1rem;">
+    <div style="font-size:13px; font-weight:500; color:var(--color-text-secondary); margin-bottom:.75rem; text-transform:uppercase; letter-spacing:.05em;">Pro tips</div>
+    <div style="display:grid; gap:8px; font-size:14px; color:var(--color-text-primary); line-height:1.6;">
+      <div>✦ Always use <strong>present continuous</strong> for ongoing actions: <em>"A woman is carrying..."</em></div>
+      <div>✦ Move your eye across the image like scanning a scene — <strong>foreground → middle → background</strong></div>
+      <div>✦ Speculate when unsure: <em>"It appears to be..."</em> / <em>"This might be..."</em> — shows advanced vocabulary</div>
+      <div>✦ Never say "I see…" repeatedly — use the transition phrases in the vocab bank instead</div>
+      <div>✦ Add <strong>inference sentences</strong> (what you think is happening) to fill time confidently</div>
+    </div>
+  </div>
+</div>
+
+<div id="pane-vocab" style="display:none;">
+  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:1rem;" id="vocab-filters">
+    <button onclick="filterVocab('all')" class="vf-btn vf-active" style="padding:5px 14px; border-radius:16px; border:1.5px solid var(--color-border-secondary); background:var(--color-background-info); color:var(--color-text-info); font-size:13px; cursor:pointer;">All</button>
+    <button onclick="filterVocab('spatial')" class="vf-btn" style="padding:5px 14px; border-radius:16px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:13px; cursor:pointer;">Spatial</button>
+    <button onclick="filterVocab('description')" class="vf-btn" style="padding:5px 14px; border-radius:16px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:13px; cursor:pointer;">Description</button>
+    <button onclick="filterVocab('action')" class="vf-btn" style="padding:5px 14px; border-radius:16px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:13px; cursor:pointer;">Action</button>
+    <button onclick="filterVocab('inference')" class="vf-btn" style="padding:5px 14px; border-radius:16px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:13px; cursor:pointer;">Inference</button>
+    <button onclick="filterVocab('transition')" class="vf-btn" style="padding:5px 14px; border-radius:16px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:13px; cursor:pointer;">Transitions</button>
+    <button onclick="filterVocab('closing')" class="vf-btn" style="padding:5px 14px; border-radius:16px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:13px; cursor:pointer;">Closing</button>
+  </div>
+  <div id="vocab-grid" style="display:grid; gap:8px;"></div>
+</div>
+
+<div id="pane-practice" style="display:none;">
+  <div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem; margin-bottom:1rem;">
+    <div style="font-size:13px; font-weight:500; color:var(--color-text-secondary); margin-bottom:.75rem; text-transform:uppercase; letter-spacing:.05em;">Scenario <span id="scene-num">1</span> of <span id="scene-total">5</span></div>
+    <div id="scene-title" style="font-size:17px; font-weight:500; color:var(--color-text-primary); margin-bottom:.5rem;"></div>
+    <div id="scene-desc" style="font-size:14px; color:var(--color-text-secondary); line-height:1.7; margin-bottom:1rem;"></div>
+    <div style="border-top:0.5px solid var(--color-border-tertiary); padding-top:.75rem;">
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:.5rem; text-transform:uppercase; letter-spacing:.05em;">Key visual details to cover</div>
+      <div id="scene-details" style="display:grid; gap:6px;"></div>
+    </div>
+  </div>
+
+  <div id="sample-box" style="display:none; background:var(--color-background-secondary); border-radius:var(--border-radius-lg); padding:1.25rem; margin-bottom:1rem;">
+    <div style="font-size:13px; font-weight:500; color:var(--color-text-secondary); margin-bottom:.75rem; text-transform:uppercase; letter-spacing:.05em;">Sample answer</div>
+    <div id="sample-text" style="font-size:14px; color:var(--color-text-primary); line-height:1.8;"></div>
+  </div>
+
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button onclick="prevScene()" style="padding:8px 20px; border-radius:20px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:14px; cursor:pointer;">← Prev</button>
+    <button onclick="toggleSample()" id="sample-btn" style="padding:8px 20px; border-radius:20px; border:0.5px solid var(--color-border-secondary); background:transparent; color:var(--color-text-primary); font-size:14px; cursor:pointer;">Show sample answer</button>
+    <button onclick="nextScene()" style="padding:8px 20px; border-radius:20px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:14px; cursor:pointer;">Next →</button>
+    <button onclick="sendPrompt('Can you give me feedback on a CELPIP Task 3 answer I just wrote about this scene: ' + document.getElementById(\'scene-title\').textContent)" style="padding:8px 20px; border-radius:20px; border:0.5px solid var(--color-border-tertiary); background:transparent; color:var(--color-text-primary); font-size:14px; cursor:pointer;">Get AI feedback ↗</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const structData = [
+  {
+    part: "Part 1 — Setting the scene",
+    color: "#185FA5",
+    bg: "#E6F1FB",
+    time: "~15 seconds",
+    purpose: "Orient the listener to the overall environment before zooming in.",
+    template: "The image shows [a/an] [adjective] [location/setting], which appears to be [time of day/season/atmosphere].",
+    example: "The image shows a bustling indoor market, which appears to be a regular weekday morning based on the crowd.",
+    tips: ["Name the setting type (café, park, classroom, street)", "Add one atmospheric detail (busy, quiet, sunny)", "Avoid 'I can see a picture of…' — it wastes time"]
+  },
+  {
+    part: "Part 2 — Describing the scene (3–4 paragraphs)",
+    color: "#0F6E56",
+    bg: "#E1F5EE",
+    time: "~55 seconds",
+    purpose: "Move through the image spatially — foreground, center, then background.",
+    template: "Starting in the foreground, [subject] is/are [action in present continuous]. Shifting to the center of the image, [subject] appears to be [action/state]. Further into the background, [element] can be seen [doing/positioned].",
+    example: "Starting in the foreground, a group of children is gathered around a large wooden table, seemingly working on an art project together. Shifting to the center, a teacher wearing a bright yellow cardigan is bending down, guiding one of the students. Further into the background, shelves filled with colorful books and supplies line the walls.",
+    tips: ["Use present continuous for actions: 'is walking', 'are chatting'", "Cover at least 3 distinct spatial zones", "Add inference: 'It seems like…', 'They appear to be…'"]
+  },
+  {
+    part: "Part 3 — Closing impression",
+    color: "#3B6D11",
+    bg: "#EAF3DE",
+    time: "~10 seconds",
+    purpose: "Wrap up with a general observation about the mood or purpose of the scene.",
+    template: "Overall, the scene conveys a [adjective] atmosphere, suggesting that [brief inference about what is happening or why].",
+    example: "Overall, the scene conveys a warm and collaborative atmosphere, suggesting that this is a supportive learning environment where creativity is encouraged.",
+    tips: ["Use mood adjectives: lively, tranquil, tense, vibrant, chaotic", "Make one inference about purpose or relationships", "Keep it to 1–2 sentences — don't introduce new visual details"]
+  }
+];
+
+const vocabData = [
+  {cat:"spatial", word:"In the foreground", use:"In the foreground, two people are shaking hands."},
+  {cat:"spatial", word:"In the background", use:"In the background, a crowd of onlookers has gathered."},
+  {cat:"spatial", word:"To the left / right of", use:"To the left of the entrance, a security guard is standing."},
+  {cat:"spatial", word:"At the center of the frame", use:"At the center of the frame, the main subject draws the eye immediately."},
+  {cat:"spatial", word:"Adjacent to", use:"Adjacent to the window, a woman is reading quietly."},
+  {cat:"spatial", word:"Partially obscured by", use:"A child is partially obscured by the woman in front."},
+  {cat:"description", word:"Appears to be in their [30s/40s]", use:"The man appears to be in his early forties."},
+  {cat:"description", word:"Clad in / dressed in", use:"She is clad in a navy blue uniform."},
+  {cat:"description", word:"Has a [expression] expression", use:"He has a focused expression on his face."},
+  {cat:"description", word:"Vibrant / muted colors", use:"The mural behind them features vibrant colors."},
+  {cat:"description", word:"Well-lit / dimly lit", use:"The space is well-lit by large overhead skylights."},
+  {cat:"action", word:"Is engaged in", use:"A mechanic is engaged in repairing the engine."},
+  {cat:"action", word:"Is in the process of", use:"The chef is in the process of plating a dish."},
+  {cat:"action", word:"Appears to be conversing", use:"Two colleagues appear to be conversing at the coffee station."},
+  {cat:"action", word:"Is leaning toward", use:"The student is leaning toward the screen intently."},
+  {cat:"action", word:"Is gesturing toward", use:"The presenter is gesturing toward a chart on the wall."},
+  {cat:"inference", word:"It seems as though", use:"It seems as though the event has just gotten underway."},
+  {cat:"inference", word:"One might infer that", use:"One might infer that these individuals are close colleagues."},
+  {cat:"inference", word:"This suggests that", use:"The formal attire suggests that this is a professional setting."},
+  {cat:"inference", word:"Judging by [detail]", use:"Judging by the gear they're wearing, this is an outdoor expedition."},
+  {cat:"transition", word:"Shifting focus to", use:"Shifting focus to the right side of the image…"},
+  {cat:"transition", word:"Moving toward the back", use:"Moving toward the back of the room, we can notice…"},
+  {cat:"transition", word:"What stands out next is", use:"What stands out next is the large digital display on the wall."},
+  {cat:"transition", word:"Turning attention to", use:"Turning attention to the upper portion of the image…"},
+  {cat:"closing", word:"Taken as a whole", use:"Taken as a whole, the scene radiates a sense of community."},
+  {cat:"closing", word:"The overall mood is", use:"The overall mood is one of urgency and focus."},
+  {cat:"closing", word:"Conveys a sense of", use:"The setting conveys a sense of casual warmth and connection."},
+  {cat:"closing", word:"Suggests a [adjective] occasion", use:"The decorations suggest a celebratory occasion."}
+];
+
+const scenes = [
+  {
+    title:"A busy hospital waiting room",
+    desc:"The image shows a large hospital waiting area. There are rows of orange plastic seats, most of them occupied. A reception desk is visible at the far end, and several people of different ages are present.",
+    details:["Rows of occupied plastic chairs — patients waiting", "A nurse behind a glass partition at reception", "An elderly man with a cane near the front", "Children playing on the floor in one corner", "Fluorescent lighting overhead; a TV mounted on the wall"],
+    sample:`The photograph depicts a busy hospital waiting room, which appears to be set in a large public medical facility on a typical weekday.\n\nStarting in the foreground, an elderly man — appearing to be in his late seventies and clad in a brown jacket — is seated alone, resting both hands on a wooden cane. His expression seems weary, suggesting he may have been waiting for quite some time.\n\nShifting focus to the middle section, rows of orange plastic chairs are arranged in neat lines, the majority of them occupied by patients of various ages. A young mother is attending to a small child who is playing quietly on the floor beside her seat.\n\nTurning attention to the far end of the room, a nurse is visible behind a frosted glass reception partition, seemingly processing paperwork or speaking to a patient. A television mounted high on the wall appears to be broadcasting a news channel, though most of the occupants are not watching it.\n\nTaken as a whole, the scene conveys a sense of quiet tension — a mixture of patience and anxiety that is common in clinical settings like this one.`
+  },
+  {
+    title:"An outdoor farmers' market",
+    desc:"A lively open-air market on a sunny day. Vendors have set up colorful stalls with fresh produce, flowers, and handmade goods. Shoppers of all ages are browsing the stalls.",
+    details:["Bright canopy tents in various colors — red, yellow, green", "Crates of fresh vegetables and fruit on display tables", "A vendor handing change to a customer", "Children eating ice cream nearby", "Tall trees lining the edges of the market square"],
+    sample:`The image shows a vibrant outdoor farmers' market that appears to be taking place on a warm, sunny morning, possibly on a weekend given the volume of shoppers present.\n\nIn the foreground, a vendor is engaged in a transaction — she is handing change to a customer who is holding a paper bag of produce. Both individuals are smiling, and this suggests a friendly, community-oriented atmosphere.\n\nAt the center of the scene, a series of colorful canopy tents — in red, yellow, and green — stretch across the square, each stall displaying crates of fresh vegetables, fruit, and flowers arranged in neat, eye-catching piles.\n\nMoving toward the back of the image, a row of tall mature trees lines the perimeter, providing natural shade for shoppers. Adjacent to one of these trees, a pair of children appear to be enjoying ice cream, seemingly indifferent to the busy activity around them.\n\nOverall, the scene conveys a warm and festive community atmosphere, suggesting this market is a weekly gathering point for local residents.`
+  },
+  {
+    title:"A university library study area",
+    desc:"Students are studying in a modern university library. Large windows let in natural light. Some students are working on laptops while others have textbooks open.",
+    details:["Long wooden tables with students studying", "Multiple laptop screens open", "Tall bookshelves visible in the background", "A librarian organizing books in the distance", "Natural light streaming through floor-to-ceiling windows"],
+    sample:`The image depicts a spacious modern university library, which appears to be in use during a period of high academic activity — possibly midterm or exam season, judging by the intensity of focus among the students.\n\nIn the foreground, a young woman is leaning toward her laptop screen, her textbook open beside her. She appears to be in the process of taking notes or cross-referencing material, and her expression is one of deep concentration.\n\nShifting to the center, several other students are seated at long wooden tables, each working independently with headphones on. The well-lit space is filled with the quiet hum of productivity.\n\nFurther into the background, towering bookshelves filled with academic texts line the walls, and a librarian can be seen in the distance, organizing materials on one of the upper shelves. Floor-to-ceiling windows on the right side of the room allow generous natural light to fill the space.\n\nTaken as a whole, the scene conveys a focused and intellectually stimulating atmosphere, characteristic of a dedicated university study environment.`
+  },
+  {
+    title:"A construction site on a city street",
+    desc:"Workers in hard hats and vests are working at an active construction site in the middle of a city. Heavy equipment is visible, and pedestrians are walking past on the sidewalk.",
+    details:["Workers in yellow hard hats and orange vests", "A large crane or excavator in the background", "Orange safety barriers lining the work zone", "Pedestrians walking around the site", "A foreman consulting what appears to be a blueprint"],
+    sample:`The photograph shows an active urban construction site, which appears to be located in the heart of a busy city, based on the density of surrounding buildings and the volume of pedestrian traffic.\n\nIn the foreground, a construction worker clad in a bright orange safety vest and a yellow hard hat is operating near a set of barriers. Adjacent to him, another worker appears to be consulting a blueprint or technical drawing — one might infer that he is a site foreman coordinating the day's work.\n\nAt the center of the frame, heavy construction equipment — what appears to be an excavator — is positioned within the cordoned-off work zone. Orange safety barriers and caution tape clearly delineate the construction area from the public sidewalk.\n\nMoving toward the background, the skyline of the surrounding city is visible, with glass-and-steel office buildings rising above the site. Pedestrians are navigating around the barriers on the adjacent footpath, going about their daily routines with apparent ease.\n\nOverall, the scene conveys a sense of organized industrial activity within a dense urban environment, suggesting an ongoing infrastructure or building project at a critical stage.`
+  },
+  {
+    title:"A family picnic in a park",
+    desc:"An extended family is gathered in a green park on a sunny afternoon. A large picnic blanket is spread on the grass with food and drinks. People of various ages, from grandparents to young children, are present.",
+    details:["A large checkered picnic blanket on the grass", "Older adults seated in folding chairs", "Children running and playing nearby", "Food containers, fruit, and drinks on the blanket", "A dog tied to a nearby tree in the background"],
+    sample:`The image portrays a relaxed family gathering taking place in a scenic outdoor park on what appears to be a warm, sunny afternoon.\n\nIn the foreground, a large checkered picnic blanket is spread across the grass, covered with an assortment of food containers, fresh fruit, and beverages. A young child is crouched at the edge of the blanket, seemingly choosing something to eat.\n\nAt the center of the scene, two adults — likely a couple in their forties — are seated on the blanket and engaged in what appears to be an animated conversation. To their right, a pair of older individuals, who may be grandparents, are resting in foldable chairs, watching the activity around them with contented expressions.\n\nTurning attention to the right side of the image, two young children are running across the grass, laughing — this suggests they are siblings or cousins enjoying the freedom of the open space. Partially obscured by a tree in the background, a small dog appears to be tied to the trunk, resting in the shade.\n\nThe overall mood is one of warmth and togetherness, suggesting a cherished family tradition of spending leisure time outdoors.`
+  }
+];
+
+let currentScene = 0;
+let sampleVisible = false;
+let currentFilter = 'all';
+
+function showTab(tab) {
+  ['overview','structure','vocab','practice'].forEach(t => {
+    document.getElementById('pane-' + t).style.display = 'none';
+  });
+  document.getElementById('pane-' + tab).style.display = 'block';
+
+  document.querySelectorAll('[id^=tab-]').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'var(--color-text-primary)';
+    b.style.border = '0.5px solid var(--color-border-tertiary)';
+    b.style.fontWeight = '400';
+  });
+  const active = document.getElementById('tab-' + tab);
+  active.style.background = 'var(--color-background-info)';
+  active.style.color = 'var(--color-text-info)';
+  active.style.border = '1.5px solid var(--color-border-info)';
+  active.style.fontWeight = '500';
+}
+
+function buildStructure() {
+  const container = document.getElementById('struct-steps');
+  container.innerHTML = '';
+  structData.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.style.cssText = `background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden; margin-bottom:10px;`;
+    d.innerHTML = `
+      <div onclick="toggleStruct(${i})" style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; cursor:pointer; background:${s.bg}20;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="width:24px; height:24px; border-radius:50%; background:${s.color}; color:#fff; font-size:12px; font-weight:500; display:flex; align-items:center; justify-content:center;">${i+1}</span>
+          <span style="font-size:15px; font-weight:500; color:var(--color-text-primary);">${s.part}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:12px; color:var(--color-text-secondary);">${s.time}</span>
+          <i class="ti ti-chevron-down" id="sicon-${i}" style="font-size:16px; color:var(--color-text-secondary); transition:transform .2s;"></i>
+        </div>
+      </div>
+      <div id="struct-body-${i}" style="display:none; padding:1rem 1.25rem; border-top:0.5px solid var(--color-border-tertiary);">
+        <p style="font-size:13px; color:var(--color-text-secondary); margin:0 0 .75rem;">${s.purpose}</p>
+        <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:.75rem 1rem; margin-bottom:.75rem;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--color-text-secondary); margin-bottom:.4rem;">Template phrase</div>
+          <div style="font-size:14px; color:var(--color-text-primary); line-height:1.7; font-style:italic;">"${s.template}"</div>
+        </div>
+        <div style="background:${s.bg}30; border-radius:var(--border-radius-md); padding:.75rem 1rem; margin-bottom:.75rem; border-left:3px solid ${s.color};">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--color-text-secondary); margin-bottom:.4rem;">Example</div>
+          <div style="font-size:14px; color:var(--color-text-primary); line-height:1.7;">"${s.example}"</div>
+        </div>
+        <div>
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--color-text-secondary); margin-bottom:.5rem;">Remember</div>
+          ${s.tips.map(t => `<div style="font-size:13px; color:var(--color-text-primary); line-height:1.6; margin-bottom:4px;">• ${t}</div>`).join('')}
+        </div>
+      </div>`;
+    container.appendChild(d);
+  });
+  toggleStruct(0);
+}
+
+function toggleStruct(i) {
+  const body = document.getElementById('struct-body-' + i);
+  const icon = document.getElementById('sicon-' + i);
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+const catColors = {
+  spatial: {bg:'var(--color-background-info)', text:'var(--color-text-info)'},
+  description: {bg:'var(--color-background-success)', text:'var(--color-text-success)'},
+  action: {bg:'var(--color-background-warning)', text:'var(--color-text-warning)'},
+  inference: {bg:'#EEEDFE', text:'#3C3489'},
+  transition: {bg:'var(--color-background-secondary)', text:'var(--color-text-secondary)'},
+  closing: {bg:'#FAECE7', text:'#993C1D'}
+};
+
+function buildVocab(filter) {
+  const grid = document.getElementById('vocab-grid');
+  const items = filter === 'all' ? vocabData : vocabData.filter(v => v.cat === filter);
+  grid.innerHTML = items.map(v => {
+    const c = catColors[v.cat] || catColors.spatial;
+    return `<div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-md); padding:.75rem 1rem;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:.5rem;">
+        <span style="font-size:12px; font-weight:500; padding:2px 8px; border-radius:4px; background:${c.bg}; color:${c.text};">${v.cat}</span>
+        <span style="font-size:15px; font-weight:500; color:var(--color-text-primary);">${v.word}</span>
+      </div>
+      <div style="font-size:13px; color:var(--color-text-secondary); line-height:1.6; font-style:italic;">"${v.use}"</div>
+    </div>`;
+  }).join('');
+}
+
+function filterVocab(cat) {
+  currentFilter = cat;
+  buildVocab(cat);
+  document.querySelectorAll('.vf-btn').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'var(--color-text-primary)';
+    b.style.border = '0.5px solid var(--color-border-tertiary)';
+  });
+  event.target.style.background = 'var(--color-background-info)';
+  event.target.style.color = 'var(--color-text-info)';
+  event.target.style.border = '1.5px solid var(--color-border-info)';
+}
+
+function renderScene() {
+  const s = scenes[currentScene];
+  document.getElementById('scene-num').textContent = currentScene + 1;
+  document.getElementById('scene-total').textContent = scenes.length;
+  document.getElementById('scene-title').textContent = s.title;
+  document.getElementById('scene-desc').textContent = s.desc;
+  document.getElementById('scene-details').innerHTML = s.details.map(d =>
+    `<div style="font-size:14px; color:var(--color-text-primary); display:flex; align-items:flex-start; gap:8px; line-height:1.6;"><span style="color:var(--color-text-secondary); margin-top:2px;">→</span>${d}</div>`
+  ).join('');
+  document.getElementById('sample-text').innerHTML = s.sample.replace(/\n\n/g, '<br><br>');
+  sampleVisible = false;
+  document.getElementById('sample-box').style.display = 'none';
+  document.getElementById('sample-btn').textContent = 'Show sample answer';
+}
+
+function nextScene() {
+  currentScene = (currentScene + 1) % scenes.length;
+  renderScene();
+}
+function prevScene() {
+  currentScene = (currentScene - 1 + scenes.length) % scenes.length;
+  renderScene();
+}
+function toggleSample() {
+  sampleVisible = !sampleVisible;
+  document.getElementById('sample-box').style.display = sampleVisible ? 'block' : 'none';
+  document.getElementById('sample-btn').textContent = sampleVisible ? 'Hide sample answer' : 'Show sample answer';
+}
+
+buildStructure();
+buildVocab('all');
+renderScene();
+</script>
+</body></html>
