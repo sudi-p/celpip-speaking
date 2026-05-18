@@ -1,412 +1,572 @@
-{% extends "base.html" %}
-{% block title %}CELPIP — Question Bank{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Question Bank</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+  </style>
+</head>
+<body class="min-h-screen">
 
-{% block body %}
-<div class="container">
-  <header>
-    <h1>Question Bank</h1>
+  {% include 'partials/navbar.html' %}
+
+  <!-- ─── HERO ─── -->
+  <header class="max-w-6xl mx-auto px-6 pt-16 pb-8">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Question Bank</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-3">
+        Practice <span class="hero-line italic">Questions</span>
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Browse, filter, and manage all your CELPIP practice questions. Add custom questions or generate them with AI.
+      </p>
+    </div>
   </header>
 
-  <!-- Filter bar -->
-  <div class="qbank-filters" style="flex-wrap:wrap;gap:.5rem">
-    <button class="qbank-filter-btn active" data-filter="all" data-type="all">All</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="1">Task 1</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="2">Task 2</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="3">Task 3</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="4">Task 4</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="5">Task 5</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="6">Task 6</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="7">Task 7</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="8">Task 8</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="9">Writing Task 1</button>
-    <button class="qbank-filter-btn" data-filter="task" data-task-id="10">Writing Task 2</button>
-    <button class="btn btn-primary" id="btn-add-question" style="margin-left:auto;font-size:.85rem;padding:.4rem .9rem">+ Add Question</button>
-  </div>
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-6xl mx-auto px-6 pb-24">
+    <!-- Error message -->
+    <div id="error-area" class="mb-6"></div>
 
-  <div id="error-area" class="error-msg"></div>
-  <div id="content"></div>
-</div>
-
-<!-- ── Create Question Modal ─────────────────────────────────────────────── -->
-<div class="modal-overlay" id="qbank-modal" style="display:none" role="dialog" aria-modal="true">
-  <div class="modal">
-
-    <!-- STEP A: Author question -->
-    <div id="step-author">
-      <h2>Add a Question</h2>
-      <p class="modal-sub">Type a question and choose the task it belongs to.</p>
-
-      <label style="display:block;font-size:.8rem;color:#555;margin:.5rem 0 .3rem">Task</label>
-      <select id="new-q-task" style="width:100%;padding:.5rem;border:1px solid #ccc;border-radius:6px;font-size:.9rem;background:#fff">
-        <optgroup label="Speaking" id="opt-speaking"></optgroup>
-        <optgroup label="Writing" id="opt-writing"></optgroup>
-      </select>
-
-      <label style="display:block;font-size:.8rem;color:#555;margin:.75rem 0 .3rem">Question</label>
-      <textarea id="new-q-text" placeholder="Type or paste your question here…" style="width:100%;min-height:110px;padding:.6rem;border:1px solid #ccc;border-radius:6px;font-size:.9rem;font-family:inherit;resize:vertical"></textarea>
-
-      <div class="btn-row" style="display:flex;gap:.5rem;margin-top:1rem">
-        <button class="btn btn-secondary" id="btn-save-only" style="flex:1">Save Question</button>
-        <button class="btn btn-primary" id="btn-save-practice" style="flex:1">Save &amp; Practice &rarr;</button>
+    <!-- Action bar -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <div>
+        <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-3">Filter by task</p>
+        <div id="filter-buttons" class="flex flex-wrap gap-2"></div>
       </div>
+      <button id="btn-add-question" class="px-6 py-2.5 rounded-lg bg-ink text-fog font-medium hover:bg-steel transition-colors whitespace-nowrap">
+        + Add Question
+      </button>
     </div>
 
-    <!-- STEP B: Session choice -->
-    <div id="step-session" style="display:none">
-      <h2>Start Practicing</h2>
-      <p class="modal-sub">You are going to practice the question you just created.</p>
+    <!-- Questions content -->
+    <div id="content" class="space-y-8"></div>
+  </main>
 
-      <div id="continue-box" style="display:none;margin-bottom:1rem">
-        <div class="session-info-card" id="session-info-card"></div>
-        <button class="btn btn-primary" id="btn-continue" style="width:100%">Continue This Session</button>
-        <div class="modal-divider" style="margin:.75rem 0">or</div>
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-mist bg-fog py-8 px-6 text-center">
+    <p class="text-xs text-slate">CELPIP Question Bank · Create custom questions for targeted practice.</p>
+  </footer>
+
+  <!-- ─── MODAL: Create/Add Question ─── -->
+  <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50" id="qbank-modal" style="display:none" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+
+      <!-- STEP A: Author question -->
+      <div id="step-author" class="px-6 pt-6">
+        <h2 class="font-display text-2xl text-ink mb-2">Add a Question</h2>
+        <p class="text-sm text-slate mb-6">Type a question and choose which task it belongs to.</p>
+
+        <label class="block text-sm font-medium text-slate mb-2">Task</label>
+        <select id="new-q-task" class="w-full px-4 py-2.5 rounded-lg border border-mist text-sm text-ink focus:outline-none focus:ring-2 focus:ring-sapphire mb-4">
+          <optgroup label="Speaking" id="opt-speaking"></optgroup>
+          <optgroup label="Writing" id="opt-writing"></optgroup>
+        </select>
+
+        <label class="block text-sm font-medium text-slate mb-2">Question</label>
+        <textarea id="new-q-text" placeholder="Type or paste your question here…" class="w-full px-4 py-2.5 rounded-lg border border-mist text-sm text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-sapphire mb-4 resize-none" rows="5"></textarea>
+
+        <div class="flex gap-2 mb-4">
+          <button class="flex-1 px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors" id="btn-save-only">Save Question</button>
+          <button class="flex-1 px-4 py-2.5 rounded-lg bg-ink text-fog font-medium hover:bg-steel transition-colors" id="btn-save-practice">Save & Practice →</button>
+        </div>
+
+        <div id="qbank-modal-error" class="text-sm text-rose2 mb-4"></div>
       </div>
 
-      <button class="btn btn-secondary" id="btn-new-session" style="width:100%">Start New Session</button>
-    </div>
+      <!-- STEP B: Session choice -->
+      <div id="step-session" style="display:none" class="px-6 pt-6">
+        <h2 class="font-display text-2xl text-ink mb-2">Start Practicing</h2>
+        <p class="text-sm text-slate mb-6">You are going to practice the question you just created.</p>
 
-    <div id="qbank-modal-error" class="error-msg"></div>
-    <div style="text-align:right;margin-top:1rem">
-      <button class="btn btn-secondary" id="btn-qbank-close" style="font-size:.8rem;padding:.3rem .75rem">Cancel</button>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-const PAGE_SIZE = 5;
-
-// ── Order tasks should appear ─────────────────────────────────────────────────
-const TASK_ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-let allQuestions  = [];
-let activeFilter  = "all";
-let activeTaskId  = null;
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function taskLabel(q) {
-  return WRITING_TASK_IDS.has(q.task_id)
-    ? q.task_name
-    : `Task ${q.task_id}: ${q.task_name}`;
-}
-
-function sourceBadge(source) {
-  return source === "ai"
-    ? `<span class="q-source-badge q-source-ai">AI</span>`
-    : `<span class="q-source-badge q-source-manual">Manual</span>`;
-}
-
-async function copyText(text, btn) {
-  try {
-    await navigator.clipboard.writeText(text);
-    const orig = btn.textContent;
-    btn.textContent = "Copied!";
-    setTimeout(() => { btn.textContent = orig; }, 1500);
-  } catch {
-    btn.textContent = "Failed";
-    setTimeout(() => { btn.textContent = "Copy"; }, 1500);
-  }
-}
-
-// ── Render ────────────────────────────────────────────────────────────────────
-function render() {
-  const content = document.getElementById("content");
-
-  const filtered = activeFilter === "all"
-    ? allQuestions
-    : (activeFilter === "task" && activeTaskId !== null)
-      ? allQuestions.filter(q => q.task_id === activeTaskId)
-      : allQuestions.filter(q => q.task_type === activeFilter);
-
-  if (filtered.length === 0) {
-    content.innerHTML = `<p class="empty-msg">No questions yet — generate one from the Tasks page.</p>`;
-    return;
-  }
-
-  // Group by task_id
-  const groups = {};
-  for (const q of filtered) {
-    if (!groups[q.task_id]) groups[q.task_id] = [];
-    groups[q.task_id].push(q);
-  }
-
-  // Sort task groups in TASK_ORDER, then any extras numerically
-  const orderedTaskIds = TASK_ORDER
-    .filter(id => groups[id])
-    .concat(Object.keys(groups).map(Number).filter(id => !TASK_ORDER.includes(id)).sort((a, b) => a - b));
-
-  let html = "";
-  for (const taskId of orderedTaskIds) {
-    const qs     = groups[taskId];
-    const isWriting = WRITING_TASK_IDS.has(taskId);
-    const label  = isWriting ? qs[0].task_name : `Task ${taskId}: ${qs[0].task_name}`;
-    const typeTag = isWriting
-      ? `<span class="practice-section-label writing-label" style="font-size:.65rem;padding:.1rem .5rem">Writing</span>`
-      : `<span class="practice-section-label speaking-label" style="font-size:.65rem;padding:.1rem .5rem">Speaking</span>`;
-    const visible  = qs.slice(0, PAGE_SIZE);
-    const hidden   = qs.slice(PAGE_SIZE);
-    const groupId  = `group-${taskId}`;
-
-    html += `
-      <div class="qbank-group" id="${groupId}">
-        <div class="qbank-group-header">
-          <div class="qbank-group-title">${escapeHtml(label)} ${typeTag}</div>
-          <span class="qbank-group-count">${qs.length} question${qs.length !== 1 ? "s" : ""}</span>
-        </div>
-        <div class="qbank-list">
-          ${visible.map(q => questionRow(q)).join("")}
-        </div>
-        ${hidden.length > 0 ? `
-          <div class="qbank-hidden" id="hidden-${taskId}" style="display:none">
-            ${hidden.map(q => questionRow(q)).join("")}
+        <div id="continue-box" style="display:none; margin-bottom:1.5rem">
+          <div id="session-info-card" class="bg-sapphire-light rounded-xl p-4 mb-4 border border-sapphire/20">
+            <div class="text-sm font-semibold text-ink mb-1"></div>
+            <div class="text-xs text-slate mb-2"></div>
           </div>
-          <button class="qbank-show-more" id="show-more-${taskId}"
-            onclick="toggleMore(${taskId}, ${hidden.length})">
-            Show ${hidden.length} more &darr;
-          </button>
-        ` : ""}
-      </div>
-    `;
-  }
-
-  content.innerHTML = html;
-
-  // Bind copy buttons
-  content.querySelectorAll(".qbank-copy-btn").forEach(btn => {
-    btn.addEventListener("click", () => copyText(btn.dataset.text, btn));
-  });
-
-  // Bind start session buttons
-  content.querySelectorAll(".qbank-start-btn").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      await startSessionFromQuestion(parseInt(btn.dataset.taskId), btn.dataset.text);
-    });
-  });
-}
-
-function questionRow(q) {
-  const date = new Date(q.created_at).toLocaleDateString();
-  return `
-    <div class="qbank-row">
-      <div class="qbank-row-body">
-        <p class="qbank-text">${escapeHtml(q.text)}</p>
-        <div class="qbank-row-meta">
-          ${sourceBadge(q.source)}
-          <span class="qbank-date">${escapeHtml(date)}</span>
+          <button class="w-full px-4 py-2.5 rounded-lg bg-ink text-fog font-medium hover:bg-steel transition-colors mb-3" id="btn-continue">Continue This Session</button>
+          <div class="text-center text-xs text-slate mb-3">or</div>
         </div>
+
+        <button class="w-full px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors" id="btn-new-session">Start New Session</button>
+
+        <div id="qbank-modal-error" class="text-sm text-rose2 mt-4"></div>
       </div>
-      <div style="display:flex;gap:.5rem;align-self:flex-start;flex-wrap:wrap;justify-content:flex-end">
-        <button class="btn btn-secondary qbank-copy-btn"
-          style="white-space:nowrap;font-size:.8rem;padding:.3rem .8rem"
-          data-text="${escapeHtml(q.text)}">Copy</button>
-        <button class="btn btn-primary qbank-start-btn"
-          style="white-space:nowrap;font-size:.8rem;padding:.3rem .8rem"
-          data-question-id="${q.id}" data-task-id="${q.task_id}" data-text="${escapeHtml(q.text)}">Start Session</button>
+
+      <div class="px-6 pb-6 pt-4 border-t border-mist">
+        <button class="w-full px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors text-sm" id="btn-qbank-close">Cancel</button>
       </div>
     </div>
-  `;
-}
+  </div>
 
-function toggleMore(taskId, hiddenCount) {
-  const hiddenEl  = document.getElementById(`hidden-${taskId}`);
-  const btn       = document.getElementById(`show-more-${taskId}`);
-  if (hiddenEl.style.display === "none") {
-    hiddenEl.style.display = "block";
-    btn.textContent = "Show less \u2191";
+  <script src="app.js"></script>
+  <script>
+    const PAGE_SIZE = 5;
+    const TASK_ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-    // Bind copy buttons inside the newly revealed section
-    hiddenEl.querySelectorAll(".qbank-copy-btn").forEach(b => {
-      b.addEventListener("click", () => copyText(b.dataset.text, b));
-    });
-  } else {
-    hiddenEl.style.display = "none";
-    btn.textContent = `Show ${hiddenCount} more \u2193`;
-  }
-}
+    let allQuestions = [];
+    let activeFilter = "all";
+    let activeTaskId = null;
 
-// ── Filter buttons ────────────────────────────────────────────────────────────
-document.querySelectorAll(".qbank-filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".qbank-filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    activeFilter = btn.dataset.filter;
-    if (btn.dataset.filter === "task") {
-      activeTaskId = parseInt(btn.dataset.taskId);
-    } else {
-      activeTaskId = null;
+    const TASK_COLORS = {
+      1: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark' },
+      2: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark' },
+      3: { bg: 'bg-amber2-light', text: 'text-amber2-dark' },
+      4: { bg: 'bg-rose2-light', text: 'text-rose2-dark' },
+      5: { bg: 'bg-violet2-light', text: 'text-violet2-dark' },
+      6: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark' },
+      7: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark' },
+      8: { bg: 'bg-amber2-light', text: 'text-amber2-dark' },
+      9: { bg: 'bg-violet2-light', text: 'text-violet2-dark' },
+      10: { bg: 'bg-violet2-light', text: 'text-violet2-dark' },
+    };
+
+    function taskLabel(q) {
+      return WRITING_TASK_IDS.has(q.task_id)
+        ? q.task_name
+        : `Task ${q.task_id}: ${q.task_name}`;
     }
-    render();
-  });
-});
 
-// ── Start session from question ───────────────────────────────────────────────
-async function startSessionFromQuestion(taskId, questionText) {
-  try {
-    const s = await apiPost("/sessions", { task_id: taskId, question: questionText });
-    sessionStorage.setItem("celpip_question", questionText);
-    const dest = WRITING_TASK_IDS.has(taskId) ? "write.html" : "record.html";
-    window.location.href = `${dest}?session=${s.id}`;
-  } catch (e) {
-    document.getElementById("error-area").textContent = `Failed to start session: ${e.message}`;
-  }
-}
+    function sourceBadge(source) {
+      return source === "ai"
+        ? `<span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-sapphire-light text-sapphire-dark">AI</span>`
+        : `<span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-mist text-slate">Manual</span>`;
+    }
 
-// ── Load ──────────────────────────────────────────────────────────────────────
-async function load() {
-  try {
-    allQuestions = await apiGet("/questions");
-  } catch (e) {
-    document.getElementById("error-area").textContent = `Failed to load questions: ${e.message}`;
-    return;
-  }
-  render();
-}
+    async function copyText(text, btn) {
+      try {
+        await navigator.clipboard.writeText(text);
+        const orig = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(() => { btn.textContent = orig; }, 1500);
+      } catch {
+        btn.textContent = "Failed";
+        setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+      }
+    }
 
-load();
+    function render() {
+      const content = document.getElementById("content");
 
-// ── Create Question Modal ────────────────────────────────────────────────────
-const qModal   = document.getElementById("qbank-modal");
-const stepA    = document.getElementById("step-author");
-const stepB    = document.getElementById("step-session");
-const qTaskSel = document.getElementById("new-q-task");
-const qTextEl  = document.getElementById("new-q-text");
-const qErr     = document.getElementById("qbank-modal-error");
+      const filtered = activeFilter === "all"
+        ? allQuestions
+        : (activeFilter === "task" && activeTaskId !== null)
+          ? allQuestions.filter(q => q.task_id === activeTaskId)
+          : allQuestions.filter(q => q.task_type === activeFilter);
 
-let qState = { taskId: null, text: "", lastSession: null };
+      if (filtered.length === 0) {
+        content.innerHTML = `
+          <div class="text-center py-16">
+            <p class="text-lg text-slate mb-4">No questions found</p>
+            <button id="btn-add-question-empty" class="inline-block px-6 py-3 bg-ink text-fog font-semibold rounded-full hover:bg-steel transition-colors">
+              Create Your First Question
+            </button>
+          </div>
+        `;
+        document.getElementById("btn-add-question-empty").addEventListener("click", openQModal);
+        return;
+      }
 
-// Populate task options once
-(function populateTaskOptions() {
-  const speakingGroup = document.getElementById("opt-speaking");
-  const writingGroup  = document.getElementById("opt-writing");
-  Object.entries(TASKS).forEach(([id, t]) => {
-    const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = `Task ${id}: ${t.name}`;
-    speakingGroup.appendChild(opt);
-  });
-  Object.entries(WRITING_TASKS).forEach(([id, t]) => {
-    const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = t.name;
-    writingGroup.appendChild(opt);
-  });
-})();
+      // Group by task_id
+      const groups = {};
+      for (const q of filtered) {
+        if (!groups[q.task_id]) groups[q.task_id] = [];
+        groups[q.task_id].push(q);
+      }
 
-function openQModal() {
-  qState = { taskId: null, text: "", lastSession: null };
-  qTextEl.value = "";
-  qTaskSel.value = "1";
-  qErr.textContent = "";
-  stepA.style.display = "block";
-  stepB.style.display = "none";
-  resetAuthorButtons();
-  qModal.style.display = "flex";
-  qTextEl.focus();
-}
+      const orderedTaskIds = TASK_ORDER
+        .filter(id => groups[id])
+        .concat(Object.keys(groups).map(Number).filter(id => !TASK_ORDER.includes(id)).sort((a, b) => a - b));
 
-function closeQModal() { qModal.style.display = "none"; }
+      let html = "";
+      for (const taskId of orderedTaskIds) {
+        const qs = groups[taskId];
+        const color = TASK_COLORS[taskId] || TASK_COLORS[1];
+        const isWriting = WRITING_TASK_IDS.has(taskId);
+        const label = isWriting ? qs[0].task_name : `Task ${taskId}: ${qs[0].task_name}`;
+        const visible = qs.slice(0, PAGE_SIZE);
+        const hidden = qs.slice(PAGE_SIZE);
 
-function resetAuthorButtons() {
-  const s = document.getElementById("btn-save-only");
-  const p = document.getElementById("btn-save-practice");
-  s.disabled = false; s.textContent = "Save Question";
-  p.disabled = false; p.innerHTML = "Save &amp; Practice &rarr;";
-}
+        html += `
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="flex-1">
+                <h3 class="font-display text-xl text-ink">${escapeHtml(label)}</h3>
+              </div>
+              <span class="text-xs font-semibold px-3 py-1 rounded-full ${color.bg} ${color.text}">${qs.length} question${qs.length !== 1 ? "s" : ""}</span>
+            </div>
+            <div class="space-y-3 mb-4">
+              ${visible.map(q => {
+                const date = new Date(q.created_at).toLocaleDateString();
+                return `
+                  <div class="bg-white rounded-xl border border-mist p-4 card-hover">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                      <p class="text-sm text-ink leading-relaxed flex-1">${escapeHtml(q.text)}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-mist">
+                      <div class="flex items-center gap-2">
+                        ${sourceBadge(q.source)}
+                        <span class="text-xs text-slate">${escapeHtml(date)}</span>
+                      </div>
+                      <div class="flex gap-2">
+                        <button class="px-3 py-1.5 rounded-lg border border-mist bg-white text-ink text-xs font-medium hover:bg-fog transition-colors qbank-copy-btn" data-text="${escapeHtml(q.text)}">Copy</button>
+                        <button class="px-3 py-1.5 rounded-lg bg-ink text-fog text-xs font-medium hover:bg-steel transition-colors qbank-start-btn" data-task-id="${q.task_id}" data-text="${escapeHtml(q.text)}">Start</button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+            ${hidden.length > 0 ? `
+              <div id="hidden-${taskId}" style="display:none" class="space-y-3 mb-4">
+                ${hidden.map(q => {
+                  const date = new Date(q.created_at).toLocaleDateString();
+                  return `
+                    <div class="bg-white rounded-xl border border-mist p-4 card-hover">
+                      <div class="flex items-start justify-between gap-3 mb-3">
+                        <p class="text-sm text-ink leading-relaxed flex-1">${escapeHtml(q.text)}</p>
+                      </div>
+                      <div class="flex items-center justify-between pt-3 border-t border-mist">
+                        <div class="flex items-center gap-2">
+                          ${sourceBadge(q.source)}
+                          <span class="text-xs text-slate">${escapeHtml(date)}</span>
+                        </div>
+                        <div class="flex gap-2">
+                          <button class="px-3 py-1.5 rounded-lg border border-mist bg-white text-ink text-xs font-medium hover:bg-fog transition-colors qbank-copy-btn" data-text="${escapeHtml(q.text)}">Copy</button>
+                          <button class="px-3 py-1.5 rounded-lg bg-ink text-fog text-xs font-medium hover:bg-steel transition-colors qbank-start-btn" data-task-id="${q.task_id}" data-text="${escapeHtml(q.text)}">Start</button>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+              <button class="qbank-show-more w-full py-2 text-sm text-slate hover:text-ink transition-colors" id="show-more-${taskId}" data-task-id="${taskId}" data-hidden-count="${hidden.length}">
+                Show ${hidden.length} more ↓
+              </button>
+            ` : ""}
+          </div>
+        `;
+      }
 
-async function saveQuestion() {
-  qErr.textContent = "";
-  const text    = qTextEl.value.trim();
-  const taskId  = Number(qTaskSel.value);
-  if (!text) { qErr.textContent = "Please enter a question."; return null; }
-  try {
-    const q = await apiPost("/questions", { task_id: taskId, text });
-    qState.taskId = taskId;
-    qState.text   = text;
-    return q;
-  } catch (e) {
-    qErr.textContent = `Error: ${e.message}`;
-    return null;
-  }
-}
+      content.innerHTML = html;
 
-document.getElementById("btn-add-question").addEventListener("click", openQModal);
-document.getElementById("btn-qbank-close").addEventListener("click", closeQModal);
-qModal.addEventListener("click", (e) => { if (e.target === qModal) closeQModal(); });
+      // Bind copy buttons
+      content.querySelectorAll(".qbank-copy-btn").forEach(btn => {
+        btn.addEventListener("click", () => copyText(btn.dataset.text, btn));
+      });
 
-document.getElementById("btn-save-only").addEventListener("click", async () => {
-  const s = document.getElementById("btn-save-only");
-  const p = document.getElementById("btn-save-practice");
-  s.disabled = true; p.disabled = true; s.textContent = "Saving…";
-  const q = await saveQuestion();
-  if (!q) { resetAuthorButtons(); return; }
-  closeQModal();
-  await load();  // re-fetch + render
-});
+      // Bind start buttons
+      content.querySelectorAll(".qbank-start-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          await startSessionFromQuestion(parseInt(btn.dataset.taskId), btn.dataset.text);
+        });
+      });
 
-document.getElementById("btn-save-practice").addEventListener("click", async () => {
-  const s = document.getElementById("btn-save-only");
-  const p = document.getElementById("btn-save-practice");
-  s.disabled = true; p.disabled = true; p.textContent = "Saving…";
-  const q = await saveQuestion();
-  if (!q) { resetAuthorButtons(); return; }
+      // Bind show more buttons
+      content.querySelectorAll(".qbank-show-more").forEach(btn => {
+        btn.addEventListener("click", () => toggleMore(btn.dataset.taskId, btn.dataset.hiddenCount));
+      });
+    }
 
-  // Fetch latest session for this task (may 404)
-  try { qState.lastSession = await apiGet(`/sessions/latest?task_id=${qState.taskId}`); }
-  catch { qState.lastSession = null; }
+    function toggleMore(taskId, hiddenCount) {
+      const hiddenEl = document.getElementById(`hidden-${taskId}`);
+      const btn = document.querySelector(`[id="show-more-${taskId}"]`);
+      if (hiddenEl.style.display === "none") {
+        hiddenEl.style.display = "block";
+        btn.textContent = "Show less ↑";
 
-  showSessionStep();
-});
+        // Bind buttons in newly revealed section
+        hiddenEl.querySelectorAll(".qbank-copy-btn").forEach(b => {
+          b.addEventListener("click", () => copyText(b.dataset.text, b));
+        });
+        hiddenEl.querySelectorAll(".qbank-start-btn").forEach(b => {
+          b.addEventListener("click", async () => {
+            await startSessionFromQuestion(parseInt(b.dataset.taskId), b.dataset.text);
+          });
+        });
+      } else {
+        hiddenEl.style.display = "none";
+        btn.textContent = `Show ${hiddenCount} more ↓`;
+      }
+    }
 
-function showSessionStep() {
-  stepA.style.display = "none";
-  stepB.style.display = "block";
-  qErr.textContent = "";
+    function setupFilters() {
+      const filterButtons = document.getElementById("filter-buttons");
+      filterButtons.innerHTML = "";
 
-  const box = document.getElementById("continue-box");
-  if (qState.lastSession) {
-    const s = qState.lastSession;
-    const score = s.avg_score != null ? `avg ${s.avg_score}/12` : "no scores yet";
-    const date  = new Date(s.created_at).toLocaleDateString();
-    document.getElementById("session-info-card").innerHTML = `
-      <div class="session-card-name">${escapeHtml(s.name)}</div>
-      <div class="session-card-meta">${s.attempt_count} attempt${s.attempt_count !== 1 ? "s" : ""} &middot; ${escapeHtml(score)} &middot; started ${escapeHtml(date)}</div>
-      ${s.question ? `<div class="session-card-question">${escapeHtml(s.question)}</div>` : ""}
-    `;
-    box.style.display = "block";
-  } else {
-    box.style.display = "none";
-  }
+      // "All" button
+      const allBtn = document.createElement("button");
+      allBtn.className = "px-4 py-2 rounded-full border font-medium text-sm transition-all bg-ink text-fog border-ink";
+      allBtn.textContent = "All";
+      allBtn.addEventListener("click", () => {
+        activeFilter = "all";
+        activeTaskId = null;
+        updateFilterButtons();
+        render();
+      });
+      filterButtons.appendChild(allBtn);
 
-  document.getElementById("btn-new-session").disabled = false;
-  document.getElementById("btn-new-session").textContent = "Start New Session";
-  if (document.getElementById("btn-continue")) {
-    document.getElementById("btn-continue").disabled = false;
-    document.getElementById("btn-continue").textContent = "Continue This Session";
-  }
-}
+      // Task buttons
+      for (let taskId = 1; taskId <= 10; taskId++) {
+        const btn = document.createElement("button");
+        const label = WRITING_TASK_IDS.has(taskId)
+          ? WRITING_TASKS[taskId].name
+          : `Task ${taskId}`;
+        btn.className = "px-4 py-2 rounded-full border font-medium text-sm transition-all bg-white border-mist text-slate hover:bg-fog";
+        btn.textContent = label;
+        btn.dataset.taskId = taskId;
+        btn.addEventListener("click", () => {
+          activeFilter = "task";
+          activeTaskId = taskId;
+          updateFilterButtons();
+          render();
+        });
+        filterButtons.appendChild(btn);
+      }
+    }
 
-function navigateToPractice(sessionId) {
-  sessionStorage.setItem("celpip_question", qState.text);
-  const dest = WRITING_TASK_IDS.has(qState.taskId) ? "write.html" : "record.html";
-  window.location.href = `${dest}?session=${sessionId}`;
-}
+    function updateFilterButtons() {
+      document.querySelectorAll("#filter-buttons button").forEach(btn => {
+        btn.classList.remove("bg-ink", "text-fog", "border-ink");
+        btn.classList.add("bg-white", "border-mist", "text-slate", "hover:bg-fog");
 
-document.getElementById("btn-continue").addEventListener("click", () => {
-  navigateToPractice(qState.lastSession.id);
-});
+        if ((activeFilter === "all" && !btn.dataset.taskId) ||
+            (activeFilter === "task" && parseInt(btn.dataset.taskId) === activeTaskId)) {
+          btn.classList.remove("bg-white", "border-mist", "text-slate", "hover:bg-fog");
+          btn.classList.add("bg-ink", "text-fog", "border-ink");
+        }
+      });
+    }
 
-document.getElementById("btn-new-session").addEventListener("click", async () => {
-  const btn = document.getElementById("btn-new-session");
-  btn.disabled = true; btn.textContent = "Creating…";
-  qErr.textContent = "";
-  try {
-    const s = await apiPost("/sessions", { task_id: qState.taskId, question: qState.text });
-    navigateToPractice(s.id);
-  } catch (e) {
-    qErr.textContent = `Error: ${e.message}`;
-    btn.disabled = false; btn.textContent = "Start New Session";
-  }
-});
-</script>
-{% endblock %}
+    async function load() {
+      try {
+        allQuestions = await apiGet("/questions");
+      } catch (e) {
+        document.getElementById("error-area").innerHTML = `
+          <div class="bg-rose2-light border border-rose2 text-rose2-dark px-4 py-3 rounded-lg text-sm">
+            Failed to load questions: ${escapeHtml(e.message)}
+          </div>
+        `;
+        return;
+      }
+      setupFilters();
+      render();
+    }
+
+    async function startSessionFromQuestion(taskId, questionText) {
+      try {
+        const s = await apiPost("/sessions", { task_id: taskId, question: questionText });
+        sessionStorage.setItem("celpip_question", questionText);
+        const dest = WRITING_TASK_IDS.has(taskId) ? "write.html" : "record.html";
+        window.location.href = `${dest}?session=${s.id}`;
+      } catch (e) {
+        document.getElementById("error-area").innerHTML = `
+          <div class="bg-rose2-light border border-rose2 text-rose2-dark px-4 py-3 rounded-lg text-sm">
+            Failed to start session: ${escapeHtml(e.message)}
+          </div>
+        `;
+      }
+    }
+
+    // ── Modal functionality ────────────────────────────────────────────────
+    const qModal = document.getElementById("qbank-modal");
+    const stepA = document.getElementById("step-author");
+    const stepB = document.getElementById("step-session");
+    const qTaskSel = document.getElementById("new-q-task");
+    const qTextEl = document.getElementById("new-q-text");
+    const qErr = document.getElementById("qbank-modal-error");
+
+    let qState = { taskId: null, text: "", lastSession: null };
+
+    (function populateTaskOptions() {
+      const speakingGroup = document.getElementById("opt-speaking");
+      const writingGroup = document.getElementById("opt-writing");
+      Object.entries(TASKS).forEach(([id, t]) => {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.textContent = `Task ${id}: ${t.name}`;
+        speakingGroup.appendChild(opt);
+      });
+      Object.entries(WRITING_TASKS).forEach(([id, t]) => {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.textContent = t.name;
+        writingGroup.appendChild(opt);
+      });
+    })();
+
+    function openQModal() {
+      qState = { taskId: null, text: "", lastSession: null };
+      qTextEl.value = "";
+      qTaskSel.value = "1";
+      qErr.textContent = "";
+      stepA.style.display = "block";
+      stepB.style.display = "none";
+      resetAuthorButtons();
+      qModal.style.display = "flex";
+      qTextEl.focus();
+    }
+
+    function closeQModal() { qModal.style.display = "none"; }
+
+    function resetAuthorButtons() {
+      const s = document.getElementById("btn-save-only");
+      const p = document.getElementById("btn-save-practice");
+      s.disabled = false; s.textContent = "Save Question";
+      p.disabled = false; p.innerHTML = "Save & Practice →";
+    }
+
+    async function saveQuestion() {
+      qErr.textContent = "";
+      const text = qTextEl.value.trim();
+      const taskId = Number(qTaskSel.value);
+      if (!text) { qErr.textContent = "Please enter a question."; return null; }
+      try {
+        const q = await apiPost("/questions", { task_id: taskId, text });
+        qState.taskId = taskId;
+        qState.text = text;
+        return q;
+      } catch (e) {
+        qErr.textContent = `Error: ${e.message}`;
+        return null;
+      }
+    }
+
+    document.getElementById("btn-add-question").addEventListener("click", openQModal);
+    document.getElementById("btn-qbank-close").addEventListener("click", closeQModal);
+    qModal.addEventListener("click", (e) => { if (e.target === qModal) closeQModal(); });
+
+    document.getElementById("btn-save-only").addEventListener("click", async () => {
+      const s = document.getElementById("btn-save-only");
+      const p = document.getElementById("btn-save-practice");
+      s.disabled = true; p.disabled = true; s.textContent = "Saving…";
+      const q = await saveQuestion();
+      if (!q) { resetAuthorButtons(); return; }
+      closeQModal();
+      await load();
+    });
+
+    document.getElementById("btn-save-practice").addEventListener("click", async () => {
+      const s = document.getElementById("btn-save-only");
+      const p = document.getElementById("btn-save-practice");
+      s.disabled = true; p.disabled = true; p.textContent = "Saving…";
+      const q = await saveQuestion();
+      if (!q) { resetAuthorButtons(); return; }
+
+      try { qState.lastSession = await apiGet(`/sessions/latest?task_id=${qState.taskId}`); }
+      catch { qState.lastSession = null; }
+
+      showSessionStep();
+    });
+
+    function showSessionStep() {
+      stepA.style.display = "none";
+      stepB.style.display = "block";
+      qErr.textContent = "";
+
+      const box = document.getElementById("continue-box");
+      if (qState.lastSession) {
+        const s = qState.lastSession;
+        const score = s.avg_score != null ? `avg ${s.avg_score}/12` : "no scores yet";
+        const date = new Date(s.created_at).toLocaleDateString();
+        document.querySelector("#session-info-card .text-sm").textContent = escapeHtml(s.name);
+        document.querySelectorAll("#session-info-card .text-xs")[0].textContent = `${s.attempt_count} attempt${s.attempt_count !== 1 ? "s" : ""} · ${escapeHtml(score)} · started ${escapeHtml(date)}`;
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
+
+      document.getElementById("btn-new-session").disabled = false;
+      document.getElementById("btn-new-session").textContent = "Start New Session";
+      if (document.getElementById("btn-continue")) {
+        document.getElementById("btn-continue").disabled = false;
+        document.getElementById("btn-continue").textContent = "Continue This Session";
+      }
+    }
+
+    function navigateToPractice(sessionId) {
+      sessionStorage.setItem("celpip_question", qState.text);
+      const dest = WRITING_TASK_IDS.has(qState.taskId) ? "write.html" : "record.html";
+      window.location.href = `${dest}?session=${sessionId}`;
+    }
+
+    document.getElementById("btn-continue").addEventListener("click", () => {
+      navigateToPractice(qState.lastSession.id);
+    });
+
+    document.getElementById("btn-new-session").addEventListener("click", async () => {
+      const btn = document.getElementById("btn-new-session");
+      btn.disabled = true; btn.textContent = "Creating…";
+      qErr.textContent = "";
+      try {
+        const s = await apiPost("/sessions", { task_id: qState.taskId, question: qState.text });
+        navigateToPractice(s.id);
+      } catch (e) {
+        qErr.textContent = `Error: ${e.message}`;
+        btn.disabled = false; btn.textContent = "Start New Session";
+      }
+    });
+
+    // Load on page load
+    load();
+  </script>
+</body>
+</html>

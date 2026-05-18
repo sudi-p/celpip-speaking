@@ -1,268 +1,447 @@
-{% extends "base.html" %}
-{% block title %}CELPIP Practice{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Speaking Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+  </style>
+</head>
+<body class="min-h-screen" id="auth-gate">
 
-{% block body %}
-  <div class="container">
-    <div class="practice-section-header">
-      <span class="practice-section-label speaking-label">Speaking</span>
-      <p class="practice-section-sub">Choose a task to begin. You will have preparation time before recording.</p>
+  {% include 'partials/navbar.html' %}
+
+  <!-- ─── HERO ─── -->
+  <header class="max-w-4xl mx-auto px-6 pt-16 pb-12">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Practice & Master</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-5">
+        CELPIP Speaking <span class="hero-line italic">Practice</span>
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Record, transcribe, and get instant AI-powered feedback on your CELPIP speaking responses. Practice all 8 speaking tasks with detailed scoring.
+      </p>
     </div>
-    <div id="task-grid"></div>
 
-    <div class="practice-section-header" style="margin-top:2.5rem">
-      <span class="practice-section-label writing-label">Writing</span>
-      <p class="practice-section-sub">28-minute timed writing session with live grammar highlighting.</p>
+    <!-- Quick stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 animate-fade-up" style="animation-delay:.1s">
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Tasks</div>
+        <div class="font-display text-3xl text-ink">8</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Feedback</div>
+        <div class="font-display text-3xl text-ink">AI</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Score</div>
+        <div class="font-display text-3xl text-ink">1–12</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Save All</div>
+        <div class="font-display text-3xl text-ink">✓</div>
+      </div>
     </div>
-    <div id="writing-grid"></div>
-  </div>
+  </header>
 
-  <!-- ── Modal ───────────────────────────────────────────────────────────── -->
-  <div class="modal-overlay" id="modal" style="display:none" role="dialog" aria-modal="true">
-    <div class="modal">
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-4xl mx-auto px-6 pb-24">
 
-      <!-- STEP 1: Session selection (shown for all tasks) -->
+    <!-- Speaking Tasks Section -->
+    <section class="mb-16">
+      <div class="mb-8">
+        <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-2">Speaking Practice</p>
+        <h2 class="font-display text-3xl text-ink">All 8 CELPIP Speaking Tasks</h2>
+      </div>
+
+      <div id="task-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+    <!-- Writing Tasks Section -->
+    <section class="mb-16">
+      <div class="mb-8">
+        <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-2">Writing Practice</p>
+        <h2 class="font-display text-3xl text-ink">2 CELPIP Writing Tasks</h2>
+      </div>
+
+      <div id="writing-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-br from-ink to-steel rounded-2xl p-8 md:p-12 text-fog">
+      <div class="max-w-2xl">
+        <h2 class="font-display text-3xl mb-4">Ready to Practice?</h2>
+        <p class="text-fog/80 leading-relaxed mb-6">
+          Choose a task below to start practicing. You'll get detailed feedback including fluency, grammar, vocabulary, and coherence scores on the CELPIP 12-point scale.
+        </p>
+        <a href="/notes" class="inline-block px-6 py-3 bg-gold text-ink font-semibold rounded-full hover:bg-gold-dark transition-colors">
+          View Study Notes →
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── MODAL ─── -->
+  <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50" id="modal" style="display:none" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+
+      <!-- STEP 1: Session selection -->
       <div id="step-session">
-        <h2 id="modal-title"></h2>
-        <p class="modal-sub">You are going to start a practice session.</p>
+        <div class="px-6 pt-6">
+          <h2 id="modal-title" class="font-display text-2xl text-ink mb-2"></h2>
+          <p class="text-sm text-slate mb-6">You are going to start a practice session.</p>
 
-        <!-- Continue option — only shown when a previous session exists -->
-        <div id="continue-box" style="display:none;margin-bottom:1rem">
-          <div class="session-info-card" id="session-info-card"></div>
-          <button class="btn btn-primary" id="btn-continue" style="width:100%">Continue This Session</button>
-          <div class="modal-divider" style="margin:.75rem 0">or</div>
-        </div>
+          <!-- Continue option -->
+          <div id="continue-box" style="display:none; margin-bottom:1.5rem">
+            <div id="session-info-card" class="bg-sapphire-light rounded-xl p-4 mb-4 border border-sapphire/20">
+              <div class="text-sm font-semibold text-ink mb-1"></div>
+              <div class="text-xs text-slate mb-2"></div>
+              <div class="text-xs text-slate italic"></div>
+            </div>
+            <button class="w-full mb-3 px-4 py-2.5 rounded-lg bg-ink text-fog font-medium hover:bg-steel transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="btn-continue">Continue This Session</button>
+            <div class="text-center text-xs text-slate mb-3">or</div>
+          </div>
 
-        <button class="btn btn-secondary" id="btn-new-session" style="width:100%">Start New Session</button>
-        <div id="session-step-error" class="error-msg"></div>
-      </div>
-
-      <!-- STEP 2: Question setup (tasks 1/2/6/7, new session only) -->
-      <div id="step-question" style="display:none">
-        <h2>Set a Question <span style="font-weight:400;font-size:.85rem;color:#888">(optional)</span></h2>
-        <p class="modal-sub">A question will appear during practice to guide your response.</p>
-
-        <div id="modal-question-display"></div>
-        <div id="modal-manual-area">
-          <textarea id="manual-input" placeholder="Paste or type your question here…"></textarea>
-        </div>
-
-        <div class="modal-actions" id="modal-actions">
-          <button class="btn btn-primary" id="btn-generate">Generate Question</button>
-          <div class="modal-divider">or</div>
-          <button class="btn btn-secondary" id="btn-manual">Add Question Manually</button>
-          <div class="modal-divider">or</div>
-          <button class="btn btn-secondary" id="btn-skip-q">Practice Without Question</button>
-        </div>
-
-        <div class="btn-row" id="modal-start-row" style="display:none;margin-top:1rem">
-          <button class="btn btn-secondary" id="btn-change-q">Change</button>
-          <button class="btn btn-primary" id="btn-start">Start Practice &rarr;</button>
+          <button class="w-full px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="btn-new-session">Start New Session</button>
+          <div id="session-step-error" class="text-xs text-rose2 mt-3"></div>
         </div>
       </div>
 
-      <div id="modal-error" class="error-msg"></div>
-      <div style="text-align:right;margin-top:1rem">
-        <button class="btn btn-secondary" id="btn-close" style="font-size:.8rem;padding:.3rem .75rem">Cancel</button>
+      <!-- STEP 2: Question setup -->
+      <div id="step-question" style="display:none" class="px-6 pt-6">
+        <h2 class="font-display text-2xl text-ink mb-2">Set a Question <span class="text-sm font-normal text-slate">(optional)</span></h2>
+        <p class="text-sm text-slate mb-6">A question will guide your response during practice.</p>
+
+        <div id="modal-question-display" style="display:none" class="bg-fog rounded-xl p-4 mb-4">
+          <p class="text-sm text-ink leading-relaxed"></p>
+        </div>
+
+        <div id="modal-manual-area" style="display:none" class="mb-4">
+          <textarea id="manual-input" placeholder="Paste or type your question here…" class="w-full rounded-lg border border-mist p-3 text-sm text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-sapphire"></textarea>
+        </div>
+
+        <div class="space-y-2 flex flex-col mb-4" id="modal-actions">
+          <button class="w-full px-4 py-2.5 rounded-lg bg-ink text-fog font-medium hover:bg-steel transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="btn-generate">Generate Question</button>
+          <div class="text-center text-xs text-slate">or</div>
+          <button class="w-full px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="btn-manual">Add Question Manually</button>
+          <div class="text-center text-xs text-slate">or</div>
+          <button class="w-full px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="btn-skip-q">Practice Without Question</button>
+        </div>
+
+        <div id="modal-start-row" style="display:none" class="flex gap-2 mb-4">
+          <button class="flex-1 px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="btn-change-q">Change</button>
+          <button class="flex-1 px-4 py-2.5 rounded-lg bg-ink text-fog font-medium hover:bg-steel transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="btn-start">Start Practice →</button>
+        </div>
+
+        <div id="modal-error" class="text-xs text-rose2"></div>
+      </div>
+
+      <div class="px-6 pb-6">
+        <button class="w-full px-4 py-2.5 rounded-lg border border-mist bg-white text-ink font-medium hover:bg-fog transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs" id="btn-close">Cancel</button>
       </div>
     </div>
   </div>
-{% endblock %}
 
-{% block scripts %}
-<script>
-  const QUESTION_TASKS = new Set([1, 2, 6, 7, 9, 10]);
 
-  // ── Render speaking task grid ───────────────────────────────────────────
-  const grid = document.getElementById("task-grid");
-  Object.entries(TASKS).forEach(([id, task]) => {
-    const card = document.createElement("div");
-    card.className = "task-card";
-    card.innerHTML = `
-      <div class="task-num">${id}</div>
-      <div class="task-name">${escapeHtml(task.name)}</div>
-      <div class="meta" style="margin-top:.5rem">Prep ${task.prep}s &middot; Speak ${task.speak}s</div>
-    `;
-    card.addEventListener("click", () => openModal(Number(id)));
-    grid.appendChild(card);
-  });
+  <script src="app.js"></script>
+  <script>
+    const QUESTION_TASKS = new Set([1, 2, 6, 7, 9, 10]);
 
-  // ── Render writing task grid ────────────────────────────────────────────
-  const writingGrid = document.getElementById("writing-grid");
-  Object.entries(WRITING_TASKS).forEach(([id, task]) => {
-    const card = document.createElement("div");
-    card.className = "task-card writing-task-card";
-    card.innerHTML = `
-      <div class="task-num writing-task-num">W${Number(id) - 8}</div>
-      <div class="task-name">${escapeHtml(task.name)}</div>
-      <div class="meta" style="margin-top:.5rem">28 min &middot; ${escapeHtml(task.label)}</div>
-    `;
-    card.addEventListener("click", () => openModal(Number(id)));
-    writingGrid.appendChild(card);
-  });
-
-  // ── Modal state ─────────────────────────────────────────────────────────
-  let mState = { taskId: null, lastSession: null, sessionId: null, pendingQuestion: "" };
-
-  const modal       = document.getElementById("modal");
-  const stepSession = document.getElementById("step-session");
-  const stepQ       = document.getElementById("step-question");
-
-  async function openModal(taskId) {
-    mState = { taskId, lastSession: null, sessionId: null, pendingQuestion: "" };
-    const isWriting = WRITING_TASK_IDS.has(taskId);
-    const taskInfo  = isWriting ? WRITING_TASKS[taskId] : TASKS[taskId];
-    document.getElementById("modal-title").textContent = isWriting
-      ? taskInfo.name
-      : `Task ${taskId}: ${taskInfo.name}`;
-    clearErrors();
-
-    try { mState.lastSession = await apiGet(`/sessions/latest?task_id=${taskId}`); }
-    catch { mState.lastSession = null; }
-
-    showStepSession();
-    modal.style.display = "flex";
-  }
-
-  function showStepSession() {
-    stepSession.style.display = "block";
-    stepQ.style.display = "none";
-    clearErrors();
-
-    const box = document.getElementById("continue-box");
-    if (mState.lastSession) {
-      const s = mState.lastSession;
-      const score = s.avg_score != null ? `avg ${s.avg_score}/12` : "no scores yet";
-      const date  = new Date(s.created_at).toLocaleDateString();
-      document.getElementById("session-info-card").innerHTML = `
-        <div class="session-card-name">${escapeHtml(s.name)}</div>
-        <div class="session-card-meta">${s.attempt_count} attempt${s.attempt_count !== 1 ? "s" : ""} &middot; ${escapeHtml(score)} &middot; started ${escapeHtml(date)}</div>
-        ${s.question ? `<div class="session-card-question">${escapeHtml(s.question)}</div>` : ""}
+    // ── Render speaking task grid ───────────────────────────────────────────
+    const grid = document.getElementById("task-grid");
+    Object.entries(TASKS).forEach(([id, task]) => {
+      const card = document.createElement("div");
+      card.className = "task-card-grid group";
+      const taskNum = Number(id);
+      const colors = {
+        1: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark', border: 'border-sapphire/20' },
+        2: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark', border: 'border-emerald2/20' },
+        3: { bg: 'bg-amber2-light', text: 'text-amber2-dark', border: 'border-amber2/20' },
+        4: { bg: 'bg-rose2-light', text: 'text-rose2-dark', border: 'border-rose2/20' },
+        5: { bg: 'bg-violet2-light', text: 'text-violet2-dark', border: 'border-violet2/20' },
+        6: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark', border: 'border-sapphire/20' },
+        7: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark', border: 'border-emerald2/20' },
+        8: { bg: 'bg-amber2-light', text: 'text-amber2-dark', border: 'border-amber2/20' },
+      };
+      const color = colors[taskNum] || colors[1];
+      card.innerHTML = `
+        <div class="flex items-start justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg ${color.bg} ${color.text} flex items-center justify-center font-display font-semibold">
+              ${taskNum}
+            </div>
+            <div>
+              <div class="font-display text-lg text-ink">${escapeHtml(task.name)}</div>
+              <div class="text-xs text-slate">Speaking Task</div>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+        <div class="flex gap-2 text-xs">
+          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">Prep ${task.prep}s</span>
+          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">Speak ${task.speak}s</span>
+        </div>
       `;
-      box.style.display = "block";
-    } else {
-      box.style.display = "none";
+      card.addEventListener("click", () => openModal(Number(id)));
+      grid.appendChild(card);
+    });
+
+    // ── Render writing task grid ────────────────────────────────────────────
+    const writingGrid = document.getElementById("writing-grid");
+    Object.entries(WRITING_TASKS).forEach(([id, task]) => {
+      const card = document.createElement("div");
+      card.className = "task-card-grid group";
+      const taskNum = Number(id);
+      const color = { bg: 'bg-violet2-light', text: 'text-violet2-dark', border: 'border-violet2/20' };
+      card.innerHTML = `
+        <div class="flex items-start justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg ${color.bg} ${color.text} flex items-center justify-center font-display font-semibold">
+              W${taskNum - 8}
+            </div>
+            <div>
+              <div class="font-display text-lg text-ink">${escapeHtml(task.name)}</div>
+              <div class="text-xs text-slate">Writing Task</div>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+        <div class="flex gap-2 text-xs">
+          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">28 min</span>
+          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">${escapeHtml(task.label)}</span>
+        </div>
+      `;
+      card.addEventListener("click", () => openModal(Number(id)));
+      writingGrid.appendChild(card);
+    });
+
+    // ── Modal state ─────────────────────────────────────────────────────────
+    let mState = { taskId: null, lastSession: null, sessionId: null, pendingQuestion: "" };
+
+    const modal       = document.getElementById("modal");
+    const stepSession = document.getElementById("step-session");
+    const stepQ       = document.getElementById("step-question");
+
+    async function openModal(taskId) {
+      mState = { taskId, lastSession: null, sessionId: null, pendingQuestion: "" };
+      const isWriting = WRITING_TASK_IDS.has(taskId);
+      const taskInfo  = isWriting ? WRITING_TASKS[taskId] : TASKS[taskId];
+      document.getElementById("modal-title").textContent = isWriting
+        ? taskInfo.name
+        : `Task ${taskId}: ${taskInfo.name}`;
+      clearErrors();
+
+      try { mState.lastSession = await apiGet(`/sessions/latest?task_id=${taskId}`); }
+      catch { mState.lastSession = null; }
+
+      showStepSession();
+      modal.style.display = "flex";
     }
 
-    const newBtn = document.getElementById("btn-new-session");
-    newBtn.disabled = false;
-    newBtn.textContent = "Start New Session";
-  }
+    function showStepSession() {
+      stepSession.style.display = "block";
+      stepQ.style.display = "none";
+      clearErrors();
 
-  // ── Step 1 actions ──────────────────────────────────────────────────────
-  document.getElementById("btn-continue").addEventListener("click", () => {
-    mState.sessionId = mState.lastSession.id;
-    mState.pendingQuestion = mState.lastSession.question || "";
-    navigate();
-  });
+      const box = document.getElementById("continue-box");
+      if (mState.lastSession) {
+        const s = mState.lastSession;
+        const score = s.avg_score != null ? `avg ${s.avg_score}/12` : "no scores yet";
+        const date  = new Date(s.created_at).toLocaleDateString();
+        const cardDiv = document.querySelector("#session-info-card");
+        cardDiv.innerHTML = `
+          <div class="text-sm font-semibold text-ink mb-1">${escapeHtml(s.name)}</div>
+          <div class="text-xs text-slate mb-2">${s.attempt_count} attempt${s.attempt_count !== 1 ? "s" : ""} · ${escapeHtml(score)} · started ${escapeHtml(date)}</div>
+          ${s.question ? `<div class="text-xs text-slate italic">"${escapeHtml(s.question)}"</div>` : ""}
+        `;
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
 
-  document.getElementById("btn-new-session").addEventListener("click", async () => {
-    clearErrors();
-    if (QUESTION_TASKS.has(mState.taskId)) {
-      showStepQuestion();
-    } else {
-      const btn = document.getElementById("btn-new-session");
-      btn.disabled = true; btn.textContent = "Creating…";
+      const newBtn = document.getElementById("btn-new-session");
+      newBtn.disabled = false;
+      newBtn.textContent = "Start New Session";
+    }
+
+    // ── Step 1 actions ──────────────────────────────────────────────────────
+    document.getElementById("btn-continue").addEventListener("click", () => {
+      mState.sessionId = mState.lastSession.id;
+      mState.pendingQuestion = mState.lastSession.question || "";
+      navigate();
+    });
+
+    document.getElementById("btn-new-session").addEventListener("click", async () => {
+      clearErrors();
+      if (QUESTION_TASKS.has(mState.taskId)) {
+        showStepQuestion();
+      } else {
+        const btn = document.getElementById("btn-new-session");
+        btn.disabled = true; btn.textContent = "Creating…";
+        try {
+          const s = await apiPost("/sessions", { task_id: mState.taskId, question: "" });
+          mState.sessionId = s.id;
+          navigate();
+        } catch (e) {
+          document.getElementById("session-step-error").textContent = `Error: ${e.message}`;
+          btn.disabled = false; btn.textContent = "Start New Session";
+        }
+      }
+    });
+
+    // ── Step 2 (question) ───────────────────────────────────────────────────
+    function showStepQuestion() {
+      stepSession.style.display = "none";
+      stepQ.style.display = "block";
+      document.getElementById("modal-question-display").style.display = "none";
+      document.getElementById("modal-manual-area").style.display = "none";
+      document.getElementById("manual-input").value = "";
+      document.getElementById("modal-actions").style.display = "flex";
+      document.getElementById("modal-start-row").style.display = "none";
+      const old = document.getElementById("btn-manual-confirm");
+      if (old) old.remove();
+      document.getElementById("btn-manual").style.display = "";
+      document.getElementById("btn-generate").disabled = false;
+      document.getElementById("btn-generate").textContent = "Generate Question";
+      clearErrors();
+    }
+
+    function showQuestionPreview(text) {
+      mState.pendingQuestion = text;
+      document.getElementById("modal-question-display").textContent = text;
+      document.getElementById("modal-question-display").style.display = "block";
+      document.getElementById("modal-manual-area").style.display = "none";
+      document.getElementById("modal-actions").style.display = "none";
+      document.getElementById("modal-start-row").style.display = "flex";
+      clearErrors();
+    }
+
+    document.getElementById("btn-generate").addEventListener("click", async () => {
+      const btn = document.getElementById("btn-generate");
+      btn.disabled = true; btn.textContent = "Generating…";
+      clearErrors();
       try {
-        const s = await apiPost("/sessions", { task_id: mState.taskId, question: "" });
+        const r = await apiPost("/generate-question", { task_id: mState.taskId });
+        showQuestionPreview(r.question);
+      } catch (e) {
+        document.getElementById("modal-error").textContent = `Failed: ${e.message}`;
+        btn.disabled = false; btn.textContent = "Generate Question";
+      }
+    });
+
+    document.getElementById("btn-manual").addEventListener("click", () => {
+      document.getElementById("modal-manual-area").style.display = "block";
+      document.getElementById("manual-input").focus();
+      document.getElementById("btn-manual").style.display = "none";
+      const confirmBtn = document.createElement("button");
+      confirmBtn.className = "w-full px-4 py-2.5 rounded-lg bg-ink text-fog font-medium hover:bg-steel transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+      confirmBtn.id = "btn-manual-confirm";
+      confirmBtn.textContent = "Use This Question";
+      confirmBtn.addEventListener("click", () => {
+        const q = document.getElementById("manual-input").value.trim();
+        if (!q) { document.getElementById("modal-error").textContent = "Please enter a question."; return; }
+        showQuestionPreview(q);
+      });
+      document.getElementById("modal-actions").appendChild(confirmBtn);
+    });
+
+    document.getElementById("btn-skip-q").addEventListener("click", () => createAndNavigate(""));
+    document.getElementById("btn-change-q").addEventListener("click", showStepQuestion);
+    document.getElementById("btn-start").addEventListener("click", () => createAndNavigate(mState.pendingQuestion));
+
+    async function createAndNavigate(question) {
+      clearErrors();
+      const startBtn = document.getElementById("btn-start");
+      const skipBtn  = document.getElementById("btn-skip-q");
+      [startBtn, skipBtn].forEach(b => { if (b) b.disabled = true; });
+      try {
+        const s = await apiPost("/sessions", { task_id: mState.taskId, question });
         mState.sessionId = s.id;
+        mState.pendingQuestion = question;
         navigate();
       } catch (e) {
-        document.getElementById("session-step-error").textContent = `Error: ${e.message}`;
-        btn.disabled = false; btn.textContent = "Start New Session";
+        document.getElementById("modal-error").textContent = `Error: ${e.message}`;
+        [startBtn, skipBtn].forEach(b => { if (b) b.disabled = false; });
       }
     }
-  });
 
-  // ── Step 2 (question) ───────────────────────────────────────────────────
-  function showStepQuestion() {
-    stepSession.style.display = "none";
-    stepQ.style.display = "block";
-    document.getElementById("modal-question-display").style.display = "none";
-    document.getElementById("modal-question-display").textContent = "";
-    document.getElementById("modal-manual-area").style.display = "none";
-    document.getElementById("manual-input").value = "";
-    document.getElementById("modal-actions").style.display = "flex";
-    document.getElementById("modal-start-row").style.display = "none";
-    const old = document.getElementById("btn-manual-confirm");
-    if (old) old.remove();
-    document.getElementById("btn-manual").style.display = "";
-    document.getElementById("btn-generate").disabled = false;
-    document.getElementById("btn-generate").textContent = "Generate Question";
-    clearErrors();
-  }
-
-  function showQuestionPreview(text) {
-    mState.pendingQuestion = text;
-    document.getElementById("modal-question-display").textContent = text;
-    document.getElementById("modal-question-display").style.display = "block";
-    document.getElementById("modal-manual-area").style.display = "none";
-    document.getElementById("modal-actions").style.display = "none";
-    document.getElementById("modal-start-row").style.display = "flex";
-    clearErrors();
-  }
-
-  document.getElementById("btn-generate").addEventListener("click", async () => {
-    const btn = document.getElementById("btn-generate");
-    btn.disabled = true; btn.textContent = "Generating…";
-    clearErrors();
-    try {
-      const r = await apiPost("/generate-question", { task_id: mState.taskId });
-      showQuestionPreview(r.question);
-    } catch (e) {
-      document.getElementById("modal-error").textContent = `Failed: ${e.message}`;
-      btn.disabled = false; btn.textContent = "Generate Question";
+    function navigate() {
+      if (mState.pendingQuestion) sessionStorage.setItem("celpip_question", mState.pendingQuestion);
+      else sessionStorage.removeItem("celpip_question");
+      const dest = WRITING_TASK_IDS.has(mState.taskId) ? "write.html" : "record.html";
+      window.location.href = `${dest}?session=${mState.sessionId}`;
     }
-  });
 
-  document.getElementById("btn-manual").addEventListener("click", () => {
-    document.getElementById("modal-manual-area").style.display = "block";
-    document.getElementById("manual-input").focus();
-    document.getElementById("btn-manual").style.display = "none";
-    const confirmBtn = document.createElement("button");
-    confirmBtn.className = "btn btn-primary";
-    confirmBtn.id = "btn-manual-confirm";
-    confirmBtn.textContent = "Use This Question";
-    confirmBtn.addEventListener("click", () => {
-      const q = document.getElementById("manual-input").value.trim();
-      if (!q) { document.getElementById("modal-error").textContent = "Please enter a question."; return; }
-      showQuestionPreview(q);
-    });
-    document.getElementById("modal-actions").appendChild(confirmBtn);
-  });
-
-  document.getElementById("btn-skip-q").addEventListener("click", () => createAndNavigate(""));
-  document.getElementById("btn-change-q").addEventListener("click", showStepQuestion);
-  document.getElementById("btn-start").addEventListener("click", () => createAndNavigate(mState.pendingQuestion));
-
-  async function createAndNavigate(question) {
-    clearErrors();
-    const startBtn = document.getElementById("btn-start");
-    const skipBtn  = document.getElementById("btn-skip-q");
-    [startBtn, skipBtn].forEach(b => { if (b) b.disabled = true; });
-    try {
-      const s = await apiPost("/sessions", { task_id: mState.taskId, question });
-      mState.sessionId = s.id;
-      mState.pendingQuestion = question;
-      navigate();
-    } catch (e) {
-      document.getElementById("modal-error").textContent = `Error: ${e.message}`;
-      [startBtn, skipBtn].forEach(b => { if (b) b.disabled = false; });
+    function clearErrors() {
+      document.getElementById("modal-error").textContent = "";
+      document.getElementById("session-step-error").textContent = "";
     }
-  }
 
-  function navigate() {
-    if (mState.pendingQuestion) sessionStorage.setItem("celpip_question", mState.pendingQuestion);
-    else sessionStorage.removeItem("celpip_question");
-    const dest = WRITING_TASK_IDS.has(mState.taskId) ? "write.html" : "record.html";
-    window.location.href = `${dest}?session=${mState.sessionId}`;
-  }
+    document.getElementById("btn-close").addEventListener("click", () => { modal.style.display = "none"; });
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
 
-  function clearErrors() {
-    document.getElementById("modal-error").textContent = "";
-    document.getElementById("session-step-error").textContent = "";
-  }
-
-  document.getElementById("btn-close").addEventListener("click", () => { modal.style.display = "none"; });
-  modal.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
-</script>
-{% endblock %}
+  </script>
+</body>
+</html>

@@ -1,110 +1,290 @@
-{% extends "base.html" %}
-{% block title %}CELPIP — Activity Log{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity Logs — CELPIP Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
 
-{% block body %}
-  <div class="container">
-    <header>
-      <h1>Activity Log</h1>
-    </header>
-    <div id="error-area" class="error-msg"></div>
+    /* Timeline styles */
+    .timeline { position: relative; }
+    .timeline-day-group { margin-bottom: 2rem; }
+    .timeline-date-sep {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b6a64;
+    }
+    .timeline-date-sep::before {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #eceae3;
+      margin-right: 1rem;
+    }
+    .timeline-date-sep::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #eceae3;
+      margin-left: 1rem;
+    }
+
+    .tl-entry { position: relative; display: flex; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .tl-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+      border: 2px solid white;
+    }
+    .tl-dot-session { background: #2c5f8a; }
+    .tl-dot-attempt { background: #a83240; }
+
+    .tl-card {
+      flex: 1;
+      background: white;
+      border: 1px solid #eceae3;
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    .tl-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .tl-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+    }
+    .tl-badge-session { background: #ddeaf6; color: #1a3d5c; }
+    .tl-badge-attempt { background: #f5dde0; color: #6e1e28; }
+    .tl-time { font-size: 0.8rem; color: #6b6a64; }
+    .tl-card-body { font-size: 0.9rem; color: #3d3c38; line-height: 1.5; }
+    .tl-actor { font-weight: 600; color: #0f0f0f; }
+    .tl-card-detail { color: #2c5f8a; font-weight: 500; }
+    .score-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      margin-left: 0.75rem;
+    }
+    .score-pill.good { background: #d8efe3; color: #1a4530; }
+    .score-pill.mid { background: #faecd8; color: #7a4210; }
+    .score-pill.low { background: #f5dde0; color: #6e1e28; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  {% include 'partials/navbar.html' %}
+
+  <!-- ─── HEADER ─── -->
+  <header class="max-w-4xl mx-auto px-6 pt-12 pb-8">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-2">Your Activity</p>
+      <h1 class="font-display text-4xl md:text-5xl leading-tight text-ink mb-3">Activity Log</h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Track all your practice sessions and recording submissions. See your progress over time.
+      </p>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-4xl mx-auto px-6 pb-24">
+    <div id="error-area" class="mb-6 text-rose2 text-sm"></div>
     <div id="log-feed"></div>
-  </div>
-{% endblock %}
+  </main>
 
-{% block scripts %}
-<script>
-  function dayLabel(isoString) {
-    const d = new Date(isoString);
-    const today     = new Date();
-    const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
-    if (d.toDateString() === today.toDateString())     return "Today";
-    if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
-    return d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric", year: "numeric" });
-  }
-
-  async function load() {
-    let logs;
-    try {
-      logs = await apiGet("/logs");
-    } catch (e) {
-      document.getElementById("error-area").textContent = `Failed to load logs: ${e.message}`;
-      return;
+  <script src="app.js"></script>
+  <script>
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return text.replace(/[&<>"']/g, m => map[m]);
     }
 
-    const feed = document.getElementById("log-feed");
+    function dayLabel(isoString) {
+      const d = new Date(isoString);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
 
-    if (!logs.length) {
-      feed.innerHTML = `<p class="empty-msg">No activity yet — go practice!</p>`;
-      return;
+      if (d.toDateString() === today.toDateString()) return "Today";
+      if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+      return d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric", year: "numeric" });
     }
 
-    let html = `<div class="timeline">`;
-    let lastDay = null;
+    async function load() {
+      let logs;
+      try {
+        logs = await apiGet("/logs");
+      } catch (e) {
+        document.getElementById("error-area").innerHTML = `<div class="bg-rose2-light border border-rose2/30 rounded-lg p-4">Failed to load logs: ${escapeHtml(e.message)}</div>`;
+        return;
+      }
 
-    logs.forEach((entry) => {
-      const d = new Date(entry.timestamp);
-      const day = d.toDateString();
+      const feed = document.getElementById("log-feed");
 
-      if (day !== lastDay) {
-        if (lastDay !== null) html += `</div>`; // close previous day group
-        html += `
-          <div class="timeline-day-group">
+      if (!logs || logs.length === 0) {
+        feed.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <h3 class="font-display text-xl text-ink mb-2">No activity yet</h3>
+            <p class="text-slate">Start practicing to see your activity here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `<div class="timeline">`;
+      let lastDay = null;
+
+      logs.forEach((entry) => {
+        const d = new Date(entry.timestamp);
+        const day = d.toDateString();
+
+        if (day !== lastDay) {
+          if (lastDay !== null) html += `</div>`;
+          html += `<div class="timeline-day-group">
             <div class="timeline-date-sep"><span>${escapeHtml(dayLabel(entry.timestamp))}</span></div>`;
-        lastDay = day;
-      }
+          lastDay = day;
+        }
 
-      const timeStr  = d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
-      const userName = entry.user_name || "Unknown";
-      const sessionLink = entry.session_id
-        ? `<a href="record.html?session=${entry.session_id}">${escapeHtml(entry.session_name || "Session")}</a>`
-        : escapeHtml(entry.session_name || "—");
+        const timeStr = d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+        const userName = entry.user_name || "Unknown";
+        const sessionLink = entry.session_id
+          ? `<a href="record.html?session=${entry.session_id}" class="tl-card-detail hover:underline">${escapeHtml(entry.session_name || "Session")}</a>`
+          : escapeHtml(entry.session_name || "—");
 
-      if (entry.type === "session_started") {
-        html += `
-          <div class="tl-entry tl-session">
-            <div class="tl-dot tl-dot-session"></div>
-            <div class="tl-card">
-              <div class="tl-card-header">
-                <span class="tl-badge tl-badge-session">New Session</span>
-                <span class="tl-time">${escapeHtml(timeStr)}</span>
+        if (entry.type === "session_started") {
+          html += `
+            <div class="tl-entry tl-session">
+              <div class="tl-dot tl-dot-session"></div>
+              <div class="tl-card card-hover">
+                <div class="tl-card-header">
+                  <span class="tl-badge tl-badge-session">New Session</span>
+                  <span class="tl-time">${escapeHtml(timeStr)}</span>
+                </div>
+                <div class="tl-card-body">
+                  <span class="tl-actor">${escapeHtml(userName)}</span>
+                  started a session
+                  <div class="mt-1">${sessionLink}</div>
+                </div>
               </div>
-              <div class="tl-card-body">
-                <span class="tl-actor">${escapeHtml(userName)}</span>
-                started a session
-                <span class="tl-card-detail">${sessionLink}</span>
+            </div>`;
+        } else {
+          const scoreClass = entry.score >= 10 ? "good" : entry.score >= 7 ? "mid" : "low";
+          const scoreBadge = entry.score != null
+            ? `<span class="score-pill ${scoreClass}">${entry.score}/12</span>`
+            : "";
+          html += `
+            <div class="tl-entry tl-attempt">
+              <div class="tl-dot tl-dot-attempt"></div>
+              <div class="tl-card card-hover">
+                <div class="tl-card-header">
+                  <span class="tl-badge tl-badge-attempt">Recording</span>
+                  <span class="tl-time">${escapeHtml(timeStr)}</span>
+                </div>
+                <div class="tl-card-body">
+                  <span class="tl-actor">${escapeHtml(userName)}</span>
+                  submitted a recording in
+                  <div class="mt-1 flex items-center">${sessionLink}${scoreBadge}</div>
+                </div>
               </div>
-            </div>
-          </div>`;
-      } else {
-        const scoreClass = entry.score >= 10 ? "good" : entry.score >= 7 ? "mid" : "low";
-        const scoreBadge = entry.score != null
-          ? `<span class="score-pill ${scoreClass}">${entry.score}/12</span>`
-          : "";
-        html += `
-          <div class="tl-entry tl-attempt">
-            <div class="tl-dot tl-dot-attempt"></div>
-            <div class="tl-card">
-              <div class="tl-card-header">
-                <span class="tl-badge tl-badge-attempt">Recording</span>
-                <span class="tl-time">${escapeHtml(timeStr)}</span>
-              </div>
-              <div class="tl-card-body">
-                <span class="tl-actor">${escapeHtml(userName)}</span>
-                submitted a recording in
-                <span class="tl-card-detail">${sessionLink}</span>
-                ${scoreBadge}
-              </div>
-            </div>
-          </div>`;
-      }
-    });
+            </div>`;
+        }
+      });
 
-    if (lastDay !== null) html += `</div>`; // close last day group
-    html += `</div>`; // close timeline
+      if (lastDay !== null) html += `</div>`;
+      html += `</div>`;
 
-    feed.innerHTML = html;
-  }
+      feed.innerHTML = html;
+    }
 
-  load();
-</script>
-{% endblock %}
+    // Auth button handler
+    function setupAuthButton() {
+      const desktopBtn = document.getElementById('nav-auth-btn');
+      const mobileBtn = document.getElementById('nav-auth-btn-mobile');
+
+      [desktopBtn, mobileBtn].forEach(btn => {
+        btn.addEventListener('click', () => {
+          window.location.href = '/login.html';
+        });
+      });
+    }
+
+    setupAuthButton();
+    load();
+  </script>
+</body>
+</html>

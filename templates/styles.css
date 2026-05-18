@@ -245,6 +245,88 @@ a:hover { text-decoration: underline; }
 }
 .navbar-overlay.is-open { display: block; }
 
+/* Dropdown menu */
+.navbar-dropdown {
+  position: relative;
+}
+
+.navbar-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: none;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.navbar-dropdown-toggle:hover {
+  background: #f3f4f6;
+  color: #1a1a2e;
+}
+
+.navbar-dropdown-toggle svg {
+  transition: transform 0.2s;
+}
+
+.navbar-dropdown-toggle.is-open svg {
+  transform: rotate(180deg);
+}
+
+.navbar-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  min-width: 180px;
+  margin-top: 0.5rem;
+  z-index: 101;
+}
+
+.navbar-dropdown-menu.is-open {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-dropdown-link {
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+  display: block;
+}
+
+.navbar-dropdown-link:first-child {
+  border-radius: 7px 7px 0 0;
+}
+
+.navbar-dropdown-link:hover {
+  background: #f3f4f6;
+  color: #1a1a2e;
+  text-decoration: none;
+}
+
+.navbar-dropdown-link.active {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.navbar-dropdown-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0.4rem 0;
+}
+
 /* ── Name gate overlay ── */
 .name-gate {
   position: fixed;
@@ -891,6 +973,40 @@ header h1 { font-size: 1.5rem; }
     padding: 0.7rem 0.75rem;
     font-size: 0.95rem;
     border-radius: 8px;
+  }
+
+  .navbar-dropdown {
+    width: 100%;
+  }
+
+  .navbar-dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.7rem 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .navbar-dropdown-menu {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    min-width: auto;
+    margin-top: 0.25rem;
+    margin-left: 1rem;
+    border-left: 2px solid #e5e7eb;
+  }
+
+  .navbar-dropdown-menu:not(.is-open) {
+    display: none;
+  }
+
+  .navbar-dropdown-link {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
   }
 
   .navbar-greeting {

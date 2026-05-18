@@ -1,319 +1,571 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — CELPIP Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
 
-{% block title %}Settings — CELPIP Practice{% endblock %}
+    /* Form styles */
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #0f0f0f; }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1.5px solid #eceae3;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: #0f0f0f;
+      background: white;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #2c5f8a;
+      box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.1);
+    }
+    .form-input:disabled {
+      background: #f5f4f0;
+      color: #6b6a64;
+      cursor: not-allowed;
+    }
+    .form-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #2c5f8a;
+    }
 
-{% block body %}
-<div class="container" style="max-width: 600px; margin-top: 2rem; margin-bottom: 3rem;">
-  <h1 style="font-size: 1.5rem; margin-bottom: 2rem;">Settings</h1>
+    /* Button styles */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-primary {
+      background: #0f0f0f;
+      color: #f5f4f0;
+    }
+    .btn-primary:hover {
+      background: #3d3c38;
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: white;
+      color: #0f0f0f;
+      border: 1.5px solid #eceae3;
+    }
+    .btn-secondary:hover {
+      background: #f5f4f0;
+    }
+    .btn-danger {
+      background: #f5dde0;
+      color: #6e1e28;
+    }
+    .btn-danger:hover {
+      background: #ecc0c8;
+    }
 
-  <!-- Profile Section -->
-  <div style="background: #fff; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e5e7eb;">
-    <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Profile</h2>
+    /* Card styles */
+    .settings-card {
+      background: white;
+      border: 1px solid #eceae3;
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .settings-card h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: #0f0f0f;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eceae3;
+    }
 
-    <div style="margin-bottom: 1rem;">
-      <label style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.95rem;">Email</label>
-      <input type="email" id="email-display" disabled style="width: 100%; padding: 0.7rem 0.9rem; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; font-family: inherit;" />
+    /* Message styles */
+    .form-message {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+    .form-message.success {
+      background: #d8efe3;
+      color: #1a4530;
+    }
+    .form-message.error {
+      background: #f5dde0;
+      color: #6e1e28;
+    }
+
+    /* Companion list styles */
+    .companion-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: #f5f4f0;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+    .companion-info h3 {
+      font-weight: 600;
+      color: #0f0f0f;
+      margin-bottom: 0.25rem;
+    }
+    .companion-info p {
+      font-size: 0.85rem;
+      color: #6b6a64;
+    }
+    .companion-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Section visibility */
+    .companion-section {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #eceae3;
+    }
+    .companion-section:last-child {
+      border-bottom: none;
+    }
+    .companion-section h3 {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #0f0f0f;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  {% include 'partials/navbar.html' %}
+
+  <!-- ─── HEADER ─── -->
+  <header class="max-w-4xl mx-auto px-6 pt-12 pb-8">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-2">Manage your account</p>
+      <h1 class="font-display text-4xl md:text-5xl leading-tight text-ink mb-3">Settings</h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Update your profile, change your password, and manage your companions.
+      </p>
     </div>
+  </header>
 
-    <div style="margin-bottom: 1rem;">
-      <label style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.95rem;">Display Name</label>
-      <input type="text" id="display-name" placeholder="Your display name" maxlength="100" style="width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #e5e7eb; border-radius: 8px; font-family: inherit; outline: none;" />
-    </div>
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-2xl mx-auto px-6 pb-24">
 
-    <div style="margin-bottom: 1rem;">
-      <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; user-select: none;">
-        <input type="checkbox" id="companion-visibility" style="width: 18px; height: 18px; cursor: pointer;" />
-        <span style="font-weight: 500; font-size: 0.95rem;">Allow companions to see my attempts</span>
-      </label>
-    </div>
+    <!-- Profile Section -->
+    <div class="settings-card">
+      <h2>Profile</h2>
 
-    <button class="btn btn-primary" id="profile-save-btn" style="width: 100%;">Save Profile</button>
-    <div id="profile-message" style="margin-top: 0.75rem; font-size: 0.9rem; text-align: center;"></div>
-  </div>
-
-  <!-- Password Section -->
-  <div style="background: #fff; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e5e7eb;">
-    <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Change Password</h2>
-
-    <div style="margin-bottom: 1rem;">
-      <label style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.95rem;">Current Password</label>
-      <input type="password" id="current-password" placeholder="Enter current password" style="width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #e5e7eb; border-radius: 8px; font-family: inherit; outline: none;" />
-    </div>
-
-    <div style="margin-bottom: 1rem;">
-      <label style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.95rem;">New Password</label>
-      <input type="password" id="new-password" placeholder="Enter new password (min 8 characters)" style="width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #e5e7eb; border-radius: 8px; font-family: inherit; outline: none;" />
-    </div>
-
-    <button class="btn btn-primary" id="password-save-btn" style="width: 100%;">Change Password</button>
-    <div id="password-message" style="margin-top: 0.75rem; font-size: 0.9rem; text-align: center;"></div>
-  </div>
-
-  <!-- Companions Section -->
-  <div style="background: #fff; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e5e7eb;">
-    <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Companions</h2>
-
-    <!-- Add Companion -->
-    <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
-      <label style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.95rem;">Add Companion</label>
-      <div style="display: flex; gap: 0.5rem;">
-        <input type="email" id="companion-email" placeholder="Enter companion's email" style="flex: 1; padding: 0.7rem 0.9rem; border: 1.5px solid #e5e7eb; border-radius: 8px; font-family: inherit; outline: none;" />
-        <button class="btn btn-primary" id="send-request-btn">Send Request</button>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="email-display" disabled class="form-input" />
       </div>
-      <div id="companion-message" style="margin-top: 0.75rem; font-size: 0.9rem;"></div>
+
+      <div class="form-group">
+        <label class="form-label">Display Name</label>
+        <input type="text" id="display-name" placeholder="Your display name" maxlength="100" class="form-input" />
+      </div>
+
+      <div class="form-group flex items-center gap-3">
+        <input type="checkbox" id="companion-visibility" class="form-checkbox" />
+        <label for="companion-visibility" class="form-label mb-0 cursor-pointer">Allow companions to see my attempts</label>
+      </div>
+
+      <button class="btn btn-primary w-full" id="profile-save-btn">Save Profile</button>
+      <div id="profile-message" class="form-message" style="display: none;"></div>
     </div>
 
-    <!-- Received Pending Requests -->
-    <div id="received-pending" style="margin-bottom: 1.5rem;">
-      <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">Pending Requests</h3>
-      <div id="received-pending-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+    <!-- Password Section -->
+    <div class="settings-card">
+      <h2>Change Password</h2>
+
+      <div class="form-group">
+        <label class="form-label">Current Password</label>
+        <input type="password" id="current-password" placeholder="Enter current password" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input type="password" id="new-password" placeholder="Enter new password (min 8 characters)" class="form-input" />
+      </div>
+
+      <button class="btn btn-primary w-full" id="password-save-btn">Change Password</button>
+      <div id="password-message" class="form-message" style="display: none;"></div>
     </div>
 
-    <!-- Accepted Companions -->
-    <div id="accepted-companions" style="margin-bottom: 1.5rem;">
-      <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">My Companions</h3>
-      <div id="accepted-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+    <!-- Companions Section -->
+    <div class="settings-card">
+      <h2>Companions</h2>
+
+      <!-- Add Companion -->
+      <div class="companion-section">
+        <h3>Add Companion</h3>
+        <div class="flex gap-2 mb-3">
+          <input type="email" id="companion-email" placeholder="Enter companion's email" class="form-input flex-1" />
+          <button class="btn btn-primary" id="send-request-btn">Send Request</button>
+        </div>
+        <div id="companion-message" class="form-message" style="display: none;"></div>
+      </div>
+
+      <!-- Received Pending Requests -->
+      <div id="received-pending" class="companion-section" style="display: none;">
+        <h3>Pending Requests</h3>
+        <div id="received-pending-list"></div>
+      </div>
+
+      <!-- Accepted Companions -->
+      <div id="accepted-companions" class="companion-section" style="display: none;">
+        <h3>My Companions</h3>
+        <div id="accepted-list"></div>
+      </div>
+
+      <!-- Sent Pending Requests -->
+      <div id="sent-pending" class="companion-section" style="display: none;">
+        <h3>Sent Requests</h3>
+        <div id="sent-pending-list"></div>
+      </div>
     </div>
 
-    <!-- Sent Pending Requests -->
-    <div id="sent-pending">
-      <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">Sent Requests</h3>
-      <div id="sent-pending-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
-    </div>
-  </div>
-</div>
+  </main>
 
-<script>
-  const emailDisplay = document.getElementById('email-display');
-  const displayNameInput = document.getElementById('display-name');
-  const companionVisibilityCheckbox = document.getElementById('companion-visibility');
-  const profileSaveBtn = document.getElementById('profile-save-btn');
-  const profileMessage = document.getElementById('profile-message');
-  const currentPasswordInput = document.getElementById('current-password');
-  const newPasswordInput = document.getElementById('new-password');
-  const passwordSaveBtn = document.getElementById('password-save-btn');
-  const passwordMessage = document.getElementById('password-message');
-  const companionEmailInput = document.getElementById('companion-email');
-  const sendRequestBtn = document.getElementById('send-request-btn');
-  const companionMessage = document.getElementById('companion-message');
-  const receivedPendingDiv = document.getElementById('received-pending');
-  const receivedPendingList = document.getElementById('received-pending-list');
-  const acceptedCompanionsDiv = document.getElementById('accepted-companions');
-  const acceptedList = document.getElementById('accepted-list');
-  const sentPendingDiv = document.getElementById('sent-pending');
-  const sentPendingList = document.getElementById('sent-pending-list');
-
-  function showMessage(el, msg, isError = false) {
-    el.textContent = msg;
-    el.style.color = isError ? '#991b1b' : '#059669';
-  }
-
-  async function loadUserData() {
-    try {
-      const resp = await fetch('/api/auth/me', { credentials: 'include' });
-      if (!resp.ok) {
-        window.location.href = '/login.html';
-        return;
-      }
-      const user = await resp.json();
-      emailDisplay.value = user.email;
-      displayNameInput.value = user.display_name || '';
-      companionVisibilityCheckbox.checked = user.companion_visibility;
-    } catch (err) {
-      showMessage(profileMessage, 'Failed to load profile', true);
+  <script src="app.js"></script>
+  <script>
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return text.replace(/[&<>"']/g, m => map[m]);
     }
-  }
 
-  async function loadCompanions() {
-    try {
-      const resp = await fetch('/api/companions', { credentials: 'include' });
-      if (!resp.ok) throw new Error('Failed to load companions');
-      const data = await resp.json();
+    const emailDisplay = document.getElementById('email-display');
+    const displayNameInput = document.getElementById('display-name');
+    const companionVisibilityCheckbox = document.getElementById('companion-visibility');
+    const profileSaveBtn = document.getElementById('profile-save-btn');
+    const profileMessage = document.getElementById('profile-message');
+    const currentPasswordInput = document.getElementById('current-password');
+    const newPasswordInput = document.getElementById('new-password');
+    const passwordSaveBtn = document.getElementById('password-save-btn');
+    const passwordMessage = document.getElementById('password-message');
+    const companionEmailInput = document.getElementById('companion-email');
+    const sendRequestBtn = document.getElementById('send-request-btn');
+    const companionMessage = document.getElementById('companion-message');
+    const receivedPendingDiv = document.getElementById('received-pending');
+    const receivedPendingList = document.getElementById('received-pending-list');
+    const acceptedCompanionsDiv = document.getElementById('accepted-companions');
+    const acceptedList = document.getElementById('accepted-list');
+    const sentPendingDiv = document.getElementById('sent-pending');
+    const sentPendingList = document.getElementById('sent-pending-list');
 
-      // Render accepted companions
-      if (data.accepted.length === 0) {
-        acceptedCompanionsDiv.style.display = 'none';
-      } else {
-        acceptedList.innerHTML = data.accepted.map(c => `
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f9fafb; border-radius: 6px;">
-            <div>
-              <div style="font-weight: 600;">${c.display_name || c.email}</div>
-              <div style="font-size: 0.85rem; color: #6b7280;">${c.email}</div>
-            </div>
-            <button class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="removeCompanion(${c.id})">Remove</button>
-          </div>
-        `).join('');
-      }
-
-      // Render received pending requests
-      if (data.received_pending.length === 0) {
-        receivedPendingDiv.style.display = 'none';
-      } else {
-        receivedPendingList.innerHTML = data.received_pending.map(r => `
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #fef3c7; border-radius: 6px;">
-            <div>
-              <div style="font-weight: 600;">${r.user.display_name || r.user.email}</div>
-              <div style="font-size: 0.85rem; color: #6b7280;">${r.user.email}</div>
-            </div>
-            <div style="display: flex; gap: 0.5rem;">
-              <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="acceptCompanion(${r.id})">Accept</button>
-              <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="rejectCompanion(${r.id})">Reject</button>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      // Render sent pending requests
-      if (data.sent_pending.length === 0) {
-        sentPendingDiv.style.display = 'none';
-      } else {
-        sentPendingList.innerHTML = data.sent_pending.map(r => `
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f3f4f6; border-radius: 6px;">
-            <div>
-              <div style="font-weight: 600;">${r.user.display_name || r.user.email}</div>
-              <div style="font-size: 0.85rem; color: #6b7280;">${r.user.email} · Awaiting acceptance</div>
-            </div>
-            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="removeCompanion(${r.id})">Cancel</button>
-          </div>
-        `).join('');
-      }
-    } catch (err) {
-      console.error(err);
+    function showMessage(el, msg, isError = false) {
+      el.textContent = msg;
+      el.className = 'form-message ' + (isError ? 'error' : 'success');
+      el.style.display = 'block';
     }
-  }
 
-  async function saveProfile() {
-    profileSaveBtn.disabled = true;
-    try {
-      const resp = await fetch('/api/auth/me', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          display_name: displayNameInput.value.trim(),
-          companion_visibility: companionVisibilityCheckbox.checked,
-        }),
-        credentials: 'include',
-      });
-      if (!resp.ok) throw new Error('Failed to save profile');
-      showMessage(profileMessage, 'Profile saved!');
-    } catch (err) {
-      showMessage(profileMessage, err.message, true);
-    } finally {
-      profileSaveBtn.disabled = false;
+    async function loadUserData() {
+      try {
+        const resp = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!resp.ok) {
+          window.location.href = '/login.html';
+          return;
+        }
+        const user = await resp.json();
+        emailDisplay.value = user.email;
+        displayNameInput.value = user.display_name || '';
+        companionVisibilityCheckbox.checked = user.companion_visibility;
+      } catch (err) {
+        showMessage(profileMessage, 'Failed to load profile', true);
+      }
     }
-  }
 
-  async function changePassword() {
-    passwordSaveBtn.disabled = true;
-    try {
-      const currentPw = currentPasswordInput.value.trim();
-      const newPw = newPasswordInput.value.trim();
+    async function loadCompanions() {
+      try {
+        const resp = await fetch('/api/companions', { credentials: 'include' });
+        if (!resp.ok) throw new Error('Failed to load companions');
+        const data = await resp.json();
 
-      if (!currentPw || !newPw) {
-        showMessage(passwordMessage, 'Both password fields are required', true);
+        // Render accepted companions
+        if (data.accepted.length === 0) {
+          acceptedCompanionsDiv.style.display = 'none';
+        } else {
+          acceptedCompanionsDiv.style.display = 'block';
+          acceptedList.innerHTML = data.accepted.map(c => `
+            <div class="companion-item">
+              <div class="companion-info">
+                <h3>${escapeHtml(c.display_name || c.email)}</h3>
+                <p>${escapeHtml(c.email)}</p>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="removeCompanion(${c.id})">Remove</button>
+            </div>
+          `).join('');
+        }
+
+        // Render received pending requests
+        if (data.received_pending.length === 0) {
+          receivedPendingDiv.style.display = 'none';
+        } else {
+          receivedPendingDiv.style.display = 'block';
+          receivedPendingList.innerHTML = data.received_pending.map(r => `
+            <div class="companion-item" style="background: #fef3c7;">
+              <div class="companion-info">
+                <h3>${escapeHtml(r.user.display_name || r.user.email)}</h3>
+                <p>${escapeHtml(r.user.email)}</p>
+              </div>
+              <div class="companion-buttons">
+                <button class="btn btn-primary btn-sm" onclick="acceptCompanion(${r.id})">Accept</button>
+                <button class="btn btn-secondary btn-sm" onclick="rejectCompanion(${r.id})">Reject</button>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Render sent pending requests
+        if (data.sent_pending.length === 0) {
+          sentPendingDiv.style.display = 'none';
+        } else {
+          sentPendingDiv.style.display = 'block';
+          sentPendingList.innerHTML = data.sent_pending.map(r => `
+            <div class="companion-item">
+              <div class="companion-info">
+                <h3>${escapeHtml(r.user.display_name || r.user.email)}</h3>
+                <p>${escapeHtml(r.user.email)} · Awaiting acceptance</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="cancelRequest(${r.id})">Cancel</button>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function saveProfile() {
+      profileSaveBtn.disabled = true;
+      try {
+        const resp = await fetch('/api/auth/me', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            display_name: displayNameInput.value.trim(),
+            companion_visibility: companionVisibilityCheckbox.checked,
+          }),
+          credentials: 'include',
+        });
+        if (!resp.ok) throw new Error('Failed to save profile');
+        showMessage(profileMessage, 'Profile saved!');
+      } catch (err) {
+        showMessage(profileMessage, err.message, true);
+      } finally {
+        profileSaveBtn.disabled = false;
+      }
+    }
+
+    async function changePassword() {
+      passwordSaveBtn.disabled = true;
+      try {
+        const currentPw = currentPasswordInput.value.trim();
+        const newPw = newPasswordInput.value.trim();
+
+        if (!currentPw || !newPw) {
+          showMessage(passwordMessage, 'Both password fields are required', true);
+          passwordSaveBtn.disabled = false;
+          return;
+        }
+
+        const resp = await fetch('/api/auth/me', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            current_password: currentPw,
+            password: newPw,
+          }),
+          credentials: 'include',
+        });
+        if (!resp.ok) {
+          const data = await resp.json().catch(() => ({}));
+          throw new Error(data.error || 'Failed to change password');
+        }
+        showMessage(passwordMessage, 'Password changed!');
+        currentPasswordInput.value = '';
+        newPasswordInput.value = '';
+      } catch (err) {
+        showMessage(passwordMessage, err.message, true);
+      } finally {
         passwordSaveBtn.disabled = false;
-        return;
       }
-
-      const resp = await fetch('/api/auth/me', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          current_password: currentPw,
-          password: newPw,
-        }),
-        credentials: 'include',
-      });
-      if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to change password');
-      }
-      showMessage(passwordMessage, 'Password changed!');
-      currentPasswordInput.value = '';
-      newPasswordInput.value = '';
-    } catch (err) {
-      showMessage(passwordMessage, err.message, true);
-    } finally {
-      passwordSaveBtn.disabled = false;
     }
-  }
 
-  async function sendCompanionRequest() {
-    sendRequestBtn.disabled = true;
-    try {
-      const email = companionEmailInput.value.trim();
-      if (!email) {
-        showMessage(companionMessage, 'Email is required', true);
+    async function sendCompanionRequest() {
+      sendRequestBtn.disabled = true;
+      try {
+        const email = companionEmailInput.value.trim();
+        if (!email) {
+          showMessage(companionMessage, 'Email is required', true);
+          sendRequestBtn.disabled = false;
+          return;
+        }
+        const resp = await fetch('/api/companions/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+          credentials: 'include',
+        });
+        if (!resp.ok) {
+          const data = await resp.json().catch(() => ({}));
+          throw new Error(data.error || 'Failed to send request');
+        }
+        showMessage(companionMessage, 'Request sent!');
+        companionEmailInput.value = '';
+        loadCompanions();
+      } catch (err) {
+        showMessage(companionMessage, err.message, true);
+      } finally {
         sendRequestBtn.disabled = false;
-        return;
       }
-      const resp = await fetch('/api/companions/request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-        credentials: 'include',
-      });
-      if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to send request');
+    }
+
+    window.acceptCompanion = async function(pk) {
+      try {
+        const resp = await fetch(`/api/companions/${pk}/accept`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+        if (!resp.ok) throw new Error('Failed to accept request');
+        loadCompanions();
+      } catch (err) {
+        alert('Error: ' + err.message);
       }
-      showMessage(companionMessage, 'Request sent!');
-      companionEmailInput.value = '';
-      loadCompanions();
-    } catch (err) {
-      showMessage(companionMessage, err.message, true);
-    } finally {
-      sendRequestBtn.disabled = false;
-    }
-  }
+    };
 
-  window.acceptCompanion = async function(pk) {
-    try {
-      const resp = await fetch(`/api/companions/${pk}/accept`, {
-        method: 'POST',
-        credentials: 'include',
+    window.rejectCompanion = async function(pk) {
+      try {
+        const resp = await fetch(`/api/companions/${pk}/reject`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+        if (!resp.ok) throw new Error('Failed to reject request');
+        loadCompanions();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    };
+
+    window.removeCompanion = async function(pk) {
+      if (!confirm('Are you sure?')) return;
+      try {
+        const resp = await fetch(`/api/companions/${pk}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+        if (!resp.ok) throw new Error('Failed to remove companion');
+        loadCompanions();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    };
+
+    window.cancelRequest = async function(pk) {
+      if (!confirm('Cancel this request?')) return;
+      try {
+        const resp = await fetch(`/api/companions/${pk}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+        if (!resp.ok) throw new Error('Failed to cancel request');
+        loadCompanions();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    };
+
+    // Event listeners
+    profileSaveBtn.addEventListener('click', saveProfile);
+    passwordSaveBtn.addEventListener('click', changePassword);
+    sendRequestBtn.addEventListener('click', sendCompanionRequest);
+
+    // Auth button handler
+    function setupAuthButton() {
+      const desktopBtn = document.getElementById('nav-auth-btn');
+      const mobileBtn = document.getElementById('nav-auth-btn-mobile');
+
+      [desktopBtn, mobileBtn].forEach(btn => {
+        btn.addEventListener('click', () => {
+          window.location.href = '/login.html';
+        });
       });
-      if (!resp.ok) throw new Error('Failed to accept request');
-      loadCompanions();
-    } catch (err) {
-      alert('Error: ' + err.message);
     }
-  };
 
-  window.rejectCompanion = async function(pk) {
-    try {
-      const resp = await fetch(`/api/companions/${pk}/reject`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-      if (!resp.ok) throw new Error('Failed to reject request');
-      loadCompanions();
-    } catch (err) {
-      alert('Error: ' + err.message);
-    }
-  };
+    setupAuthButton();
 
-  window.removeCompanion = async function(pk) {
-    if (!confirm('Are you sure?')) return;
-    try {
-      const resp = await fetch(`/api/companions/${pk}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-      if (!resp.ok) throw new Error('Failed to remove companion');
-      loadCompanions();
-    } catch (err) {
-      alert('Error: ' + err.message);
-    }
-  };
-
-  // Event listeners
-  profileSaveBtn.addEventListener('click', saveProfile);
-  passwordSaveBtn.addEventListener('click', changePassword);
-  sendRequestBtn.addEventListener('click', sendCompanionRequest);
-
-  // Load data on page load
-  loadUserData();
-  loadCompanions();
-</script>
-{% endblock %}
+    // Load data on page load
+    loadUserData();
+    loadCompanions();
+  </script>
+</body>
+</html>

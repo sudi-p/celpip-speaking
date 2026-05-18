@@ -1,168 +1,276 @@
-{% extends "base.html" %}
-{% block title %}CELPIP — History{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Practice History</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); cursor: pointer; }
+    .score-badge { font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; }
+    .score-badge.good { background-color: #d8efe3; color: #1a4530; }
+    .score-badge.mid { background-color: #faecd8; color: #7a4210; }
+    .score-badge.low { background-color: #f5dde0; color: #6e1e28; }
+  </style>
+</head>
+<body class="min-h-screen">
 
-{% block body %}
-  <div class="container">
-    <header>
-      <h1>Practice History</h1>
-    </header>
-    <div id="error-area" class="error-msg"></div>
+  {% include 'partials/navbar.html' %}
 
-    <!-- Filter buttons -->
-    <div id="filter-area" style="display:none;margin-bottom:1.5rem">
-      <div style="margin-bottom:.75rem;font-size:.9rem;color:#666">Filter by task:</div>
-      <div id="filter-buttons" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
+  <!-- ─── HERO ─── -->
+  <header class="max-w-6xl mx-auto px-6 pt-16 pb-8">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Your Progress</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-3">
+        Practice <span class="hero-line italic">History</span>
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Review all your practice sessions, track your scores, and monitor your progress across all CELPIP tasks.
+      </p>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-6xl mx-auto px-6 pb-24">
+    <!-- Error message -->
+    <div id="error-area" class="mb-4"></div>
+
+    <!-- Filter section -->
+    <div id="filter-section" class="mb-8" style="display:none">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Filter by task</p>
+      <div id="filter-buttons" class="flex flex-wrap gap-2"></div>
     </div>
 
-    <div id="content"></div>
-  </div>
-{% endblock %}
+    <!-- Sessions grid -->
+    <div id="content" class="grid gap-4"></div>
+  </main>
 
-{% block scripts %}
-<script>
-  let allSessions = [];
-  let selectedFilter = "all";
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-mist bg-fog py-8 px-6 text-center">
+    <p class="text-xs text-slate">CELPIP Practice History · Keep practicing to improve your scores.</p>
+  </footer>
 
-  const TASK_LABELS = {
-    1: "Task 1: Advice",
-    2: "Task 2: Experience",
-    3: "Task 3: Scene",
-    4: "Task 4: Predictions",
-    5: "Task 5: Comparing",
-    6: "Task 6: Difficult",
-    7: "Task 7: Opinions",
-    8: "Task 8: Unusual",
-    9: "Task 9: Writing (Email)",
-    10: "Task 10: Writing (Opinion)",
-  };
+  <script src="app.js"></script>
+  <script>
+    let allSessions = [];
+    let selectedFilter = "all";
 
-  function renderTable(sessions) {
-    const content = document.getElementById("content");
+    const TASK_LABELS = {
+      1: "Task 1: Advice",
+      2: "Task 2: Experience",
+      3: "Task 3: Scene",
+      4: "Task 4: Predictions",
+      5: "Task 5: Comparing",
+      6: "Task 6: Difficult",
+      7: "Task 7: Opinions",
+      8: "Task 8: Unusual",
+      9: "Writing 1: Email",
+      10: "Writing 2: Opinion",
+    };
 
-    if (sessions.length === 0) {
-      content.innerHTML = `<p class="empty-msg">No sessions for this filter — go practice!</p>`;
-      return;
-    }
+    const TASK_COLORS = {
+      1: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark', badge: 'bg-sapphire-light' },
+      2: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark', badge: 'bg-emerald2-light' },
+      3: { bg: 'bg-amber2-light', text: 'text-amber2-dark', badge: 'bg-amber2-light' },
+      4: { bg: 'bg-rose2-light', text: 'text-rose2-dark', badge: 'bg-rose2-light' },
+      5: { bg: 'bg-violet2-light', text: 'text-violet2-dark', badge: 'bg-violet2-light' },
+      6: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark', badge: 'bg-sapphire-light' },
+      7: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark', badge: 'bg-emerald2-light' },
+      8: { bg: 'bg-amber2-light', text: 'text-amber2-dark', badge: 'bg-amber2-light' },
+      9: { bg: 'bg-violet2-light', text: 'text-violet2-dark', badge: 'bg-violet2-light' },
+      10: { bg: 'bg-violet2-light', text: 'text-violet2-dark', badge: 'bg-violet2-light' },
+    };
 
-    const rows = sessions.map((s) => {
-      const scoreClass = s.avg_score >= 10 ? "good" : s.avg_score >= 7 ? "mid" : "low";
-      const scoreBadge = s.avg_score != null
-        ? `<span class="score-pill ${scoreClass}">${s.avg_score}/12</span>`
-        : `<span class="score-pill low">—</span>`;
-      const date    = new Date(s.created_at).toLocaleDateString();
-      const snippet = s.question
-        ? `<div class="session-question-snippet">${escapeHtml(s.question.length > 75 ? s.question.slice(0, 75) + "…" : s.question)}</div>`
-        : "";
-      const isWriting = WRITING_TASK_IDS.has(s.task_id);
-      const viewHref  = `${isWriting ? "write" : "record"}.html?session=${s.id}`;
+    function renderSessions(sessions) {
+      const content = document.getElementById("content");
 
-      return `
-        <tr class="session-row" data-href="${viewHref}">
-          <td>
-            <div class="session-name">
-            ${isWriting
-              ? `<span class="practice-section-label writing-label" style="font-size:.65rem;padding:.1rem .5rem;margin-right:.4rem">Writing</span>`
-              : ""}
-            ${escapeHtml(s.task_name)}
+      if (sessions.length === 0) {
+        content.innerHTML = `
+          <div class="col-span-full text-center py-16">
+            <p class="text-lg text-slate mb-4">No sessions found</p>
+            <a href="/" class="inline-block px-6 py-3 bg-ink text-fog font-semibold rounded-full hover:bg-steel transition-colors">
+              Start Practicing →
+            </a>
           </div>
-            <div style="font-size:.78rem;color:#888;margin-top:.1rem">${escapeHtml(s.name)}</div>
-            ${snippet}
-          </td>
-          <td>${escapeHtml(date)}</td>
-          <td>${escapeHtml(String(s.attempt_count))}</td>
-          <td>${scoreBadge}</td>
-          <td><a href="${viewHref}" class="btn btn-secondary" style="padding:.3rem .75rem;font-size:.8rem">Open</a></td>
-        </tr>
-      `;
-    }).join("");
-
-    content.innerHTML = `
-      <table class="sessions-table">
-        <thead>
-          <tr>
-            <th>Session</th>
-            <th>Started</th>
-            <th>Attempts</th>
-            <th>Avg Score</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    `;
-
-    content.querySelectorAll(".session-row").forEach((row) => {
-      row.addEventListener("click", (e) => {
-        if (e.target.tagName === "A") return;
-        window.location.href = row.dataset.href;
-      });
-    });
-  }
-
-  function setupFilters() {
-    const filterArea = document.getElementById("filter-area");
-    const filterButtons = document.getElementById("filter-buttons");
-
-    // Create "All" button
-    const allBtn = document.createElement("button");
-    allBtn.className = "btn btn-secondary";
-    allBtn.textContent = "All";
-    allBtn.style.cssText = "font-size:.85rem;padding:.4rem .75rem";
-    allBtn.classList.add("filter-active");
-    allBtn.addEventListener("click", () => {
-      selectedFilter = "all";
-      updateFilterButtons();
-      renderTable(allSessions);
-    });
-    filterButtons.appendChild(allBtn);
-
-    // Create task filter buttons
-    for (let taskId = 1; taskId <= 10; taskId++) {
-      const btn = document.createElement("button");
-      btn.className = "btn btn-secondary";
-      btn.textContent = TASK_LABELS[taskId];
-      btn.style.cssText = "font-size:.85rem;padding:.4rem .75rem";
-      btn.dataset.taskId = taskId;
-      btn.addEventListener("click", () => {
-        selectedFilter = taskId;
-        updateFilterButtons();
-        const filtered = allSessions.filter(s => s.task_id === taskId);
-        renderTable(filtered);
-      });
-      filterButtons.appendChild(btn);
-    }
-
-    filterArea.style.display = "block";
-  }
-
-  function updateFilterButtons() {
-    document.querySelectorAll("#filter-buttons button").forEach(btn => {
-      btn.classList.remove("filter-active");
-      if (selectedFilter === "all" && btn.textContent === "All") {
-        btn.classList.add("filter-active");
-      } else if (selectedFilter !== "all" && parseInt(btn.dataset.taskId) === selectedFilter) {
-        btn.classList.add("filter-active");
+        `;
+        return;
       }
-    });
-  }
 
-  async function load() {
-    try {
-      allSessions = await apiGet("/sessions");
-    } catch (e) {
-      document.getElementById("error-area").textContent = `Failed to load history: ${e.message}`;
-      return;
+      const cards = sessions.map((s) => {
+        const color = TASK_COLORS[s.task_id] || TASK_COLORS[1];
+        const scoreClass = s.avg_score >= 10 ? "good" : s.avg_score >= 7 ? "mid" : "low";
+        const scoreBadge = s.avg_score != null
+          ? `<span class="score-badge ${scoreClass}">${s.avg_score.toFixed(1)}/12</span>`
+          : `<span class="score-badge low">—</span>`;
+        const date = new Date(s.created_at).toLocaleDateString();
+        const isWriting = WRITING_TASK_IDS.has(s.task_id);
+        const viewHref = `${isWriting ? "write" : "record"}.html?session=${s.id}`;
+        const questionSnippet = s.question
+          ? `<p class="text-xs text-slate italic mt-2 line-clamp-2">"${escapeHtml(s.question)}"</p>`
+          : "";
+
+        return `
+          <a href="${viewHref}" class="bg-white rounded-2xl border border-mist p-6 card-hover block">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="${color.bg} ${color.text} text-xs font-semibold px-2.5 py-1 rounded-md">
+                    ${escapeHtml(TASK_LABELS[s.task_id])}
+                  </span>
+                  ${isWriting ? '<span class="bg-violet2-light text-violet2-dark text-xs font-semibold px-2.5 py-1 rounded-md">Writing</span>' : ''}
+                </div>
+                <h3 class="font-display text-lg text-ink mb-1">${escapeHtml(s.name)}</h3>
+              </div>
+              ${scoreBadge}
+            </div>
+            ${questionSnippet}
+            <div class="flex items-center justify-between mt-4 pt-4 border-t border-mist text-xs text-slate">
+              <span>${s.attempt_count} attempt${s.attempt_count !== 1 ? 's' : ''} · ${escapeHtml(date)}</span>
+              <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+        `;
+      }).join("");
+
+      content.innerHTML = cards;
     }
 
-    if (allSessions.length === 0) {
-      document.getElementById("content").innerHTML = `<p class="empty-msg">No sessions yet — go practice!</p>`;
-      return;
+    function setupFilters() {
+      const filterArea = document.getElementById("filter-section");
+      const filterButtons = document.getElementById("filter-buttons");
+      filterButtons.innerHTML = "";
+
+      // "All" button
+      const allBtn = document.createElement("button");
+      allBtn.className = "px-4 py-2 rounded-full border font-medium text-sm transition-all filter-all";
+      allBtn.textContent = "All";
+      allBtn.classList.add("filter-active", "bg-ink", "text-fog", "border-ink");
+      allBtn.addEventListener("click", () => {
+        selectedFilter = "all";
+        updateFilterButtons();
+        renderSessions(allSessions);
+      });
+      filterButtons.appendChild(allBtn);
+
+      // Task filter buttons
+      for (let taskId = 1; taskId <= 10; taskId++) {
+        const btn = document.createElement("button");
+        const color = TASK_COLORS[taskId] || TASK_COLORS[1];
+        btn.className = "px-4 py-2 rounded-full border font-medium text-sm transition-all filter-btn";
+        btn.textContent = TASK_LABELS[taskId];
+        btn.dataset.taskId = taskId;
+        btn.classList.add("bg-white", "border-mist", "text-slate", "hover:bg-fog");
+        btn.addEventListener("click", () => {
+          selectedFilter = taskId;
+          updateFilterButtons();
+          const filtered = allSessions.filter(s => s.task_id === taskId);
+          renderSessions(filtered);
+        });
+        filterButtons.appendChild(btn);
+      }
+
+      filterArea.style.display = "block";
     }
 
-    setupFilters();
-    renderTable(allSessions);
-  }
+    function updateFilterButtons() {
+      document.querySelectorAll("#filter-buttons button").forEach(btn => {
+        btn.classList.remove("bg-ink", "text-fog", "border-ink", "filter-active");
+        btn.classList.add("bg-white", "border-mist", "text-slate");
 
-  load();
-</script>
-{% endblock %}
+        if (selectedFilter === "all" && btn.classList.contains("filter-all")) {
+          btn.classList.remove("bg-white", "border-mist", "text-slate");
+          btn.classList.add("bg-ink", "text-fog", "border-ink", "filter-active");
+        } else if (selectedFilter !== "all" && parseInt(btn.dataset.taskId) === selectedFilter) {
+          btn.classList.remove("bg-white", "border-mist", "text-slate");
+          btn.classList.add("bg-ink", "text-fog", "border-ink", "filter-active");
+        }
+      });
+    }
+
+    async function load() {
+      try {
+        allSessions = await apiGet("/sessions");
+      } catch (e) {
+        const errorArea = document.getElementById("error-area");
+        errorArea.innerHTML = `<div class="bg-rose2-light border border-rose2 text-rose2-dark px-4 py-3 rounded-lg text-sm">Failed to load history: ${escapeHtml(e.message)}</div>`;
+        return;
+      }
+
+      if (allSessions.length === 0) {
+        document.getElementById("content").innerHTML = `
+          <div class="col-span-full text-center py-16">
+            <p class="text-lg text-slate mb-4">No sessions yet</p>
+            <a href="/" class="inline-block px-6 py-3 bg-ink text-fog font-semibold rounded-full hover:bg-steel transition-colors">
+              Start Practicing →
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      setupFilters();
+      renderSessions(allSessions);
+    }
+
+    // Load on page load
+    load();
+  </script>
+</body>
+</html>

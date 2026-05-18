@@ -60,6 +60,38 @@ async function initAuthUI() {
       .forEach((l) => l.addEventListener("click", closeDrawer));
   }
 
+  // Dropdown menu toggle
+  const dropdownToggle = document.getElementById("navbar-dropdown-toggle");
+  const dropdownMenu = document.getElementById("navbar-dropdown-menu");
+  if (dropdownToggle && dropdownMenu) {
+    dropdownToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownToggle.classList.toggle("is-open");
+      dropdownMenu.classList.toggle("is-open");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        !dropdownToggle.contains(e.target) &&
+        !dropdownMenu.contains(e.target)
+      ) {
+        dropdownToggle.classList.remove("is-open");
+        dropdownMenu.classList.remove("is-open");
+      }
+    });
+
+    // Close dropdown when clicking a link
+    dropdownMenu
+      .querySelectorAll(".navbar-dropdown-link")
+      .forEach((link) => {
+        link.addEventListener("click", () => {
+          dropdownToggle.classList.remove("is-open");
+          dropdownMenu.classList.remove("is-open");
+        });
+      });
+  }
+
   // Auth gate: redirect to login if not authenticated (except on auth pages)
   const isAuthPage =
     window.location.pathname.includes("login") ||

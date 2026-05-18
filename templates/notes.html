@@ -56,50 +56,7 @@
 </head>
 <body class="min-h-screen">
 
-  <!-- ─── NAV ─── -->
-  <nav class="sticky top-0 z-50 bg-fog/95 backdrop-blur border-b border-mist">
-    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-ink rounded-full flex items-center justify-center">
-          <span class="text-fog text-xs font-display italic">C</span>
-        </div>
-        <a href="/" class="font-display text-base text-ink hover:opacity-80 transition-opacity">CELPIP Prep</a>
-      </div>
-
-      <!-- Desktop Navigation -->
-      <div class="hidden md:flex items-center gap-6">
-        <a href="/" class="text-sm text-slate hover:text-ink transition-colors">Tasks</a>
-        <a href="/notes" class="text-sm text-gold font-semibold">Study Notes</a>
-        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors">History</a>
-        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors">Questions</a>
-        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors">Vocab</a>
-        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors">Logs</a>
-        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors">Settings</a>
-        <button id="nav-auth-btn" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors">Sign In</button>
-      </div>
-
-      <!-- Mobile Menu Button -->
-      <button id="navbar-burger" class="md:hidden flex flex-col gap-1" aria-label="Open navigation">
-        <span class="w-5 h-0.5 bg-ink block"></span>
-        <span class="w-5 h-0.5 bg-ink block"></span>
-        <span class="w-5 h-0.5 bg-ink block"></span>
-      </button>
-    </div>
-
-    <!-- Mobile Navigation Menu -->
-    <div id="navbar-menu" class="hidden md:hidden border-t border-mist bg-white">
-      <div class="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-3">
-        <a href="/" class="text-sm text-slate hover:text-ink transition-colors py-1">Tasks</a>
-        <a href="/notes" class="text-sm text-gold font-semibold py-1">Study Notes</a>
-        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors py-1">History</a>
-        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Questions</a>
-        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Vocab</a>
-        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Logs</a>
-        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Settings</a>
-        <button id="nav-auth-btn-mobile" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors w-fit">Sign In</button>
-      </div>
-    </div>
-  </nav>
+  {% include 'partials/navbar.html' %}
 
   <!-- ─── HERO ─── -->
   <header class="max-w-4xl mx-auto px-6 pt-16 pb-12">
@@ -385,34 +342,6 @@
   </footer>
 
   <script>
-    // Auth button
-    const authBtn = document.getElementById("nav-auth-btn");
-    if (authBtn) {
-      authBtn.addEventListener("click", () => {
-        window.location.href = "/login.html";
-      });
-    }
-    const authBtnMobile = document.getElementById("nav-auth-btn-mobile");
-    if (authBtnMobile) {
-      authBtnMobile.addEventListener("click", () => {
-        window.location.href = "/login.html";
-      });
-    }
-
-    // Mobile menu toggle
-    const burger = document.getElementById("navbar-burger");
-    const menu = document.getElementById("navbar-menu");
-    if (burger && menu) {
-      burger.addEventListener("click", () => {
-        menu.classList.toggle("hidden");
-      });
-      // Close menu when a link is clicked
-      menu.querySelectorAll("a, button").forEach(item => {
-        item.addEventListener("click", () => {
-          menu.classList.add("hidden");
-        });
-      });
-    }
   </script>
 </body>
 </html>

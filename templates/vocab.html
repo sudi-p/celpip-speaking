@@ -1,390 +1,474 @@
-{% extends "base.html" %}
-{% block title %}CELPIP — Vocabulary Bank{% endblock %}
-
-{% block body %}
-<div class="vocab-container">
-  <h1>Vocabulary Bank</h1>
-
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="word-list">Word List</button>
-    <button class="tab-btn" data-tab="quiz">Quiz</button>
-  </div>
-
-  <!-- Word List Tab -->
-  <div id="word-list" class="tab-content active">
-    <div class="filter-section">
-      <div class="filter-group">
-        <label class="filter-label">Filter by Task:</label>
-        <div class="filter-buttons" id="task-filters">
-          <button class="filter-btn active" data-filter-type="task" data-filter-value="all">All Tasks</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="0">General</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="1">Task 1</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="2">Task 2</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="3">Task 3</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="4">Task 4</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="5">Task 5</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="6">Task 6</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="7">Task 7</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="8">Task 8</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="9">Writing Task 1</button>
-          <button class="filter-btn" data-filter-type="task" data-filter-value="10">Writing Task 2</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="vocab-content" class="vocab-content">
-      <!-- Words will be grouped by type here -->
-    </div>
-
-    <div id="empty-state" class="empty-state hidden">
-      <p>No words found for the selected filters.</p>
-    </div>
-  </div>
-
-  <!-- Quiz Tab -->
-  <div id="quiz" class="tab-content hidden">
-    <div id="quiz-setup" class="quiz-setup">
-      <h2>Start a Quiz</h2>
-      <p>Choose which tasks to practice:</p>
-      <div class="quiz-filter-buttons" id="quiz-filter-buttons">
-        <button class="quiz-filter-btn active" data-quiz-task="all" hx-get="/api/vocab-quiz-count?task=all" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">All Tasks</button>
-        <button class="quiz-filter-btn" data-quiz-task="0" hx-get="/api/vocab-quiz-count?task=0" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">General</button>
-        <button class="quiz-filter-btn" data-quiz-task="1" hx-get="/api/vocab-quiz-count?task=1" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 1</button>
-        <button class="quiz-filter-btn" data-quiz-task="2" hx-get="/api/vocab-quiz-count?task=2" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 2</button>
-        <button class="quiz-filter-btn" data-quiz-task="3" hx-get="/api/vocab-quiz-count?task=3" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 3</button>
-        <button class="quiz-filter-btn" data-quiz-task="4" hx-get="/api/vocab-quiz-count?task=4" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 4</button>
-        <button class="quiz-filter-btn" data-quiz-task="5" hx-get="/api/vocab-quiz-count?task=5" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 5</button>
-        <button class="quiz-filter-btn" data-quiz-task="6" hx-get="/api/vocab-quiz-count?task=6" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 6</button>
-        <button class="quiz-filter-btn" data-quiz-task="7" hx-get="/api/vocab-quiz-count?task=7" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 7</button>
-        <button class="quiz-filter-btn" data-quiz-task="8" hx-get="/api/vocab-quiz-count?task=8" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Task 8</button>
-        <button class="quiz-filter-btn" data-quiz-task="9" hx-get="/api/vocab-quiz-count?task=9" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Writing Task 1</button>
-        <button class="quiz-filter-btn" data-quiz-task="10" hx-get="/api/vocab-quiz-count?task=10" hx-target="#quiz-question-count" hx-trigger="click" hx-swap="innerHTML">Writing Task 2</button>
-      </div>
-      <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
-    </div>
-
-    <div id="quiz-question-container" class="quiz-question-container hidden">
-      <div class="quiz-progress">
-        <span id="question-number"></span>
-        <div class="progress-bar">
-          <div id="progress-fill" class="progress-fill"></div>
-        </div>
-      </div>
-
-      <div id="question-box" class="question-box">
-        <p id="question-text" class="question-text"></p>
-      </div>
-
-      <div id="options-container" class="options-container">
-      </div>
-
-      <div id="feedback" class="feedback hidden"></div>
-
-      <button id="next-btn" class="btn btn-primary hidden">Next Question</button>
-    </div>
-
-    <div id="quiz-results" class="quiz-results hidden">
-      <h2>Quiz Complete!</h2>
-      <div class="score-display">
-        <span class="score-number" id="final-score"></span>
-        <span class="score-total">/ <span id="total-questions"></span></span>
-      </div>
-      <p id="result-message" class="result-message"></p>
-      <button id="restart-quiz-btn" class="btn btn-primary">Take Another Quiz</button>
-    </div>
-  </div>
-</div>
-
-{% endblock %}
-
-{% block scripts %}
-<script src="/vocab_data.js"></script>
-<script>
-  const TASK_NAMES = {
-    1: "Giving Advice",
-    2: "Personal Experience",
-    3: "Describing a Scene",
-    4: "Making Predictions",
-    5: "Comparing & Persuading",
-    6: "Difficult Situation",
-    7: "Expressing Opinions",
-    8: "Unusual Situation",
-  };
-
-  let listFilters = { task: "all" };
-
-  // ===== Word List Tab =====
-  function renderWordList() {
-    const content = document.getElementById("vocab-content");
-    const emptyState = document.getElementById("empty-state");
-
-    // Filter vocab by task only (type filtering disabled)
-    let filtered = window.VOCAB.filter(v => {
-      const taskMatch = listFilters.task === "all" || v.task === listFilters.task;
-      return taskMatch;
-    });
-
-    if (filtered.length === 0) {
-      content.innerHTML = "";
-      emptyState.classList.remove("hidden");
-      return;
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Vocabulary Bank</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
     }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+    .option-btn { transition: all 0.2s ease; }
+    .option-btn.correct { background-color: #d8efe3 !important; color: #1a4530 !important; border-color: #2a6b4a !important; }
+    .option-btn.incorrect { background-color: #f5dde0 !important; color: #6e1e28 !important; border-color: #a83240 !important; }
+  </style>
+</head>
+<body class="min-h-screen">
 
-    emptyState.classList.add("hidden");
+  {% include 'partials/navbar.html' %}
 
-    // Group by type
-    const grouped = {};
-    filtered.forEach(vocab => {
-      if (!grouped[vocab.type]) {
-        grouped[vocab.type] = [];
-      }
-      grouped[vocab.type].push(vocab);
-    });
+  <!-- ─── HERO ─── -->
+  <header class="max-w-6xl mx-auto px-6 pt-16 pb-8">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Build Your Vocabulary</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-3">
+        Vocabulary <span class="hero-line italic">Bank</span>
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Learn essential vocabulary for each CELPIP task. Review word lists or test yourself with interactive quizzes.
+      </p>
+    </div>
+  </header>
 
-    // Render grouped sections
-    const html = Object.keys(grouped)
-      .sort()
-      .map(typeKey => {
-        const words = grouped[typeKey];
-        const rows = words
-          .map(
-            v => `
-          <tr>
-            <td class="word-col" data-label="Word">${escapeHtml(v.word)}</td>
-            <td class="meaning-col" data-label="Meaning">${escapeHtml(v.meaning)}</td>
-            <td class="example-col" data-label="Example"><em>${escapeHtml(v.example)}</em></td>
-          </tr>
-        `
-          )
-          .join("");
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-6xl mx-auto px-6 pb-24">
+    <!-- Tab buttons -->
+    <div class="flex gap-2 mb-8 border-b border-mist">
+      <button class="tab-btn active px-6 py-3 text-sm font-medium text-ink border-b-2 border-ink transition-all" data-tab="word-list">
+        Word List
+      </button>
+      <button class="tab-btn px-6 py-3 text-sm font-medium text-slate hover:text-ink border-b-2 border-transparent transition-all" data-tab="quiz">
+        Quiz
+      </button>
+    </div>
 
-        return `
-        <div class="vocab-type-group">
-          <h3 class="vocab-type-heading">${escapeHtml(typeKey)}</h3>
-          <table class="vocab-table">
-            <tbody>
-              ${rows}
-            </tbody>
-          </table>
+    <!-- Word List Tab -->
+    <div id="word-list" class="tab-content">
+      <div class="mb-8">
+        <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-3">Filter by task</p>
+        <div id="task-filters" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <div id="vocab-content" class="space-y-8"></div>
+
+      <div id="empty-state" class="hidden text-center py-16">
+        <p class="text-lg text-slate">No words found for the selected filters.</p>
+      </div>
+    </div>
+
+    <!-- Quiz Tab -->
+    <div id="quiz" class="tab-content hidden">
+      <!-- Quiz Setup -->
+      <div id="quiz-setup" class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl border border-mist p-8">
+          <h2 class="font-display text-2xl text-ink mb-3">Start a Vocabulary Quiz</h2>
+          <p class="text-slate mb-6">Choose which tasks to practice, then test your vocabulary knowledge:</p>
+
+          <div class="mb-6">
+            <p class="text-sm font-medium text-slate mb-3">Select task:</p>
+            <div id="quiz-filter-buttons" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div id="quiz-question-count" class="mb-6 text-center"></div>
+
+          <button id="start-quiz-btn" class="w-full px-6 py-3 rounded-lg bg-ink text-fog font-semibold hover:bg-steel transition-colors">
+            Start Quiz
+          </button>
         </div>
-      `;
-      })
-      .join("");
+      </div>
 
-    content.innerHTML = html;
-  }
+      <!-- Quiz Question -->
+      <div id="quiz-question-container" class="hidden max-w-2xl mx-auto">
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-2">
+            <span id="question-number" class="text-sm font-medium text-slate"></span>
+            <span class="text-sm text-slate" id="score-display"></span>
+          </div>
+          <div class="w-full bg-mist rounded-full h-2 overflow-hidden">
+            <div id="progress-fill" class="bg-sapphire h-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
 
-  // ===== Quiz Logic =====
-  let quizState = {
-    currentQuestionIndex: 0,
-    score: 0,
-    totalQuestions: 0,
-    quizVocab: [],
-    selectedTask: "all",
-    currentQuestion: null,
-  };
+        <div class="bg-white rounded-2xl border border-mist p-8 mb-6">
+          <p id="question-text" class="font-display text-xl text-ink mb-6"></p>
+          <div id="options-container" class="space-y-3"></div>
+          <div id="feedback" class="hidden mt-6 p-4 rounded-lg text-center font-semibold"></div>
+        </div>
 
-  function getRandomOptions(correctEntry, count = 4) {
-    const otherOptions = window.VOCAB.filter((v) => v.word !== correctEntry.word);
-    const shuffled = otherOptions.sort(() => Math.random() - 0.5).slice(0, count - 1);
-    const options = [correctEntry, ...shuffled].sort(() => Math.random() - 0.5);
-    return options;
-  }
-
-  function generateRandomQuestionType() {
-    return Math.random() < 0.5 ? "word-to-meaning" : "meaning-to-word";
-  }
-
-  function renderQuestion() {
-    const vocab = quizState.quizVocab[quizState.currentQuestionIndex];
-    const questionType = generateRandomQuestionType();
-    quizState.currentQuestion = { vocab, type: questionType };
-
-    const questionText = document.getElementById("question-text");
-    const optionsContainer = document.getElementById("options-container");
-
-    if (questionType === "word-to-meaning") {
-      questionText.textContent = `What does "${vocab.word}" mean?`;
-      const options = getRandomOptions(vocab);
-      quizState.currentQuestion.correctAnswer = vocab.word;
-
-      optionsContainer.innerHTML = options
-        .map(
-          (opt) => `
-        <button class="option-btn" data-answer="${opt.word}">
-          ${escapeHtml(opt.meaning)}
+        <button id="next-btn" class="hidden w-full px-6 py-3 rounded-lg bg-ink text-fog font-semibold hover:bg-steel transition-colors">
+          Next Question
         </button>
-      `
-        )
-        .join("");
-    } else {
-      questionText.textContent = `Which word means "${vocab.meaning}"?`;
-      const options = getRandomOptions(vocab);
-      quizState.currentQuestion.correctAnswer = vocab.word;
+      </div>
 
-      optionsContainer.innerHTML = options
-        .map(
-          (opt) => `
-        <button class="option-btn" data-answer="${opt.word}">
-          ${escapeHtml(opt.word)}
-        </button>
-      `
-        )
-        .join("");
-    }
+      <!-- Quiz Results -->
+      <div id="quiz-results" class="hidden max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl border border-mist p-8 text-center">
+          <h2 class="font-display text-3xl text-ink mb-4">Quiz Complete!</h2>
+          <div class="flex items-baseline justify-center gap-2 mb-6">
+            <span class="font-display text-5xl text-sapphire" id="final-score"></span>
+            <span class="text-2xl text-slate">/ <span id="total-questions"></span></span>
+          </div>
+          <p id="result-message" class="text-lg text-slate mb-8"></p>
+          <button id="restart-quiz-btn" class="w-full px-6 py-3 rounded-lg bg-ink text-fog font-semibold hover:bg-steel transition-colors">
+            Take Another Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    document.getElementById("question-number").textContent =
-      `Question ${quizState.currentQuestionIndex + 1} of ${quizState.totalQuestions}`;
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-mist bg-fog py-8 px-6 text-center">
+    <p class="text-xs text-slate">CELPIP Vocabulary Bank · Master essential words for test success.</p>
+  </footer>
 
-    const progressPercent = ((quizState.currentQuestionIndex + 1) / quizState.totalQuestions) * 100;
-    document.getElementById("progress-fill").style.width = progressPercent + "%";
+  <script src="/vocab_data.js"></script>
+  <script>
+    const TASK_COLORS = {
+      all: { bg: 'bg-ink', text: 'text-fog' },
+      0: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark' },
+      1: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark' },
+      2: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark' },
+      3: { bg: 'bg-amber2-light', text: 'text-amber2-dark' },
+      4: { bg: 'bg-rose2-light', text: 'text-rose2-dark' },
+      5: { bg: 'bg-violet2-light', text: 'text-violet2-dark' },
+      6: { bg: 'bg-sapphire-light', text: 'text-sapphire-dark' },
+      7: { bg: 'bg-emerald2-light', text: 'text-emerald2-dark' },
+      8: { bg: 'bg-amber2-light', text: 'text-amber2-dark' },
+      9: { bg: 'bg-violet2-light', text: 'text-violet2-dark' },
+      10: { bg: 'bg-violet2-light', text: 'text-violet2-dark' },
+    };
 
-    // Wire up option buttons
-    document.querySelectorAll(".option-btn").forEach((btn) => {
-      btn.addEventListener("click", handleAnswer);
-    });
-  }
+    const TASK_LABELS = {
+      all: 'All Tasks',
+      0: 'General',
+      1: 'Task 1',
+      2: 'Task 2',
+      3: 'Task 3',
+      4: 'Task 4',
+      5: 'Task 5',
+      6: 'Task 6',
+      7: 'Task 7',
+      8: 'Task 8',
+      9: 'Writing Task 1',
+      10: 'Writing Task 2',
+    };
 
-  function handleAnswer(e) {
-    const selectedAnswer = e.target.dataset.answer;
-    const isCorrect = selectedAnswer === quizState.currentQuestion.correctAnswer;
+    let listFilters = { task: 'all' };
+    let quizState = {
+      currentQuestionIndex: 0,
+      score: 0,
+      totalQuestions: 0,
+      quizVocab: [],
+      selectedTask: 'all',
+      currentQuestion: null,
+    };
 
-    if (isCorrect) {
-      quizState.score++;
-      e.target.classList.add("correct");
-    } else {
-      e.target.classList.add("incorrect");
-      document.querySelectorAll(".option-btn").forEach((btn) => {
-        if (btn.dataset.answer === quizState.currentQuestion.correctAnswer) {
-          btn.classList.add("correct");
-        }
+    // ─── Setup filter buttons ───────────────────────────────────────────
+    function setupFilterButtons() {
+      const taskFilters = document.getElementById('task-filters');
+      const quizFilterButtons = document.getElementById('quiz-filter-buttons');
+
+      ['all', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].forEach(task => {
+        const color = TASK_COLORS[task];
+
+        // Word list filter
+        const btn1 = document.createElement('button');
+        btn1.className = `px-4 py-2 rounded-full border font-medium text-sm transition-all ${task === 'all' ? 'bg-ink text-fog border-ink' : 'bg-white border-mist text-slate hover:bg-fog'}`;
+        btn1.textContent = TASK_LABELS[task];
+        btn1.dataset.filterValue = task;
+        btn1.dataset.filterType = 'task';
+        btn1.addEventListener('click', () => {
+          document.querySelectorAll('[data-filter-type="task"]').forEach(b => {
+            b.classList.remove('bg-ink', 'text-fog', 'border-ink');
+            b.classList.add('bg-white', 'border-mist', 'text-slate', 'hover:bg-fog');
+          });
+          btn1.classList.remove('bg-white', 'border-mist', 'text-slate', 'hover:bg-fog');
+          btn1.classList.add('bg-ink', 'text-fog', 'border-ink');
+          listFilters.task = task;
+          renderWordList();
+        });
+        taskFilters.appendChild(btn1);
+
+        // Quiz filter
+        const btn2 = document.createElement('button');
+        btn2.className = `px-4 py-2 rounded-full border font-medium text-sm transition-all quiz-filter-btn ${task === 'all' ? 'bg-ink text-fog border-ink' : 'bg-white border-mist text-slate hover:bg-fog'}`;
+        btn2.textContent = TASK_LABELS[task];
+        btn2.dataset.quizTask = task;
+        btn2.addEventListener('click', () => {
+          document.querySelectorAll('.quiz-filter-btn').forEach(b => {
+            b.classList.remove('bg-ink', 'text-fog', 'border-ink');
+            b.classList.add('bg-white', 'border-mist', 'text-slate', 'hover:bg-fog');
+          });
+          btn2.classList.remove('bg-white', 'border-mist', 'text-slate', 'hover:bg-fog');
+          btn2.classList.add('bg-ink', 'text-fog', 'border-ink');
+          quizState.selectedTask = task;
+        });
+        quizFilterButtons.appendChild(btn2);
       });
     }
 
-    document.querySelectorAll(".option-btn").forEach((btn) => {
-      btn.disabled = true;
-    });
+    // ─── Word List Rendering ───────────────────────────────────────────
+    function renderWordList() {
+      const content = document.getElementById('vocab-content');
+      const emptyState = document.getElementById('empty-state');
 
-    const feedback = document.getElementById("feedback");
-    feedback.textContent = isCorrect ? "✓ Correct!" : "✗ Incorrect";
-    feedback.classList.remove("hidden");
-    feedback.classList.toggle("correct", isCorrect);
+      let filtered = window.VOCAB.filter(v => {
+        const taskMatch = listFilters.task === 'all' || String(v.task) === listFilters.task;
+        return taskMatch;
+      });
 
-    document.getElementById("next-btn").classList.remove("hidden");
-  }
-
-  function goToNextQuestion() {
-    quizState.currentQuestionIndex++;
-
-    if (quizState.currentQuestionIndex < quizState.totalQuestions) {
-      document.getElementById("feedback").classList.add("hidden");
-      document.getElementById("next-btn").classList.add("hidden");
-      renderQuestion();
-    } else {
-      showQuizResults();
-    }
-  }
-
-  function showQuizResults() {
-    document.getElementById("quiz-question-container").classList.add("hidden");
-    document.getElementById("quiz-results").classList.remove("hidden");
-
-    const percentage = Math.round((quizState.score / quizState.totalQuestions) * 100);
-    document.getElementById("final-score").textContent = quizState.score;
-    document.getElementById("total-questions").textContent = quizState.totalQuestions;
-
-    let message = "";
-    if (percentage === 100) {
-      message = "Perfect! You're a vocab master! 🎉";
-    } else if (percentage >= 80) {
-      message = "Great job! Keep practicing to improve! 🌟";
-    } else if (percentage >= 60) {
-      message = "Good effort! Review the words you missed. 📚";
-    } else {
-      message = "Keep studying! You'll improve with practice. 💪";
-    }
-    document.getElementById("result-message").textContent = message;
-  }
-
-  function startQuiz() {
-    const selectedTask = quizState.selectedTask;
-    quizState.quizVocab =
-      selectedTask === "all" ? window.VOCAB : window.VOCAB.filter((v) => v.task === selectedTask);
-
-    if (quizState.quizVocab.length === 0) {
-      alert("No words available for the selected task.");
-      return;
-    }
-
-    quizState.currentQuestionIndex = 0;
-    quizState.score = 0;
-    quizState.totalQuestions = quizState.quizVocab.length;
-
-    document.getElementById("quiz-setup").classList.add("hidden");
-    document.getElementById("quiz-question-container").classList.remove("hidden");
-    document.getElementById("quiz-results").classList.add("hidden");
-
-    renderQuestion();
-  }
-
-  // ===== Event Listeners =====
-
-  // Tab switching
-  document.querySelectorAll(".tab-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const tab = btn.dataset.tab;
-      document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-      document.querySelectorAll(".tab-content").forEach((c) => c.classList.add("hidden"));
-      btn.classList.add("active");
-      document.getElementById(tab).classList.remove("hidden");
-
-      // Auto-start quiz when Quiz tab is clicked
-      if (tab === "quiz") {
-        quizState.selectedTask = "all";
-        startQuiz();
+      if (filtered.length === 0) {
+        content.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
       }
+
+      emptyState.classList.add('hidden');
+
+      const grouped = {};
+      filtered.forEach(vocab => {
+        if (!grouped[vocab.type]) grouped[vocab.type] = [];
+        grouped[vocab.type].push(vocab);
+      });
+
+      let html = '';
+      Object.keys(grouped).sort().forEach(typeKey => {
+        const words = grouped[typeKey];
+        html += `
+          <div>
+            <h3 class="font-display text-lg text-ink mb-4">${typeKey}</h3>
+            <div class="space-y-3">
+              ${words.map(v => `
+                <div class="bg-white rounded-xl border border-mist p-4 card-hover">
+                  <div class="font-semibold text-ink mb-2">${v.word}</div>
+                  <p class="text-sm text-slate mb-2">${v.meaning}</p>
+                  <p class="text-xs text-slate italic">"${v.example}"</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      content.innerHTML = html;
+    }
+
+    // ─── Quiz Logic ────────────────────────────────────────────────────
+    function getRandomOptions(correctEntry, count = 4) {
+      const otherOptions = window.VOCAB.filter(v => v.word !== correctEntry.word);
+      const shuffled = otherOptions.sort(() => Math.random() - 0.5).slice(0, count - 1);
+      return [correctEntry, ...shuffled].sort(() => Math.random() - 0.5);
+    }
+
+    function generateRandomQuestionType() {
+      return Math.random() < 0.5 ? 'word-to-meaning' : 'meaning-to-word';
+    }
+
+    function renderQuestion() {
+      const vocab = quizState.quizVocab[quizState.currentQuestionIndex];
+      const questionType = generateRandomQuestionType();
+      quizState.currentQuestion = { vocab, type: questionType };
+
+      const questionText = document.getElementById('question-text');
+      const optionsContainer = document.getElementById('options-container');
+
+      if (questionType === 'word-to-meaning') {
+        questionText.textContent = `What does "${vocab.word}" mean?`;
+        const options = getRandomOptions(vocab);
+        quizState.currentQuestion.correctAnswer = vocab.word;
+        optionsContainer.innerHTML = options.map(opt => `
+          <button class="option-btn w-full px-4 py-3 rounded-lg border border-mist bg-white text-slate hover:bg-fog transition-colors text-left" data-answer="${opt.word}">
+            ${opt.meaning}
+          </button>
+        `).join('');
+      } else {
+        questionText.textContent = `Which word means "${vocab.meaning}"?`;
+        const options = getRandomOptions(vocab);
+        quizState.currentQuestion.correctAnswer = vocab.word;
+        optionsContainer.innerHTML = options.map(opt => `
+          <button class="option-btn w-full px-4 py-3 rounded-lg border border-mist bg-white text-slate hover:bg-fog transition-colors text-left" data-answer="${opt.word}">
+            ${opt.word}
+          </button>
+        `).join('');
+      }
+
+      document.getElementById('question-number').textContent = `Question ${quizState.currentQuestionIndex + 1} of ${quizState.totalQuestions}`;
+      document.getElementById('score-display').textContent = `Score: ${quizState.score}`;
+
+      const progressPercent = ((quizState.currentQuestionIndex + 1) / quizState.totalQuestions) * 100;
+      document.getElementById('progress-fill').style.width = progressPercent + '%';
+
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', handleAnswer);
+      });
+    }
+
+    function handleAnswer(e) {
+      const selectedAnswer = e.target.dataset.answer;
+      const isCorrect = selectedAnswer === quizState.currentQuestion.correctAnswer;
+
+      if (isCorrect) {
+        quizState.score++;
+        e.target.classList.add('correct');
+      } else {
+        e.target.classList.add('incorrect');
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          if (btn.dataset.answer === quizState.currentQuestion.correctAnswer) {
+            btn.classList.add('correct');
+          }
+        });
+      }
+
+      document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = isCorrect ? '✓ Correct!' : '✗ Incorrect';
+      feedback.classList.remove('hidden', 'bg-mist', 'text-slate');
+      feedback.classList.add(isCorrect ? 'bg-emerald2-light text-emerald2-dark' : 'bg-rose2-light text-rose2-dark');
+
+      document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function goToNextQuestion() {
+      quizState.currentQuestionIndex++;
+
+      if (quizState.currentQuestionIndex < quizState.totalQuestions) {
+        document.getElementById('feedback').classList.add('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+        renderQuestion();
+      } else {
+        showQuizResults();
+      }
+    }
+
+    function showQuizResults() {
+      document.getElementById('quiz-question-container').classList.add('hidden');
+      document.getElementById('quiz-results').classList.remove('hidden');
+
+      const percentage = Math.round((quizState.score / quizState.totalQuestions) * 100);
+      document.getElementById('final-score').textContent = quizState.score;
+      document.getElementById('total-questions').textContent = quizState.totalQuestions;
+
+      let message = '';
+      if (percentage === 100) message = 'Perfect! You\'re a vocab master! 🎉';
+      else if (percentage >= 80) message = 'Great job! Keep practicing to improve! 🌟';
+      else if (percentage >= 60) message = 'Good effort! Review the words you missed. 📚';
+      else message = 'Keep studying! You\'ll improve with practice. 💪';
+
+      document.getElementById('result-message').textContent = message;
+    }
+
+    function startQuiz() {
+      const selectedTask = quizState.selectedTask;
+      quizState.quizVocab = selectedTask === 'all'
+        ? window.VOCAB
+        : window.VOCAB.filter(v => String(v.task) === selectedTask);
+
+      if (quizState.quizVocab.length === 0) {
+        alert('No words available for the selected task.');
+        return;
+      }
+
+      quizState.currentQuestionIndex = 0;
+      quizState.score = 0;
+      quizState.totalQuestions = quizState.quizVocab.length;
+
+      document.getElementById('quiz-setup').classList.add('hidden');
+      document.getElementById('quiz-question-container').classList.remove('hidden');
+      document.getElementById('quiz-results').classList.add('hidden');
+
+      renderQuestion();
+    }
+
+    // ─── Event Listeners ────────────────────────────────────────────────
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('border-ink', 'text-ink');
+          b.classList.add('border-transparent', 'text-slate');
+        });
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+        btn.classList.remove('border-transparent', 'text-slate');
+        btn.classList.add('border-ink', 'text-ink');
+        document.getElementById(tab).classList.remove('hidden');
+      });
     });
-  });
 
-  // Task filter buttons
-  document.querySelectorAll('[data-filter-type="task"]').forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const value = btn.dataset.filterValue;
-      document.querySelectorAll('[data-filter-type="task"]').forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      listFilters.task = value;
-      renderWordList();
+    document.getElementById('start-quiz-btn').addEventListener('click', startQuiz);
+    document.getElementById('next-btn').addEventListener('click', goToNextQuestion);
+    document.getElementById('restart-quiz-btn').addEventListener('click', () => {
+      document.getElementById('quiz-setup').classList.remove('hidden');
+      document.getElementById('quiz-results').classList.add('hidden');
+      document.querySelectorAll('.quiz-filter-btn').forEach(b => {
+        b.classList.remove('bg-ink', 'text-fog', 'border-ink');
+        b.classList.add('bg-white', 'border-mist', 'text-slate', 'hover:bg-fog');
+      });
+      document.querySelector('[data-quiz-task="all"]').classList.remove('bg-white', 'border-mist', 'text-slate', 'hover:bg-fog');
+      document.querySelector('[data-quiz-task="all"]').classList.add('bg-ink', 'text-fog', 'border-ink');
+      quizState.selectedTask = 'all';
     });
-  });
 
-  // Quiz task filtering with HTMX integration
-  document.querySelectorAll(".quiz-filter-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const task = btn.dataset.quizTask;
-      document.querySelectorAll(".quiz-filter-btn").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      quizState.selectedTask = task;
-
-      // HTMX will handle the API call, just ensure event propagates
-    });
-  });
-
-  // Quiz start
-  document.getElementById("start-quiz-btn").addEventListener("click", startQuiz);
-
-  // Next question
-  document.getElementById("next-btn").addEventListener("click", goToNextQuestion);
-
-  // Restart quiz
-  document.getElementById("restart-quiz-btn").addEventListener("click", () => {
-    document.getElementById("quiz-setup").classList.remove("hidden");
-    document.getElementById("quiz-results").classList.add("hidden");
-    document.querySelectorAll(".quiz-filter-btn").forEach((b) => b.classList.remove("active"));
-    document.querySelector("[data-quiz-task='all']").classList.add("active");
-    quizState.selectedTask = "all";
-  });
-
-  // Initial render
-  renderWordList();
-</script>
-{% endblock %}
+    // Initialize
+    setupFilterButtons();
+    renderWordList();
+  </script>
+</body>
+</html>

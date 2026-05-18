@@ -1,19 +1,153 @@
-<nav class="navbar">
-  <div class="navbar-inner">
-    <a href="index.html" class="navbar-brand">CELPIP Practice</a>
-    <span class="navbar-greeting" id="navbar-greeting"></span>
-    <button class="navbar-burger" id="navbar-burger" aria-label="Open navigation">
-      <span></span><span></span><span></span>
+<!-- ─── NAV ─── -->
+<nav class="sticky top-0 z-50 bg-fog/95 backdrop-blur border-b border-mist">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-ink rounded-full flex items-center justify-center">
+        <span class="text-fog text-xs font-display italic">C</span>
+      </div>
+      <a href="/" class="font-display text-base text-ink hover:opacity-80 transition-opacity">CELPIP Prep</a>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex items-center gap-6">
+      <a href="/" class="text-sm text-slate hover:text-ink transition-colors">Tasks</a>
+      <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors">Study Notes</a>
+
+      <!-- Desktop Dropdown -->
+      <div class="relative group">
+        <button class="text-sm text-slate hover:text-ink transition-colors flex items-center gap-1">
+          More
+          <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </button>
+        <div class="absolute right-0 mt-2 w-48 bg-white border border-mist rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+          <a href="/history.html" class="block px-4 py-2 text-sm text-slate hover:text-ink hover:bg-mist transition-colors first:rounded-t-lg">History</a>
+          <a href="/questions.html" class="block px-4 py-2 text-sm text-slate hover:text-ink hover:bg-mist transition-colors">Questions</a>
+          <a href="/vocab.html" class="block px-4 py-2 text-sm text-slate hover:text-ink hover:bg-mist transition-colors">Vocab</a>
+          <a href="/logs.html" class="block px-4 py-2 text-sm text-slate hover:text-ink hover:bg-mist transition-colors">Logs</a>
+          <a href="/settings.html" class="block px-4 py-2 text-sm text-slate hover:text-ink hover:bg-mist transition-colors">Settings</a>
+          <div class="border-t border-mist"></div>
+          <button id="nav-auth-btn" class="w-full text-left px-4 py-2 text-sm text-slate hover:text-ink hover:bg-mist transition-colors rounded-b-lg">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button id="navbar-burger" class="md:hidden flex flex-col gap-1" aria-label="Open navigation">
+      <span class="w-5 h-0.5 bg-ink block transition-all"></span>
+      <span class="w-5 h-0.5 bg-ink block transition-all"></span>
+      <span class="w-5 h-0.5 bg-ink block transition-all"></span>
     </button>
-    <div class="navbar-menu" id="navbar-menu">
-      <a href="index.html" class="navbar-link{% if active_page == 'tasks' %} active{% endif %}">Tasks</a>
-      <a href="history.html" class="navbar-link{% if active_page == 'history' %} active{% endif %}">History</a>
-      <a href="questions.html" class="navbar-link{% if active_page == 'questions' %} active{% endif %}">Questions</a>
-      <a href="vocab.html" class="navbar-link{% if active_page == 'vocab' %} active{% endif %}">Vocab</a>
-      <a href="logs.html" class="navbar-link{% if active_page == 'logs' %} active{% endif %}">Logs</a>
-      <a href="settings.html" class="navbar-link{% if active_page == 'settings' %} active{% endif %}">Settings</a>
-      <a href="#" class="navbar-link" id="navbar-logout">Logout</a>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div id="navbar-menu" class="hidden md:hidden border-t border-mist bg-white">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-1">
+      <a href="/" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Tasks</a>
+      <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Study Notes</a>
+
+      <!-- Mobile Dropdown -->
+      <div class="mt-2 border-t border-mist pt-2">
+        <button id="mobile-dropdown-toggle" class="w-full text-left text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist flex items-center justify-between">
+          More
+          <svg id="mobile-dropdown-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </button>
+        <div id="mobile-dropdown-menu" class="hidden pl-4 flex flex-col gap-1 mt-1">
+          <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">History</a>
+          <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Questions</a>
+          <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Vocab</a>
+          <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Logs</a>
+          <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Settings</a>
+          <button id="nav-auth-btn-mobile" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors w-fit mt-2">Sign In</button>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
-<div class="navbar-overlay" id="navbar-overlay"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication status and update auth button text
+    async function updateAuthButtons() {
+      try {
+        const resp = await fetch('/api/auth/me', { credentials: 'include' });
+        const desktopBtn = document.getElementById('nav-auth-btn');
+        const mobileBtn = document.getElementById('nav-auth-btn-mobile');
+
+        if (resp.ok) {
+          // User is logged in - show logout button
+          const user = await resp.json();
+          const btnText = `Logout (${user.display_name || user.email})`;
+          if (desktopBtn) desktopBtn.textContent = btnText;
+          if (mobileBtn) mobileBtn.textContent = btnText;
+
+          // Handle logout
+          [desktopBtn, mobileBtn].forEach(btn => {
+            if (btn) {
+              btn.onclick = async (e) => {
+                e.preventDefault();
+                await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+                window.location.href = '/login.html';
+              };
+            }
+          });
+        } else {
+          // User is not logged in - show sign in button
+          if (desktopBtn) desktopBtn.textContent = 'Sign In';
+          if (mobileBtn) mobileBtn.textContent = 'Sign In';
+
+          // Handle sign in
+          [desktopBtn, mobileBtn].forEach(btn => {
+            if (btn) {
+              btn.onclick = () => window.location.href = '/login.html';
+            }
+          });
+        }
+      } catch (err) {
+        // Default to sign in on error
+        const desktopBtn = document.getElementById('nav-auth-btn');
+        const mobileBtn = document.getElementById('nav-auth-btn-mobile');
+
+        [desktopBtn, mobileBtn].forEach(btn => {
+          if (btn) {
+            btn.textContent = 'Sign In';
+            btn.onclick = () => window.location.href = '/login.html';
+          }
+        });
+      }
+    }
+
+    // Mobile navbar toggle
+    const burger = document.getElementById('navbar-burger');
+    const menu = document.getElementById('navbar-menu');
+    const mobileDropdownToggle = document.getElementById('mobile-dropdown-toggle');
+    const mobileDropdownMenu = document.getElementById('mobile-dropdown-menu');
+    const mobileDropdownChevron = document.getElementById('mobile-dropdown-chevron');
+
+    if (burger && menu) {
+      burger.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+        burger.querySelectorAll('span').forEach((span, index) => {
+          if (index === 0) span.classList.toggle('rotate-45');
+          if (index === 1) span.classList.toggle('opacity-0');
+          if (index === 2) span.classList.toggle('-rotate-45');
+        });
+      });
+    }
+
+    if (mobileDropdownToggle && mobileDropdownMenu) {
+      mobileDropdownToggle.addEventListener('click', () => {
+        mobileDropdownMenu.classList.toggle('hidden');
+        if (mobileDropdownChevron) {
+          mobileDropdownChevron.classList.toggle('rotate-180');
+        }
+      });
+    }
+
+    // Update auth buttons based on login status
+    updateAuthButtons();
+  });
+</script>
