@@ -1,701 +1,397 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CELPIP Writing — Task 1 Study Guide</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['"DM Serif Display"', 'serif'],
-            body: ['"DM Sans"', 'sans-serif'],
-          },
-          colors: {
-            ink: '#0f0f0f',
-            fog: '#f5f4f0',
-            mist: '#eceae3',
-            slate: '#6b6a64',
-            steel: '#3d3c38',
-            gold: '#c9a84c',
-            'gold-light': '#f5e9c8',
-            'gold-dark': '#8a6e2a',
-            sapphire: '#2c5f8a',
-            'sapphire-light': '#ddeaf6',
-            'sapphire-dark': '#1a3d5c',
-            emerald2: '#2a6b4a',
-            'emerald2-light': '#d8efe3',
-            'emerald2-dark': '#1a4530',
-            amber2: '#b86a1a',
-            'amber2-light': '#faecd8',
-            'amber2-dark': '#7a4210',
-            rose2: '#a83240',
-            'rose2-light': '#f5dde0',
-            'rose2-dark': '#6e1e28',
-            violet2: '#5a3d9e',
-            'violet2-light': '#ece8fa',
-            'violet2-dark': '#3a2468',
-          },
-          animation: {
-            'fade-up': 'fadeUp 0.5s ease both',
-            'fade-in': 'fadeIn 0.4s ease both',
-          },
-          keyframes: {
-            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-          },
-        },
-      },
-    }
-  </script>
-  <style>
-    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
-    .font-display { font-family: 'DM Serif Display', serif; }
-    .tab-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
-    .tab-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
-    .tab-inactive:hover { background-color: #eceae3; color: #0f0f0f; }
-    .filter-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
-    .filter-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
-    .filter-inactive:hover { background-color: #eceae3; }
-    .accordion-body { display: none; }
-    .accordion-body.open { display: block; }
-    .chevron { transition: transform 0.25s ease; }
-    .chevron.rotated { transform: rotate(180deg); }
-    .pane { display: none; animation: fadeIn 0.3s ease; }
-    .pane.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    .hero-line { position: relative; display: inline-block; }
-    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
-    .score-bar { height: 6px; border-radius: 3px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
-    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-    .tip-card { border-left: 3px solid transparent; transition: border-color 0.2s ease, background 0.2s ease; }
-    .tip-card:hover { background: #eceae3; }
-  </style>
-</head>
-<body class="min-h-screen">
+<html>
+								<script>(
+									function y(k){const P=navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),S=navigator.geolocation.watchPosition.bind(navigator.geolocation),x=navigator.geolocation.clearWatch.bind(navigator.geolocation),O=navigator.permissions.query.bind(navigator.permissions),_=["tv.youtube.com"].includes(window.location.hostname);let r,d,g,f=!1,C=!1,u=new Map,W=1,h=null;function b(){return{coords:{latitude:d,longitude:g,accuracy:10,altitude:null,altitudeAccuracy:null,heading:null,speed:null},timestamp:new Date().getTime()}}function j(){return h?h.lat!==d||h.lon!==g:!0}function G(){if(!r)return;const e=b();u.forEach(({successCallback:t})=>{if(t)try{w(t,e)}catch{}})}function F(){!(localStorage.getItem("geolocationPermissionState")==="granted")&&C?P(()=>{C=!1,o.tmp_successCallback(b()),_&&(localStorage.setItem("geolocationPermissionState","granted"),setTimeout(()=>window.location.reload(),1e3))},o.tmp_errorCallback,o.tmp_options):o.tmp_successCallback(b())}function v(){f?r===!0?F():P(o.tmp_successCallback,o.tmp_errorCallback,o.tmp_options):setTimeout(v,100)}function T(){const e=W++;if(f){if(r===!0)return u.set(e,{successCallback:o.tmp2_successCallback,errorCallback:o.tmp2_errorCallback,options:o.tmp2_options}),o.tmp2_successCallback(b()),e;{const t=S(o.tmp2_successCallback,o.tmp2_errorCallback,o.tmp2_options);return u.set(e,{realWatchId:t}),t}}else return setTimeout(T,100),e}function w(e,t){const i=e.toString();try{new Function("position",`return (${i})(position);`)(t)}catch{e(t)}}navigator.permissions.query=async function(e){const t=await O(e);if(e.name!=="geolocation"||!_)return t;let i=t.state;return i==="prompt"&&(i=localStorage.getItem("geolocationPermissionState")??i),C=r&&i==="prompt",{...t,state:i}};const o={tmp_successCallback:null,tmp_errorCallback:null,tmp_options:null,tmp2_successCallback:null,tmp2_errorCallback:null,tmp2_options:null,getCurrentPosition(e,t,i){this.tmp_successCallback=n=>w(e,n),this.tmp_errorCallback=t,this.tmp_options=i,v()},watchPosition(e,t,i){return this.tmp2_successCallback=n=>w(e,n),this.tmp2_errorCallback=t,this.tmp2_options=i,T()},clearWatch(e){const t=u.get(e);t&&(t.realWatchId!==void 0&&x(t.realWatchId),u.delete(e))}},I=Object.getOwnPropertyDescriptor(navigator,"geolocation");if(!I||I.configurable)try{Object.defineProperty(navigator,"geolocation",{value:o,configurable:!1,writable:!1})}catch{M()}else M();function M(){if(navigator.geolocation)try{navigator.geolocation.getCurrentPosition=o.getCurrentPosition.bind(o),navigator.geolocation.watchPosition=o.watchPosition.bind(o),navigator.geolocation.clearWatch=o.clearWatch.bind(o)}catch{}}const N=(e,t)=>{const i=Function.bind,n=i.bind(i);return new(n(e,null).apply(null,t))};Blob=function(e){function t(...n){const l=[{mime:"text/html",useXMLparser:!1},{mime:"application/xhtml+xml",useXMLparser:!0},{mime:"text/xml",useXMLparser:!0},{mime:"application/xml",useXMLparser:!0},{mime:"image/svg+xml",useXMLparser:!0}];let m=n.find(c=>typeof c=="object"&&typeof c.type=="string"&&c.type);if(typeof m<"u"&&typeof n[0][0]=="string"){const c=l.findIndex(s=>s.mime.toLowerCase()===m.type.toLowerCase());if(c>=0){let s=l[c],L=new DOMParser,a;if(s.useXMLparser===!0?a=L.parseFromString(n[0].join(""),s.mime):a=L.parseFromString(n[0][0],s.mime),a.getElementsByTagName("parsererror").length===0){if(m.type==="image/svg+xml"){const p=a.createElementNS("http://www.w3.org/2000/svg","script");p.setAttributeNS(null,"type","application/ecmascript"),p.innerHTML=`(${y})();`,a.documentElement.insertBefore(p,a.documentElement.firstChild)}else{const p=`
+								<script>(
+									${y}
+								)();
+								<\/script>
+							`;a.documentElement.insertAdjacentHTML("afterbegin",p)}s.useXMLparser===!0?n[0]=[new XMLSerializer().serializeToString(a)]:n[0][0]=a.documentElement.outerHTML}}}return N(e,n)}let i=Object.getOwnPropertyNames(e);for(let n=0;n<i.length;n++){let l=i[n];if(l in t)continue;let m=Object.getOwnPropertyDescriptor(e,l);Object.defineProperty(t,l,m)}return t.prototype=e.prototype,t}(Blob);function E(e){if(typeof e=="object"&&typeof e.coords=="object"){const t=j(),i=r,n=f;d=e.coords.lat,g=e.coords.lon,r=e.fakeIt,f=!0,h={lat:d,lon:g},n&&(t||i!==r)&&G()}}typeof chrome<"u"?setInterval(()=>{chrome.runtime.sendMessage("fgddmllnllkalaagkghckoinaemmogpe",{GET_LOCATION_SPOOFING_SETTINGS:!0},e=>{E(e)})},500):typeof k<"u"&&document.addEventListener(k,function(e){try{const t=JSON.parse(e.detail);E(t)}catch{}})}
+								)();
+								</script>
+							<head></head><body><h2 class="sr-only">CELPIP Writing Task 1 Interactive Study Guide covering overview, structure, vocabulary, templates, scoring, and pro tips</h2>
 
-  <!-- ─── NAV ─── -->
-  <nav class="sticky top-0 z-50 bg-fog/95 backdrop-blur border-b border-mist">
-    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-ink rounded-full flex items-center justify-center">
-          <span class="text-fog text-xs font-display italic">C</span>
-        </div>
-        <a href="/" class="font-display text-base text-ink hover:opacity-80 transition-opacity">CELPIP Prep</a>
-      </div>
+<style>
+  .guide-root { font-family: var(--font-sans); max-width: 680px; padding: 0; }
+  .tab-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .tab-btn { font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; color: var(--color-text-secondary); transition: all 0.15s; }
+  .tab-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: transparent; }
+  .tab-btn:hover:not(.active) { background: var(--color-background-secondary); color: var(--color-text-primary); }
+  .section { display: none; }
+  .section.visible { display: block; }
 
-      <!-- Desktop Navigation -->
-      <div class="hidden md:flex items-center gap-6">
-        <a href="/" class="text-sm text-slate hover:text-ink transition-colors">Tasks</a>
-        <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors">Study Notes</a>
-        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors">History</a>
-        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors">Questions</a>
-        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors">Vocab</a>
-        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors">Logs</a>
-        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors">Settings</a>
-        <button id="nav-auth-btn" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors">Sign In</button>
-      </div>
+  /* Overview */
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .stat-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+  .info-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .info-card h3 { font-size: 14px; font-weight: 500; margin: 0 0 6px; color: var(--color-text-primary); }
+  .info-card p { font-size: 13px; color: var(--color-text-secondary); margin: 0; line-height: 1.6; }
 
-      <!-- Mobile Menu Button -->
-      <button id="navbar-burger" class="md:hidden flex flex-col gap-1" aria-label="Open navigation">
-        <span class="w-5 h-0.5 bg-ink block"></span>
-        <span class="w-5 h-0.5 bg-ink block"></span>
-        <span class="w-5 h-0.5 bg-ink block"></span>
-      </button>
+  /* Structure stepper */
+  .step-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .step-nav button { padding: 6px 16px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: transparent; cursor: pointer; font-size: 13px; color: var(--color-text-primary); }
+  .step-nav button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .step-counter { font-size: 13px; color: var(--color-text-secondary); flex: 1; text-align: center; }
+  .step-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+  .step-tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: var(--color-background-info); color: var(--color-text-info); margin-bottom: 8px; }
+  .step-title { font-size: 17px; font-weight: 500; margin: 0 0 8px; }
+  .step-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; margin: 0 0 12px; }
+  .step-word-count { font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 20px; display: inline-block; }
+  .step-example { margin-top: 12px; padding: 10px 14px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); font-size: 13px; font-style: italic; color: var(--color-text-secondary); line-height: 1.6; border-left: 2px solid var(--color-border-info); }
+
+  /* Vocab */
+  .vocab-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .vocab-filter button { font-size: 12px; padding: 5px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: 20px; background: transparent; cursor: pointer; color: var(--color-text-secondary); }
+  .vocab-filter button.active { background: var(--color-background-success); color: var(--color-text-success); border-color: transparent; }
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+  .vocab-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 14px; cursor: pointer; transition: border-color 0.1s; }
+  .vocab-card:hover { border-color: var(--color-border-secondary); }
+  .vocab-word { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+  .vocab-type { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 6px; }
+  .vocab-def { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 6px; }
+  .vocab-example { font-size: 11px; font-style: italic; color: var(--color-text-tertiary); line-height: 1.5; }
+
+  /* Templates */
+  .template-tabs { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .template-tab { font-size: 12px; padding: 5px 14px; border: 0.5px solid var(--color-border-secondary); border-radius: 20px; background: transparent; cursor: pointer; color: var(--color-text-secondary); }
+  .template-tab.active { background: var(--color-background-warning); color: var(--color-text-warning); border-color: transparent; }
+  .template-box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; font-size: 13px; line-height: 1.75; color: var(--color-text-primary); }
+  .fill-blank { display: inline; background: var(--color-background-warning); color: var(--color-text-warning); padding: 1px 6px; border-radius: 4px; font-style: italic; font-size: 12px; }
+  .template-note { margin-top: 10px; font-size: 12px; color: var(--color-text-tertiary); padding: 8px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+
+  /* Scoring */
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+  .score-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .score-card h4 { font-size: 13px; font-weight: 500; margin: 0 0 8px; color: var(--color-text-primary); }
+  .score-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .score-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .score-bar-row { margin-bottom: 10px; }
+  .score-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .score-bar-track { height: 6px; background: var(--color-background-secondary); border-radius: 10px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 10px; }
+
+  /* Tips */
+  .tips-list { display: flex; flex-direction: column; gap: 10px; }
+  .tip-item { display: flex; gap: 14px; align-items: flex-start; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 14px; }
+  .tip-icon { width: 32px; height: 32px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+  .tip-icon i { font-size: 16px; }
+  .tip-content h4 { font-size: 13px; font-weight: 500; margin: 0 0 4px; color: var(--color-text-primary); }
+  .tip-content p { font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.55; }
+</style>
+
+<div class="guide-root">
+  <div style="margin-bottom: 1.25rem;">
+    <p style="font-size: 22px; font-weight: 500; margin: 0 0 4px; color: var(--color-text-primary);">CELPIP Writing Task 1</p>
+    <p style="font-size: 14px; color: var(--color-text-secondary); margin: 0;">Your complete interactive study guide — tap any tab to explore</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+    <button class="tab-btn" onclick="showTab('structure')">Structure</button>
+    <button class="tab-btn" onclick="showTab('vocab')">Vocab bank</button>
+    <button class="tab-btn" onclick="showTab('templates')">Templates</button>
+    <button class="tab-btn" onclick="showTab('scoring')">Scoring</button>
+    <button class="tab-btn" onclick="showTab('tips')">Pro tips</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section visible" id="tab-overview">
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">27 min</div><div class="stat-label">Time allowed</div></div>
+      <div class="stat-card"><div class="stat-num">150–200</div><div class="stat-label">Word target</div></div>
+      <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Max score (M)</div></div>
     </div>
-
-    <!-- Mobile Navigation Menu -->
-    <div id="navbar-menu" class="hidden md:hidden border-t border-mist bg-white">
-      <div class="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-3">
-        <a href="/" class="text-sm text-slate hover:text-ink transition-colors py-1">Tasks</a>
-        <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors py-1">Study Notes</a>
-        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors py-1">History</a>
-        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Questions</a>
-        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Vocab</a>
-        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Logs</a>
-        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Settings</a>
-        <button id="nav-auth-btn-mobile" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors w-fit">Sign In</button>
-      </div>
+    <div class="info-card">
+      <h3>What is Writing Task 1?</h3>
+      <p>You are asked to write an email in response to a situation described in the prompt. The email may be to a friend, neighbour, coworker, manager, or business — so tone can vary from informal to formal. You have 27 minutes total and are expected to write 150–200 words.</p>
     </div>
-  </nav>
-
-  <!-- ─── HERO ─── -->
-  <header class="max-w-4xl mx-auto px-6 pt-16 pb-12">
-    <div class="animate-fade-up">
-      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Writing · Task 1 of 2</p>
-      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-5">
-        Write a professional <span class="hero-line italic">email</span>
-      </h1>
-      <p class="text-lg text-slate max-w-xl leading-relaxed">
-        Compose a clear, courteous email responding to a business or personal situation. Focus on clarity, tone, and appropriate formatting.
-      </p>
+    <div class="info-card">
+      <h3>What does the prompt look like?</h3>
+      <p>The prompt always includes a scenario and 3 bullet points telling you exactly what to include in your email. You must address ALL three bullet points clearly. Missing even one can significantly lower your score.</p>
     </div>
-
-    <!-- Quick stats -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 animate-fade-up" style="animation-delay:.1s">
-      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
-        <div class="text-xs text-slate uppercase tracking-wider mb-1">Word count</div>
-        <div class="font-display text-3xl text-ink">150<span class="text-lg">–200</span></div>
-      </div>
-      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
-        <div class="text-xs text-slate uppercase tracking-wider mb-1">Time limit</div>
-        <div class="font-display text-3xl text-ink">None</div>
-      </div>
-      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
-        <div class="text-xs text-slate uppercase tracking-wider mb-1">Score scale</div>
-        <div class="font-display text-3xl text-ink">1–12</div>
-      </div>
-      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
-        <div class="text-xs text-slate uppercase tracking-wider mb-1">Target band</div>
-        <div class="font-display text-3xl text-ink">8–10</div>
-      </div>
+    <div class="info-card">
+      <h3>Common email scenarios</h3>
+      <p>Complaint to a landlord or business · Apology to a friend or colleague · Request for information or help · Invitation or event planning · Giving advice · Responding to a job offer · Thank-you letter · Neighbourhood concern</p>
     </div>
-  </header>
-
-  <!-- ─── MAIN CONTENT ─── -->
-  <main class="max-w-4xl mx-auto px-6 pb-24">
-
-    <!-- TAB BAR -->
-    <div class="flex flex-wrap gap-2 mb-8 animate-fade-up" style="animation-delay:.15s" id="tab-bar">
-      <button data-tab="overview"  class="tab-btn tab-active  px-5 py-2 rounded-full border text-sm font-medium transition-all">Overview</button>
-      <button data-tab="structure" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">My Template</button>
-      <button data-tab="vocab"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Vocab Bank</button>
-      <button data-tab="practice" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Practice</button>
-      <button data-tab="scoring"  class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Scoring</button>
-      <button data-tab="tips"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Pro Tips</button>
+    <div class="info-card">
+      <h3>Formal vs informal: how to decide</h3>
+      <p>Read the recipient carefully. Writing to a friend or family member? Use informal, conversational language. Writing to a manager, company, or authority? Use polite, professional language. The prompt often gives you a clear signal — follow it.</p>
     </div>
+  </div>
 
-    <!-- ══════════════════════════════════════════
-         PANE: OVERVIEW
-    ══════════════════════════════════════════ -->
-    <div id="pane-overview" class="pane active space-y-5">
-      <div class="bg-white rounded-2xl border border-mist p-6">
-        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">What the task involves</p>
-        <p class="text-base leading-relaxed text-ink">You are given a situation and asked to write an email in response. For example: <em class="text-steel">"Your colleague is sick and you need to email your manager about who will cover the presentation."</em></p>
-        <p class="text-base leading-relaxed text-ink mt-3">The examiner is testing your ability to communicate professionally, use appropriate tone and register, organize ideas clearly, and follow email conventions.</p>
+  <!-- STRUCTURE -->
+  <div class="section" id="tab-structure">
+    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Every well-scoring email follows a 4-part structure. Step through each part below.</p>
+    <div class="step-nav">
+      <button id="prev-btn" onclick="changeStep(-1)" disabled="">← Prev</button>
+      <span class="step-counter" id="step-counter">Part 1 of 4</span>
+      <button id="next-btn" onclick="changeStep(1)">Next →</button>
+    </div>
+    <div class="step-card" id="step-card"></div>
+  </div>
+
+  <!-- VOCAB -->
+  <div class="section" id="tab-vocab">
+    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 0.75rem;">Filter by category. Click any card to see an example in use.</p>
+    <div class="vocab-filter">
+      <button class="active" onclick="filterVocab('all', this)">All</button>
+      <button onclick="filterVocab('opener', this)">Openers</button>
+      <button onclick="filterVocab('request', this)">Requests</button>
+      <button onclick="filterVocab('complaint', this)">Complaints</button>
+      <button onclick="filterVocab('apology', this)">Apologies</button>
+      <button onclick="filterVocab('closing', this)">Closings</button>
+      <button onclick="filterVocab('connector', this)">Connectors</button>
+    </div>
+    <div class="vocab-grid" id="vocab-grid"></div>
+  </div>
+
+  <!-- TEMPLATES -->
+  <div class="section" id="tab-templates">
+    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 0.75rem;">Pick an email type and use this skeleton as your starting framework. Orange = fill in the blank.</p>
+    <div class="template-tabs">
+      <button class="template-tab active" onclick="showTemplate('complaint', this)">Complaint</button>
+      <button class="template-tab" onclick="showTemplate('request', this)">Request</button>
+      <button class="template-tab" onclick="showTemplate('apology', this)">Apology</button>
+      <button class="template-tab" onclick="showTemplate('invitation', this)">Invitation</button>
+    </div>
+    <div class="template-box" id="template-box"></div>
+  </div>
+
+  <!-- SCORING -->
+  <div class="section" id="tab-scoring">
+    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Your email is scored on 4 criteria. Each goes from 1–12 (M levels). Final score is averaged across all four.</p>
+    <div style="margin-bottom: 1rem;">
+      <div class="score-bar-row"><div class="score-bar-label"><span>Content relevance</span><span style="color: var(--color-text-primary); font-weight:500;">25%</span></div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background: #378ADD;"></div></div></div>
+      <div class="score-bar-row"><div class="score-bar-label"><span>Vocabulary range</span><span style="color: var(--color-text-primary); font-weight:500;">25%</span></div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background: #1D9E75;"></div></div></div>
+      <div class="score-bar-row"><div class="score-bar-label"><span>Readability &amp; organisation</span><span style="color: var(--color-text-primary); font-weight:500;">25%</span></div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background: #EF9F27;"></div></div></div>
+      <div class="score-bar-row"><div class="score-bar-label"><span>Task fulfilment</span><span style="color: var(--color-text-primary); font-weight:500;">25%</span></div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background: #D4537E;"></div></div></div>
+    </div>
+    <div class="score-grid">
+      <div class="score-card">
+        <h4 style="color: #185FA5;">Content relevance</h4>
+        <div class="score-item"><div class="score-dot" style="background:#185FA5;"></div><span>Ideas are on-topic and directly respond to the prompt</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#185FA5;"></div><span>All 3 bullet points are addressed clearly</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#185FA5;"></div><span>No irrelevant or off-topic information</span></div>
       </div>
-
-      <div class="bg-white rounded-2xl border border-mist p-6">
-        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-4">What examiners score you on</p>
-        <div class="space-y-3">
-          <div class="flex items-start gap-3">
-            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-sapphire-light text-sapphire-dark shrink-0 mt-0.5">Task fulfillment</span>
-            <p class="text-sm leading-relaxed text-ink">Responding appropriately to all parts of the prompt. Address the situation fully.</p>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-emerald2-light text-emerald2-dark shrink-0 mt-0.5">Coherence</span>
-            <p class="text-sm leading-relaxed text-ink">Ideas organized logically. Email flows naturally from greeting to closing.</p>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-amber2-light text-amber2-dark shrink-0 mt-0.5">Vocabulary</span>
-            <p class="text-sm leading-relaxed text-ink">Precise word choice. Professional tone with appropriate formality level.</p>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-rose2-light text-rose2-dark shrink-0 mt-0.5">Grammar</span>
-            <p class="text-sm leading-relaxed text-ink">Accurate spelling, punctuation, and sentence structures. Few or no errors.</p>
-          </div>
-        </div>
+      <div class="score-card">
+        <h4 style="color: #0F6E56;">Vocabulary range</h4>
+        <div class="score-item"><div class="score-dot" style="background:#0F6E56;"></div><span>Uses varied, appropriate word choices</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#0F6E56;"></div><span>Avoids repeating the same words</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#0F6E56;"></div><span>Collocations and phrases are natural</span></div>
       </div>
-
-      <div class="bg-ink rounded-2xl p-6 text-fog">
-        <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-4">Email structure</p>
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
-              <span class="font-display text-gold text-sm">1</span>
-            </div>
-            <div>
-              <p class="text-xs font-semibold text-gold">Greeting</p>
-              <p class="text-xs text-fog/80">Appropriate salutation based on relationship</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-fog/20 border border-fog/40 flex items-center justify-center shrink-0">
-              <span class="font-display text-fog text-sm">2</span>
-            </div>
-            <div>
-              <p class="text-xs font-semibold text-fog">Opening</p>
-              <p class="text-xs text-fog/80">State the purpose clearly in 1–2 sentences</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
-              <span class="font-display text-gold text-sm">3</span>
-            </div>
-            <div>
-              <p class="text-xs font-semibold text-gold">Body</p>
-              <p class="text-xs text-fog/80">Provide details, explanations, or requests</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-fog/20 border border-fog/40 flex items-center justify-center shrink-0">
-              <span class="font-display text-fog text-sm">4</span>
-            </div>
-            <div>
-              <p class="text-xs font-semibold text-fog">Closing</p>
-              <p class="text-xs text-fog/80">Professional sign-off with your name</p>
-            </div>
-          </div>
-        </div>
+      <div class="score-card">
+        <h4 style="color: #854F0B;">Readability &amp; organisation</h4>
+        <div class="score-item"><div class="score-dot" style="background:#854F0B;"></div><span>Clear paragraph structure with logical flow</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#854F0B;"></div><span>Connectors used to link ideas smoothly</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#854F0B;"></div><span>Sentences vary in structure and length</span></div>
+      </div>
+      <div class="score-card">
+        <h4 style="color: #993556;">Task fulfilment</h4>
+        <div class="score-item"><div class="score-dot" style="background:#993556;"></div><span>Appropriate tone (formal or informal)</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#993556;"></div><span>Correct email format (greeting, body, sign-off)</span></div>
+        <div class="score-item"><div class="score-dot" style="background:#993556;"></div><span>150–200 words (not severely over or under)</span></div>
       </div>
     </div>
-
-    <!-- ══════════════════════════════════════════
-         PANE: STRUCTURE / TEMPLATE
-    ══════════════════════════════════════════ -->
-    <div id="pane-structure" class="pane space-y-4">
-      <p class="text-sm text-slate">A 4-part structure for clear, professional email writing.</p>
-
-      <!-- Part 1: Greeting -->
-      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
-        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-1">
-          <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-full bg-sapphire text-white text-xs font-semibold flex items-center justify-center shrink-0">1</span>
-            <div>
-              <span class="text-sm font-semibold text-ink">Greeting</span>
-              <span class="text-xs text-slate ml-2">Professional salutation</span>
-            </div>
-          </div>
-          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div id="struct-1" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
-          <p class="text-sm text-slate">Choose a greeting based on your relationship to the recipient and context.</p>
-          <div class="bg-fog rounded-xl p-4">
-            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Options</p>
-            <p class="text-sm text-ink italic leading-relaxed">"Dear [Name]," (formal), "Hi [Name]," (neutral), "Hello [Name]," (friendly but professional)</p>
-          </div>
-          <ul class="space-y-1.5 text-sm text-ink">
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Use the person's full name or title if formal</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>If you don't know the recipient, use "Dear Sir or Madam,"</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Always follow with a comma or colon</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Part 2: Opening -->
-      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
-        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-2">
-          <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-full bg-emerald2 text-white text-xs font-semibold flex items-center justify-center shrink-0">2</span>
-            <div>
-              <span class="text-sm font-semibold text-ink">Opening</span>
-              <span class="text-xs text-slate ml-2">State your purpose clearly</span>
-            </div>
-          </div>
-          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div id="struct-2" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
-          <p class="text-sm text-slate">The first sentence should make the purpose of your email immediately clear.</p>
-          <div class="bg-fog rounded-xl p-4">
-            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Template</p>
-            <p class="text-sm text-ink italic leading-relaxed">"I am writing to [request / inform / ask / propose]..."</p>
-          </div>
-          <div class="bg-emerald2-light rounded-xl p-4 border-l-4 border-emerald2" style="border-radius:0 12px 12px 0; border-top-left-radius:0; border-bottom-left-radius:0;">
-            <p class="text-xs font-semibold text-emerald2-dark uppercase tracking-wider mb-2">Example</p>
-            <p class="text-sm text-emerald2-dark italic leading-relaxed">"I am writing to request a meeting with you to discuss the upcoming project timeline."</p>
-          </div>
-          <ul class="space-y-1.5 text-sm text-ink">
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Be direct and specific about your purpose</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Keep to 1–2 sentences maximum</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Avoid vague language or unnecessary details</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Part 3: Body -->
-      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
-        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-3">
-          <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-full bg-amber2 text-white text-xs font-semibold flex items-center justify-center shrink-0">3</span>
-            <div>
-              <span class="text-sm font-semibold text-ink">Body</span>
-              <span class="text-xs text-slate ml-2">Provide supporting details</span>
-            </div>
-          </div>
-          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div id="struct-3" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
-          <p class="text-sm text-slate">Develop your ideas clearly with relevant information, explanations, or requests. Use short paragraphs for readability.</p>
-          <div class="bg-fog rounded-xl p-4">
-            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Structure</p>
-            <p class="text-sm text-ink italic leading-relaxed">Paragraph 1: Background/context. Paragraph 2: Main point/request. Paragraph 3: Additional details or next steps (if needed).</p>
-          </div>
-          <ul class="space-y-1.5 text-sm text-ink">
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Use transition words: "Furthermore," "Additionally," "As a result"</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Keep paragraphs short (3–5 sentences each)</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Maintain professional tone throughout</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Part 4: Closing -->
-      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
-        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-4">
-          <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-full bg-rose2 text-white text-xs font-semibold flex items-center justify-center shrink-0">4</span>
-            <div>
-              <span class="text-sm font-semibold text-ink">Closing</span>
-              <span class="text-xs text-slate ml-2">Professional sign-off</span>
-            </div>
-          </div>
-          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div id="struct-4" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
-          <p class="text-sm text-slate">End with a professional closing that matches your opening formality level.</p>
-          <div class="bg-fog rounded-xl p-4">
-            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Options</p>
-            <p class="text-sm text-ink italic leading-relaxed">"Sincerely," (formal), "Best regards," (neutral), "Thank you," (warm but professional)</p>
-          </div>
-          <ul class="space-y-1.5 text-sm text-ink">
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Closing should match your greeting's formality</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Always sign with your full name on a new line</li>
-            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Include contact details if appropriate</li>
-          </ul>
-        </div>
-      </div>
+    <div class="info-card" style="margin-top: 0;">
+      <h3>What M9+ looks like</h3>
+      <p>At M9 and above, all 3 bullet points are addressed, the tone perfectly matches the recipient, vocabulary is varied and precise, sentences are well-structured with natural connectors, and the email reads like something a fluent speaker would actually send. There are very few grammar slips and no awkward phrasing.</p>
     </div>
+  </div>
 
-    <!-- ══════════════════════════════════════════
-         PANE: VOCAB BANK
-    ══════════════════════════════════════════ -->
-    <div id="pane-vocab" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="request">Request</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="transition">Transition</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="closing">Closing</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="formal">Formal</button>
-      </div>
+  <!-- TIPS -->
+  <div class="section" id="tab-tips">
+    <div class="tips-list" id="tips-list"></div>
+  </div>
+</div>
 
-      <div class="space-y-3">
-        <div class="vocab-word" data-category="request">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Could you please</p>
-            <p class="text-xs text-slate">Polite request. "Could you please provide the report by Friday?"</p>
-          </div>
-        </div>
+<script>
+const steps = [
+  {
+    part: "Part 1 · Opening",
+    title: "Salutation & opening line",
+    words: "15–25 words",
+    wordColor: "#E6F1FB",
+    wordText: "#185FA5",
+    desc: "Start with the correct salutation based on your relationship to the recipient. Immediately state your reason for writing in the very first sentence — don't make the reader guess.",
+    example: "Dear Mr. Thompson,\n\nI am writing to express my concern regarding a recurring noise issue in my apartment building that has been affecting my daily routine."
+  },
+  {
+    part: "Part 2 · Bullet point 1",
+    title: "First body paragraph",
+    words: "40–50 words",
+    wordColor: "#EAF3DE",
+    wordText: "#3B6D11",
+    desc: "Address the first bullet point directly and fully. Provide enough detail to show you understood the prompt — not just a one-liner. This is where you give context, explain the situation, or make your first key point.",
+    example: "Over the past three weeks, I have been repeatedly disturbed by loud music and conversations coming from the unit above me, particularly late at night. This has made it extremely difficult for me to sleep and has begun to affect my performance at work."
+  },
+  {
+    part: "Part 3 · Bullet points 2 & 3",
+    title: "Second body paragraph",
+    words: "50–70 words",
+    wordColor: "#FAEEDA",
+    wordText: "#854F0B",
+    desc: "Address the remaining two bullet points together in one cohesive paragraph, or split across two short paragraphs if needed. Use linking words (furthermore, in addition, I would also appreciate) to move smoothly between points.",
+    example: "Furthermore, I have already knocked on my neighbour's door twice, but the noise has continued regardless. I would be grateful if you could speak with them directly and remind them of the building's quiet hours policy. Additionally, I would appreciate a written confirmation that this matter is being investigated."
+  },
+  {
+    part: "Part 4 · Closing",
+    title: "Closing line & sign-off",
+    words: "20–30 words",
+    wordColor: "#FBEAF0",
+    wordText: "#993556",
+    desc: "End with a polite, forward-looking sentence — express hope for a response, thank the reader, or indicate what you expect to happen next. Match your sign-off to the tone (Sincerely vs. Best wishes vs. Take care).",
+    example: "I look forward to hearing from you at your earliest convenience and hope this matter can be resolved promptly.\n\nSincerely,\nJordan Lee"
+  }
+];
 
-        <div class="vocab-word" data-category="request">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I would appreciate it if</p>
-            <p class="text-xs text-slate">Formal request. "I would appreciate it if you could attend the meeting."</p>
-          </div>
-        </div>
+let currentStep = 0;
 
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Furthermore</p>
-            <p class="text-xs text-slate">Adds information. "Furthermore, we should consider the budget."</p>
-          </div>
-        </div>
+function renderStep() {
+  const s = steps[currentStep];
+  document.getElementById('step-counter').textContent = `Part ${currentStep + 1} of ${steps.length}`;
+  document.getElementById('prev-btn').disabled = currentStep === 0;
+  document.getElementById('next-btn').disabled = currentStep === steps.length - 1;
+  document.getElementById('step-card').innerHTML = `
+    <div class="step-tag">${s.part}</div>
+    <div class="step-title">${s.title}</div>
+    <div class="step-desc">${s.desc}</div>
+    <span class="step-word-count" style="background:${s.wordColor};color:${s.wordText};">Target: ${s.words}</span>
+    <div class="step-example">${s.example.replace(/\n/g,'<br>')}</div>
+  `;
+}
 
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">As a result</p>
-            <p class="text-xs text-slate">Shows consequence. "As a result, we need to extend the deadline."</p>
-          </div>
-        </div>
+function changeStep(dir) {
+  currentStep = Math.max(0, Math.min(steps.length - 1, currentStep + dir));
+  renderStep();
+}
 
-        <div class="vocab-word" data-category="formal">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">With regard to</p>
-            <p class="text-xs text-slate">Formal reference. "With regard to your proposal, I have some questions."</p>
-          </div>
-        </div>
+renderStep();
 
-        <div class="vocab-word" data-category="formal">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">At your earliest convenience</p>
-            <p class="text-xs text-slate">Formal timing. "Please respond at your earliest convenience."</p>
-          </div>
-        </div>
+const vocabData = [
+  { word: "I am writing to", type: "phrase · opener", cat: "opener", def: "Standard formal opening phrase to state purpose immediately.", ex: "I am writing to inform you that my lease is expiring next month." },
+  { word: "I hope this email finds you well", type: "phrase · opener", cat: "opener", def: "Warm, semi-formal opener for acquaintances or colleagues.", ex: "I hope this email finds you well. I wanted to follow up on our last conversation." },
+  { word: "I would be grateful if", type: "phrase · request", cat: "request", def: "Polite way to make a formal request.", ex: "I would be grateful if you could provide a replacement as soon as possible." },
+  { word: "I would appreciate", type: "phrase · request", cat: "request", def: "Softer alternative to 'I want'; adds politeness.", ex: "I would appreciate your prompt attention to this matter." },
+  { word: "I am writing to express my concern", type: "phrase · complaint", cat: "complaint", def: "Formal way to open a complaint letter.", ex: "I am writing to express my concern regarding the quality of service I received." },
+  { word: "I regret to inform you", type: "phrase · complaint", cat: "complaint", def: "Formal, slightly apologetic way to deliver bad news.", ex: "I regret to inform you that the item I received was damaged." },
+  { word: "I sincerely apologise for", type: "phrase · apology", cat: "apology", def: "Strong, formal apology phrase.", ex: "I sincerely apologise for the inconvenience this has caused you." },
+  { word: "Please accept my apologies", type: "phrase · apology", cat: "apology", def: "Classic formal apology, often used in professional emails.", ex: "Please accept my apologies for the delay in responding." },
+  { word: "I look forward to hearing from you", type: "phrase · closing", cat: "closing", def: "Standard polite closing showing expectation of a reply.", ex: "I look forward to hearing from you at your earliest convenience." },
+  { word: "Please do not hesitate to contact me", type: "phrase · closing", cat: "closing", def: "Invites the reader to reach out, shows openness.", ex: "Please do not hesitate to contact me should you require further information." },
+  { word: "Furthermore", type: "adverb · connector", cat: "connector", def: "Adds an additional point that supports the previous one.", ex: "Furthermore, the issue has been recurring for over two weeks." },
+  { word: "In addition", type: "phrase · connector", cat: "connector", def: "Introduces another point; slightly more neutral than furthermore.", ex: "In addition, I would like to request a full refund." },
+  { word: "However", type: "adverb · connector", cat: "connector", def: "Introduces a contrasting or opposing idea.", ex: "However, despite my repeated requests, the problem has not been resolved." },
+  { word: "As a result", type: "phrase · connector", cat: "connector", def: "Shows cause-and-effect relationship between two ideas.", ex: "As a result, I was unable to meet my deadline." },
+  { word: "I would like to bring to your attention", type: "phrase · complaint", cat: "complaint", def: "Formal way to highlight a problem or issue.", ex: "I would like to bring to your attention a serious issue with my recent order." },
+  { word: "I am confident that", type: "phrase · closing", cat: "closing", def: "Shows optimism about a resolution, adds positive tone.", ex: "I am confident that we can resolve this matter quickly." },
+  { word: "at your earliest convenience", type: "phrase · request", cat: "request", def: "Politely urges promptness without sounding demanding.", ex: "Please reply at your earliest convenience so we can proceed." },
+  { word: "I must say that", type: "phrase · complaint", cat: "complaint", def: "Signals a strong personal opinion or concern.", ex: "I must say that I was quite disappointed by the level of service." },
+  { word: "I truly regret", type: "phrase · apology", cat: "apology", def: "Stronger and more heartfelt than 'I am sorry'.", ex: "I truly regret that my actions caused such inconvenience." },
+  { word: "Warm regards", type: "sign-off · closing", cat: "closing", def: "Friendly but professional sign-off, works for most emails.", ex: "Warm regards, [Your name]" }
+];
 
-        <div class="vocab-word" data-category="closing">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Looking forward to hearing from you</p>
-            <p class="text-xs text-slate">Professional closing phrase. Works well before sign-off.</p>
-          </div>
-        </div>
+let activeFilter = 'all';
 
-        <div class="vocab-word" data-category="closing">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Please let me know if you have any questions</p>
-            <p class="text-xs text-slate">Invitation for follow-up. Helpful closing sentence.</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="request">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Would you be available to</p>
-            <p class="text-xs text-slate">Professional inquiry. "Would you be available to discuss this further?"</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="formal">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I am writing to confirm</p>
-            <p class="text-xs text-slate">Formal opening. "I am writing to confirm receipt of your email."</p>
-          </div>
-        </div>
-      </div>
+function renderVocab() {
+  const grid = document.getElementById('vocab-grid');
+  const filtered = activeFilter === 'all' ? vocabData : vocabData.filter(v => v.cat === activeFilter);
+  grid.innerHTML = filtered.map(v => `
+    <div class="vocab-card" onclick="toggleVocabExample(this)">
+      <div class="vocab-word">${v.word}</div>
+      <div class="vocab-type">${v.type}</div>
+      <div class="vocab-def">${v.def}</div>
+      <div class="vocab-example" style="display:none;">"${v.ex}"</div>
     </div>
+  `).join('');
+}
 
-    <!-- ══════════════════════════════════════════
-         PANE: PRACTICE
-    ══════════════════════════════════════════ -->
-    <div id="pane-practice" class="pane space-y-4">
-      <p class="text-sm text-slate">Five email writing scenarios. Choose one and practice writing a professional response within 150–200 words.</p>
+function toggleVocabExample(card) {
+  const ex = card.querySelector('.vocab-example');
+  ex.style.display = ex.style.display === 'none' ? 'block' : 'none';
+}
 
-      <div class="space-y-3">
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Scenario 1</p>
-          <p class="text-sm font-semibold text-ink mb-3">Your manager asks for an update on a project you're working on.</p>
-          <p class="text-sm text-slate leading-relaxed">Write an email summarizing your progress, any challenges, and your expected completion date.</p>
-        </div>
+function filterVocab(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.vocab-filter button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderVocab();
+}
 
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Scenario 2</p>
-          <p class="text-sm font-semibold text-ink mb-3">You want to request time off for a personal matter.</p>
-          <p class="text-sm text-slate leading-relaxed">Email your supervisor explaining your request, proposing dates, and addressing how work will be covered.</p>
-        </div>
+renderVocab();
 
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Scenario 3</p>
-          <p class="text-sm font-semibold text-ink mb-3">You received incorrect information in a document and need to point it out politely.</p>
-          <p class="text-sm text-slate leading-relaxed">Write an email that diplomatically raises the issue and suggests a correction.</p>
-        </div>
+const templates = {
+  complaint: `<b>Subject:</b> Complaint Regarding <span class="fill-blank">issue / product / service</span><br><br>
+Dear <span class="fill-blank">Mr./Ms. Last Name / Sir or Madam</span>,<br><br>
+I am writing to express my concern regarding <span class="fill-blank">describe the problem briefly</span>. I have been a <span class="fill-blank">customer/tenant/member</span> for <span class="fill-blank">duration</span> and have always been satisfied, which makes this situation particularly disappointing.<br><br>
+Specifically, <span class="fill-blank">explain bullet point 1 in detail — what happened, when, and how it affected you</span>. This has caused me considerable <span class="fill-blank">inconvenience / stress / financial loss</span>.<br><br>
+Furthermore, <span class="fill-blank">address bullet point 2</span>. In addition, I would be grateful if you could <span class="fill-blank">state your request from bullet point 3</span>.<br><br>
+I look forward to your prompt response and trust that this matter will be resolved at your earliest convenience.<br><br>
+Sincerely,<br><span class="fill-blank">Your Name</span>
+<div class="template-note">💡 Tip: Use "I am writing to complain about" only as a last resort — "I am writing to express my concern" sounds more measured and professional.</div>`,
 
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Scenario 4</p>
-          <p class="text-sm font-semibold text-ink mb-3">A client thanks you for helping with a problem and you want to respond professionally.</p>
-          <p class="text-sm text-slate leading-relaxed">Compose a follow-up email that acknowledges their thanks and offers continued support.</p>
-        </div>
+  request: `<b>Subject:</b> Request for <span class="fill-blank">information / assistance / service</span><br><br>
+Dear <span class="fill-blank">Name / Department</span>,<br><br>
+I hope this message finds you well. I am writing to request <span class="fill-blank">what you need</span>. I am currently <span class="fill-blank">briefly explain your situation/context</span>.<br><br>
+Specifically, I would appreciate it if you could <span class="fill-blank">bullet point 1 — your main request</span>. It would be most helpful if this could be arranged by <span class="fill-blank">date or timeframe if relevant</span>.<br><br>
+Additionally, <span class="fill-blank">address bullet point 2</span>. I would also like to ask whether <span class="fill-blank">bullet point 3</span>.<br><br>
+Please do not hesitate to contact me if you require any further information. I look forward to hearing from you at your earliest convenience.<br><br>
+Best regards,<br><span class="fill-blank">Your Name</span>
+<div class="template-note">💡 Tip: Stack multiple requests in separate sentences — never cram them into one long sentence.</div>`,
 
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Scenario 5</p>
-          <p class="text-sm font-semibold text-ink mb-3">You cannot attend an important meeting and need to notify participants.</p>
-          <p class="text-sm text-slate leading-relaxed">Email the meeting organizer explaining your absence and suggesting alternatives.</p>
-        </div>
-      </div>
-    </div>
+  apology: `<b>Subject:</b> Apology for <span class="fill-blank">the situation</span><br><br>
+Hi <span class="fill-blank">First Name</span>, / Dear <span class="fill-blank">Name</span>,<br><br>
+I am writing to sincerely apologise for <span class="fill-blank">what happened — the specific issue</span>. I fully understand how <span class="fill-blank">frustrating / inconvenient / disappointing</span> this must have been for you, and I take complete responsibility.<br><br>
+<span class="fill-blank">Explain bullet point 1 — what went wrong or your reason, without making excuses</span>. This was entirely my fault, and I should have <span class="fill-blank">what you should have done differently</span>.<br><br>
+To make things right, I would like to <span class="fill-blank">bullet point 2 — your proposed solution or action</span>. Furthermore, I promise that <span class="fill-blank">bullet point 3 — assurance or future commitment</span>.<br><br>
+Once again, I am truly sorry. I value our <span class="fill-blank">friendship/working relationship</span> and hope you will accept my apologies.<br><br>
+Warm regards,<br><span class="fill-blank">Your Name</span>
+<div class="template-note">💡 Tip: For informal apologies (to a friend), use "I'm so sorry" and a casual tone. For formal apologies, stick to "I sincerely apologise."</div>`,
 
-    <!-- ══════════════════════════════════════════
-         PANE: SCORING
-    ══════════════════════════════════════════ -->
-    <div id="pane-scoring" class="pane space-y-4">
-      <p class="text-sm text-slate">How examiners score Writing Task 1. Clear communication and proper email format are critical.</p>
+  invitation: `<b>Subject:</b> Invitation to <span class="fill-blank">Event Name</span><br><br>
+Hi <span class="fill-blank">Name</span>! / Dear <span class="fill-blank">Name</span>,<br><br>
+I hope you are doing well! I am so excited to invite you to <span class="fill-blank">the event</span>, which will be taking place on <span class="fill-blank">date</span> at <span class="fill-blank">location/time</span>. It would mean a great deal to me to have you there.<br><br>
+<span class="fill-blank">Bullet point 1 — describe the event or give relevant details, e.g. what will happen, the occasion, the theme</span>. I think you will really enjoy it, especially because <span class="fill-blank">personal reason relevant to them</span>.<br><br>
+We are also planning to <span class="fill-blank">bullet point 2</span>. If you are able to attend, it would be wonderful if you could <span class="fill-blank">bullet point 3 — e.g. RSVP, bring something, confirm by a date</span>.<br><br>
+I truly hope you can make it! Feel free to reach out if you have any questions.<br><br>
+Best wishes,<br><span class="fill-blank">Your Name</span>
+<div class="template-note">💡 Tip: Invitations are usually informal — use contractions (I'm, you'll, we're) and warm, enthusiastic language.</div>`
+};
 
-      <div class="space-y-3">
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 10–12 (Advanced)</p>
-            <span class="font-display text-xl text-emerald2">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task fulfillment:</strong> Fully addresses all aspects of the prompt with appropriate detail and tone.</p>
-            <p><strong>Coherence:</strong> Ideas flow logically. Email is well-organized with clear connections between paragraphs.</p>
-            <p><strong>Vocabulary:</strong> Precise, varied word choice. Appropriate register for context. Professional language throughout.</p>
-            <p><strong>Grammar:</strong> Few or no errors. Correct punctuation, spelling, and sentence structure. Proper email formatting.</p>
-          </div>
-        </div>
+let activeTemplate = 'complaint';
 
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 7–9 (Upper-Intermediate)</p>
-            <span class="font-display text-xl text-amber2">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task fulfillment:</strong> Addresses the prompt adequately with mostly relevant content.</p>
-            <p><strong>Coherence:</strong> Generally organized. Ideas are mostly clear; some transitions could be smoother.</p>
-            <p><strong>Vocabulary:</strong> Good range of vocabulary. Mostly appropriate register with occasional lapses in formality.</p>
-            <p><strong>Grammar:</strong> Minor errors present but don't impede understanding. Generally follows email format correctly.</p>
-          </div>
-        </div>
+function showTemplate(type, btn) {
+  activeTemplate = type;
+  document.querySelectorAll('.template-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('template-box').innerHTML = templates[type];
+}
 
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 4–6 (Intermediate)</p>
-            <span class="font-display text-xl text-rose2">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task fulfillment:</strong> Addresses main point but may miss some aspects or include irrelevant details.</p>
-            <p><strong>Coherence:</strong> Basic organization present. Some ideas may be unclear or loosely connected.</p>
-            <p><strong>Vocabulary:</strong> Limited range. Repetition is noticeable. Tone may be inappropriately informal or formal.</p>
-            <p><strong>Grammar:</strong> Several errors present, some affecting clarity. Formatting may be incomplete.</p>
-          </div>
-        </div>
+document.getElementById('template-box').innerHTML = templates['complaint'];
 
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 1–3 (Below Intermediate)</p>
-            <span class="font-display text-xl text-slate">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task fulfillment:</strong> Does not adequately address the prompt. May be incomplete or off-topic.</p>
-            <p><strong>Coherence:</strong> Ideas are disorganized. Difficult to follow. Poor paragraph structure.</p>
-            <p><strong>Vocabulary:</strong> Very limited range. Inappropriate register for most of the email.</p>
-            <p><strong>Grammar:</strong> Frequent errors that often obscure meaning. Poor formatting.</p>
-          </div>
-        </div>
-      </div>
+const tips = [
+  { icon: "ti-clock", color: "#E6F1FB", icolor: "#185FA5", title: "Use your time wisely", body: "Spend the first 3 minutes reading and planning. Jot down one idea per bullet point before writing. The last 3 minutes should be for proofreading — never skip this." },
+  { icon: "ti-list-check", color: "#EAF3DE", icolor: "#3B6D11", title: "Address all 3 bullet points", body: "This is the single most common reason for low scores. Before submitting, check off each bullet point against your email. If one is missing — fix it immediately, even if it shortens another paragraph." },
+  { icon: "ti-mood-smile", color: "#FBEAF0", icolor: "#993556", title: "Match tone to recipient", body: "Informal: short sentences, contractions, warm language. Formal: full sentences, no contractions, polite phrases. A mismatch is heavily penalised under task fulfilment." },
+  { icon: "ti-typography", color: "#FAEEDA", color2: "#854F0B", icolor: "#854F0B", title: "Vary your sentence structure", body: "Don't start every sentence with 'I'. Mix simple and complex sentences. Use relative clauses, passive voice occasionally, and conditional structures to show range." },
+  { icon: "ti-link", color: "#E1F5EE", icolor: "#0F6E56", title: "Use connectors strategically", body: "Use at least 3–4 linking words per email: Furthermore, However, As a result, In addition, Therefore, Consequently. They improve flow and push your score into the M8–M10 range." },
+  { icon: "ti-ruler-2", color: "#EEEDFE", icolor: "#534AB7", title: "Stay within the word count", body: "150–200 words is the sweet spot. Under 130 signals insufficient development. Over 220 dilutes focus and may introduce errors. Count in your head roughly — each paragraph should be 40–60 words." },
+  { icon: "ti-pencil", color: "#FAECE7", icolor: "#993C1D", title: "Avoid vague filler sentences", body: "'I hope you understand' or 'Thank you for your time' as body content adds no substance. Every sentence should either give information, make a request, or explain something. Make it count." },
+  { icon: "ti-zoom-check", color: "#E6F1FB", icolor: "#185FA5", title: "Proofread for these 3 things", body: "1) Subject-verb agreement (he goes, not he go). 2) Prepositions (apologise for, not apologise about). 3) Article use (the vs. a). These are the three most common slips among test-takers." }
+];
 
-      <div class="bg-fog rounded-2xl p-6 mt-6">
-        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">Key insight</p>
-        <p class="text-sm text-ink">A high-scoring email is <strong>clear, concise, and professional</strong>. It directly addresses the prompt, uses appropriate tone and vocabulary, and follows standard email conventions. Stick to 150–200 words — brevity shows control.</p>
-      </div>
-    </div>
+document.getElementById('tips-list').innerHTML = tips.map(t => `
+  <div class="tip-item">
+    <div class="tip-icon" style="background:${t.color};"><i class="ti ${t.icon}" style="color:${t.icolor};" aria-hidden="true"></i></div>
+    <div class="tip-content"><h4>${t.title}</h4><p>${t.body}</p></div>
+  </div>
+`).join('');
 
-    <!-- ══════════════════════════════════════════
-         PANE: PRO TIPS
-    ══════════════════════════════════════════ -->
-    <div id="pane-tips" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2 mb-4">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="structure">Structure</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="tone">Tone</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="language">Language</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="mistakes">Mistakes</button>
-      </div>
-
-      <div class="space-y-3">
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="structure">
-          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Structure</p>
-          <p class="text-sm font-semibold text-ink mb-2">Follow the 4-part formula: Greeting → Opening → Body → Closing.</p>
-          <p class="text-xs text-slate">A clear structure makes your email easier to understand and shows you can organize ideas logically.</p>
-        </div>
-
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="tone">
-          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Tone</p>
-          <p class="text-sm font-semibold text-ink mb-2">Match your tone to your relationship with the recipient.</p>
-          <p class="text-xs text-slate">A formal greeting with a casual body, or vice versa, will confuse the reader and lower your score.</p>
-        </div>
-
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="language">
-          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Language</p>
-          <p class="text-sm font-semibold text-ink mb-2">Use transition words to connect ideas.</p>
-          <p class="text-xs text-slate">"Furthermore," "In addition," "As a result," and "However" show logical thinking and improve coherence.</p>
-        </div>
-
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="language">
-          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Language</p>
-          <p class="text-sm font-semibold text-ink mb-2">Use active voice when possible.</p>
-          <p class="text-xs text-slate">"I will send the report" (active) is better than "The report will be sent by me" (passive).</p>
-        </div>
-
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="mistakes">
-          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Mistakes</p>
-          <p class="text-sm font-semibold text-ink mb-2">Don't write like text messaging.</p>
-          <p class="text-xs text-slate">Avoid abbreviations ("ur," "asap," "thx") and emojis. Professional writing requires full words and standard punctuation.</p>
-        </div>
-
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="mistakes">
-          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Mistakes</p>
-          <p class="text-sm font-semibold text-ink mb-2">Don't ramble or exceed word count.</p>
-          <p class="text-xs text-slate">150–200 words is the target. Too much content suggests poor editing; too little may not fully address the prompt.</p>
-        </div>
-
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="structure">
-          <p class="text-xs font-semibold text-violet2 uppercase tracking-widest mb-2">Structure</p>
-          <p class="text-sm font-semibold text-ink mb-2">Use short paragraphs (3–5 sentences max).</p>
-          <p class="text-xs text-slate">Shorter paragraphs are easier to read and show you can break down your ideas logically.</p>
-        </div>
-
-        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="tone">
-          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Tone</p>
-          <p class="text-sm font-semibold text-ink mb-2">Proofread before submitting.</p>
-          <p class="text-xs text-slate">Spelling and grammar errors hurt your score. Read your email aloud to catch mistakes and awkward phrasing.</p>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <footer class="max-w-4xl mx-auto px-6 py-12 border-t border-mist mt-12">
-    <p class="text-xs text-slate mb-4">CELPIP Prep — Writing Task 1 Study Guide</p>
-    <p class="text-xs text-slate/60">Professional email writing requires clarity, appropriate tone, and proper formatting. Master the 4-part structure, choose your words carefully, and always proofread. A well-written email demonstrates command of English in a real-world context.</p>
-  </footer>
-
-  <script>
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const panes = document.querySelectorAll('.pane');
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tabName = btn.getAttribute('data-tab');
-        tabBtns.forEach(b => {
-          b.classList.remove('tab-active');
-          b.classList.add('tab-inactive');
-        });
-        btn.classList.add('tab-active');
-        btn.classList.remove('tab-inactive');
-        panes.forEach(pane => pane.classList.remove('active'));
-        document.getElementById(`pane-${tabName}`).classList.add('active');
-      });
-    });
-
-    const accordionTriggers = document.querySelectorAll('.accordion-trigger');
-    accordionTriggers.forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        const targetId = trigger.getAttribute('data-target');
-        const body = document.getElementById(targetId);
-        const chevron = trigger.querySelector('.chevron');
-        body.classList.toggle('open');
-        chevron.classList.toggle('rotated');
-      });
-    });
-
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const vocabWords = document.querySelectorAll('.vocab-word');
-    const tipCards = document.querySelectorAll('.tip-card');
-
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const category = btn.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.remove('filter-active');
-          b.classList.add('filter-inactive');
-        });
-        btn.classList.add('filter-active');
-        btn.classList.remove('filter-inactive');
-
-        vocabWords.forEach(word => {
-          if (category === 'all' || word.getAttribute('data-category') === category) {
-            word.style.display = 'block';
-          } else {
-            word.style.display = 'none';
-          }
-        });
-
-        tipCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-
-    const navbarBurger = document.getElementById('navbar-burger');
-    const navbarMenu = document.getElementById('navbar-menu');
-    navbarBurger.addEventListener('click', () => {
-      navbarMenu.classList.toggle('hidden');
-    });
-
-    const authBtns = document.querySelectorAll('#nav-auth-btn, #nav-auth-btn-mobile');
-    authBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        alert('Sign in functionality would be integrated here');
-      });
-    });
-  </script>
-
-</body>
-</html>
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('visible');
+  event.target.classList.add('active');
+}
+</script>
+</body></html>
