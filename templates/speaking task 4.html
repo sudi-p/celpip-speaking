@@ -1,701 +1,636 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CELPIP Speaking Task 4: Making Predictions</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Speaking — Task 4 Study Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --color-text-primary: #0f0f0f;
-      --color-text-secondary: #6b6a64;
-      --color-text-tertiary: #9a9993;
-      --color-background-primary: #ffffff;
-      --color-background-secondary: #f5f4f0;
-      --color-background-tertiary: #eceae3;
-      --color-background-info: #e6f1fb;
-      --color-background-success: #e1f5ee;
-      --color-background-warning: #faeeda;
-      --color-background-danger: #faece7;
-      --color-border-primary: #c9a84c;
-      --color-border-secondary: #d4d3ce;
-      --color-border-tertiary: #e7e5df;
-      --color-text-info: #2c5f8a;
-      --color-text-success: #2a6b4a;
-      --color-text-warning: #b86a1a;
-      --color-text-danger: #a83240;
-      --border-radius-md: 8px;
-      --border-radius-lg: 12px;
-      --font-serif: 'DM Serif Display', serif;
-      --font-sans: 'DM Sans', sans-serif;
-    }
-
-    html {
-      font-family: var(--font-sans);
-      background: var(--color-background-secondary);
-    }
-
-    body {
-      color: var(--color-text-primary);
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-    }
-
-    h1 {
-      font-family: var(--font-serif);
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      font-weight: 400;
-      color: var(--color-text-primary);
-    }
-
-    .hero-underline {
-      position: relative;
-      display: inline-block;
-    }
-
-    .hero-underline::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: var(--color-border-primary);
-    }
-
-    h2 {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--color-text-primary);
-      margin: 1.5rem 0 1rem;
-    }
-
-    h3 {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--color-text-primary);
-      margin: 1rem 0 0.5rem;
-    }
-
-    p {
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      line-height: 1.6;
-      margin: 0 0 1rem;
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 1.2rem;
-    }
-
-    li {
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      line-height: 1.7;
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-card {
-      background: var(--color-background-secondary);
-      border-radius: var(--border-radius-md);
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 26px;
-      font-weight: 500;
-      color: var(--color-text-primary);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--color-border-tertiary);
-      padding-bottom: 1rem;
-    }
-
-    .tab-btn {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--color-border-tertiary);
-      background: transparent;
-      color: var(--color-text-primary);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-      background: var(--color-background-info);
-      color: var(--color-text-info);
-      border-color: var(--color-background-info);
-    }
-
-    .tab-btn:hover:not(.active) {
-      background: var(--color-background-secondary);
-    }
-
-    .pane {
-      display: none;
-    }
-
-    .pane.active {
-      display: block;
-    }
-
-    .card {
-      background: var(--color-background-primary);
-      border: 1px solid var(--color-border-tertiary);
-      border-radius: var(--border-radius-lg);
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-    }
-
-    .card-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 500;
-      padding: 3px 8px;
-      border-radius: 4px;
-      margin-right: 6px;
-      margin-bottom: 6px;
-      white-space: nowrap;
-    }
-
-    .badge-info {
-      background: var(--color-background-info);
-      color: var(--color-text-info);
-    }
-
-    .badge-success {
-      background: var(--color-background-success);
-      color: var(--color-text-success);
-    }
-
-    .badge-warning {
-      background: var(--color-background-warning);
-      color: var(--color-text-warning);
-    }
-
-    .badge-danger {
-      background: var(--color-background-danger);
-      color: var(--color-text-danger);
-    }
-
-    .template-step {
-      background: var(--color-background-secondary);
-      border-left: 4px solid var(--color-border-primary);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 4px;
-    }
-
-    .template-step h3 {
-      margin-top: 0;
-    }
-
-    .template-example {
-      background: var(--color-background-tertiary);
-      padding: 0.75rem;
-      border-radius: 4px;
-      font-size: 13px;
-      font-style: italic;
-      color: var(--color-text-primary);
-      margin-top: 0.5rem;
-    }
-
-    .vocab-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .vocab-item {
-      background: var(--color-background-secondary);
-      padding: 1rem;
-      border-radius: var(--border-radius-md);
-      border-left: 3px solid var(--color-border-primary);
-    }
-
-    .vocab-word {
-      font-weight: 500;
-      color: var(--color-text-primary);
-      margin-bottom: 0.25rem;
-    }
-
-    .vocab-definition {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-    }
-
-    .practice-scenario {
-      background: var(--color-background-secondary);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: var(--border-radius-md);
-    }
-
-    .scenario-num {
-      display: inline-block;
-      background: var(--color-border-primary);
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 24px;
-      font-size: 12px;
-      font-weight: 500;
-      margin-right: 0.5rem;
-    }
-
-    .scenario-prompt {
-      font-size: 14px;
-      color: var(--color-text-primary);
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-
-    .scenario-hint {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-      line-height: 1.5;
-    }
-
-    .scoring-band {
-      background: var(--color-background-secondary);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: var(--border-radius-md);
-      border-left: 4px solid var(--color-border-primary);
-    }
-
-    .band-score {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .band-description {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-      line-height: 1.6;
-    }
-
-    .filter-buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-
-    .filter-btn {
-      padding: 5px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--color-border-tertiary);
-      background: transparent;
-      color: var(--color-text-primary);
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .filter-btn.active {
-      background: var(--color-background-info);
-      color: var(--color-text-info);
-      border-color: var(--color-background-info);
-    }
-
-    .filter-btn:hover:not(.active) {
-      background: var(--color-background-secondary);
-    }
-
-    .vocab-item-hidden {
-      display: none;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 1.5rem 1rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .stat-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .tabs {
-        gap: 4px;
-      }
-
-      .tab-btn {
-        padding: 7px 12px;
-        font-size: 13px;
-      }
-
-      .vocab-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .tab-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
+    .tab-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
+    .tab-inactive:hover { background-color: #eceae3; color: #0f0f0f; }
+    .filter-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
+    .filter-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
+    .filter-inactive:hover { background-color: #eceae3; }
+    .accordion-body { display: none; }
+    .accordion-body.open { display: block; }
+    .chevron { transition: transform 0.25s ease; }
+    .chevron.rotated { transform: rotate(180deg); }
+    .pane { display: none; animation: fadeIn 0.3s ease; }
+    .pane.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .score-bar { height: 6px; border-radius: 3px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .tip-card { border-left: 3px solid transparent; transition: border-color 0.2s ease, background 0.2s ease; }
+    .tip-card:hover { background: #eceae3; }
   </style>
 </head>
-<body>
-<div class="container">
-  <h1>Make <span class="hero-underline">predictions</span></h1>
-  <p style="font-size: 15px; margin-bottom: 1.5rem; color: var(--color-text-secondary);">Speaking Task 4 — Show your ability to hypothesize, reason logically, and speak confidently about future or imaginary scenarios.</p>
+<body class="min-h-screen">
 
-  <div class="stat-grid">
-    <div class="stat-card">
-      <div class="stat-label">Time to speak</div>
-      <div class="stat-value">60s</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Prep time</div>
-      <div class="stat-value">30s</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Scenario type</div>
-      <div class="stat-value">Hypothetical</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Target band</div>
-      <div class="stat-value">8–12</div>
-    </div>
-  </div>
+  {% include 'partials/navbar.html' %}
 
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('overview')">📋 Task overview</button>
-    <button class="tab-btn" onclick="switchTab('template')">🏗️ My template</button>
-    <button class="tab-btn" onclick="switchTab('vocab')">📚 Vocab bank</button>
-    <button class="tab-btn" onclick="switchTab('practice')">🎯 Practice</button>
-    <button class="tab-btn" onclick="switchTab('scoring')">📊 Scoring</button>
-    <button class="tab-btn" onclick="switchTab('tips')">💡 Pro tips</button>
-  </div>
-
-  <div id="overview" class="pane active">
-    <div class="card">
-      <div class="card-title">What the task involves</div>
-      <p>You are given a hypothetical scenario and asked to predict what will happen next or how someone will respond. The question might be: <em>"What do you think will happen if this situation continues?"</em> or <em>"Predict how the industry will change in 5 years."</em></p>
-      <p style="margin-bottom: 0;">The examiner is assessing your ability to think ahead logically, use conditional language, support predictions with reasoning, and speak with confidence and fluency.</p>
+  <!-- ─── HERO ─── -->
+  <header class="max-w-4xl mx-auto px-6 pt-16 pb-12">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Speaking · Task 4 of 8</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-5">
+        Make <span class="hero-line italic">predictions</span>
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Everything you need to score 9+ on Task 4 — structure, vocab, scoring rubric, practice scenarios, and delivery tips.
+      </p>
     </div>
 
-    <div class="card">
-      <div class="card-title">Scoring criteria (what examiners watch for)</div>
-      <div style="display: grid; gap: 10px;">
-        <div style="display: flex; align-items: flex-start; gap: 10px;">
-          <span class="badge badge-info">Logic</span>
-          <span style="font-size: 14px; color: var(--color-text-primary); line-height: 1.6;">Predictions are reasonable and well-supported by evidence or reasoning</span>
+    <!-- Quick stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 animate-fade-up" style="animation-delay:.1s">
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Speaking time</div>
+        <div class="font-display text-3xl text-ink">60<span class="text-lg">s</span></div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Prep time</div>
+        <div class="font-display text-3xl text-ink">30<span class="text-lg">s</span></div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Score scale</div>
+        <div class="font-display text-3xl text-ink">1–12</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Target band</div>
+        <div class="font-display text-3xl text-ink">8–10</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-4xl mx-auto px-6 pb-24">
+
+    <!-- TAB BAR -->
+    <div class="flex flex-wrap gap-2 mb-8 animate-fade-up" style="animation-delay:.15s" id="tab-bar">
+      <button data-tab="overview"  class="tab-btn tab-active  px-5 py-2 rounded-full border text-sm font-medium transition-all">Overview</button>
+      <button data-tab="structure" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">My Template</button>
+      <button data-tab="vocab"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Vocab Bank</button>
+      <button data-tab="practice" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Practice</button>
+      <button data-tab="scoring"  class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Scoring</button>
+      <button data-tab="tips"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Pro Tips</button>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: OVERVIEW
+    ══════════════════════════════════════════ -->
+    <div id="pane-overview" class="pane active space-y-5">
+      <div class="bg-white rounded-2xl border border-mist p-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">What the task involves</p>
+        <p class="text-base leading-relaxed text-ink">You are given a hypothetical scenario and asked to predict what will happen next or how someone will respond. The question might be: <em>"What do you think will happen if this situation continues?"</em> or <em>"Predict how this industry will change in 5 years."</em></p>
+        <p class="text-base leading-relaxed text-ink mt-3">The examiner is assessing your ability to think logically, use conditional language, support predictions with reasoning, and speak with confidence and fluency.</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-mist p-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-4">What examiners score you on</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-sapphire-light text-sapphire-dark shrink-0 mt-0.5">Logic</span>
+            <p class="text-sm leading-relaxed text-ink">Predictions are reasonable and well-supported by evidence or reasoning.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-emerald2-light text-emerald2-dark shrink-0 mt-0.5">Vocabulary</span>
+            <p class="text-sm leading-relaxed text-ink">Use of conditional, predictive, and speculative language (will, might, could, likely).</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-amber2-light text-amber2-dark shrink-0 mt-0.5">Fluency</span>
+            <p class="text-sm leading-relaxed text-ink">Smooth delivery without excessive hesitation or filler words.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-rose2-light text-rose2-dark shrink-0 mt-0.5">Accuracy</span>
+            <p class="text-sm leading-relaxed text-ink">Proper use of future tense, conditionals, and grammatically correct sentences.</p>
+          </div>
         </div>
-        <div style="display: flex; align-items: flex-start; gap: 10px;">
-          <span class="badge badge-success">Vocabulary</span>
-          <span style="font-size: 14px; color: var(--color-text-primary); line-height: 1.6;">Use of conditional, predictive, and speculative language (will, might, could, likely)</span>
+      </div>
+
+      <div class="bg-ink rounded-2xl p-6 text-fog">
+        <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-4">The 60-second blueprint</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-gold text-sm">1</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gold">Setup (10s)</p>
+              <p class="text-xs text-fog/80">Acknowledge the scenario briefly. Show you understood it.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-fog/20 border border-fog/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-fog text-sm">2</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-fog">Predictions (35s)</p>
+              <p class="text-xs text-fog/80">Present 2–3 specific, logical predictions. Use conditional language.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-gold text-sm">3</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gold">Reasoning (15s)</p>
+              <p class="text-xs text-fog/80">Explain why these predictions make sense. Link to real-world factors.</p>
+            </div>
+          </div>
         </div>
-        <div style="display: flex; align-items: flex-start; gap: 10px;">
-          <span class="badge badge-warning">Fluency</span>
-          <span style="font-size: 14px; color: var(--color-text-primary); line-height: 1.6;">Smooth delivery without excessive hesitation or filler words</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: STRUCTURE / TEMPLATE
+    ══════════════════════════════════════════ -->
+    <div id="pane-structure" class="pane space-y-4">
+      <p class="text-sm text-slate">A 3-part structure to internalize — not a word-for-word script.</p>
+
+      <!-- Part 1: Setup -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-1">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-sapphire text-white text-xs font-semibold flex items-center justify-center shrink-0">1</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Setup</span>
+              <span class="text-xs text-slate ml-2">~10 seconds</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-1" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Restate or acknowledge the scenario briefly. Show you understood it completely.</p>
+          <ul class="space-y-2 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Acknowledge the situation.</strong> "If someone loses their job suddenly..." or "Given that remote work is now permanent..."</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Signal that you're ready to predict.</strong> "I think there will be..." or "Looking ahead, I predict..."</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Keep it brief.</strong> 1–2 sentences max. Save time for predictions.</li>
+          </ul>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Example setups</p>
+            <p class="text-sm text-ink italic leading-relaxed">"If someone loses their job suddenly, I think there will be several immediate changes in their life..."</p>
+            <p class="text-sm text-ink italic leading-relaxed mt-2">"Remote work becoming permanent would significantly affect how companies operate and how people live."</p>
+          </div>
         </div>
-        <div style="display: flex; align-items: flex-start; gap: 10px;">
-          <span class="badge badge-danger">Accuracy</span>
-          <span style="font-size: 14px; color: var(--color-text-primary); line-height: 1.6;">Proper use of future tense, conditionals, and grammatically correct sentences</span>
+      </div>
+
+      <!-- Part 2: Predictions -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-2">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald2 text-white text-xs font-semibold flex items-center justify-center shrink-0">2</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Predictions</span>
+              <span class="text-xs text-slate ml-2">~35 seconds · the core of your response</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-2" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Present 2–3 specific predictions. Use conditional language (will, might, could, likely). Each should be distinct and logically connected.</p>
+          <ul class="space-y-2 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Use signal phrases:</strong> "First, I predict..." "Second, they might..." "Third, it's likely that..."</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>State prediction + reason:</strong> "Prices will probably rise because demand will increase" beats just "prices will rise."</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Vary your conditional language.</strong> "Will likely," "might," "could," "probably," "I imagine" — don't repeat the same phrase.</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Connect to real-world factors.</strong> Reference economics, psychology, technology, or social trends when possible.</li>
+          </ul>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Example prediction chain</p>
+            <div class="space-y-1 text-sm text-ink italic">
+              <p>"First, they will likely face financial stress. Second, they might decide to update their resume. Third, they could explore a new career direction."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 3: Reasoning -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-3">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber2 text-white text-xs font-semibold flex items-center justify-center shrink-0">3</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Reasoning</span>
+              <span class="text-xs text-slate ml-2">~15 seconds</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-3" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Briefly recap or add a concluding thought that ties your predictions together. Explain the reasoning holistically.</p>
+          <ul class="space-y-2 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Recap with a conditional.</strong> "Overall, I believe the long-term impact will depend on whether..."</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Add a final supporting idea.</strong> Reference a factor you haven't mentioned yet (economy, government policy, human nature).</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span><strong>Finish confidently.</strong> "That's why I predict..." not "Maybe I'm wrong, but..."</li>
+          </ul>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Example reasoning</p>
+            <div class="space-y-1 text-sm text-ink italic">
+              <p>"Overall, the long-term outcome will depend on whether the person finds support from family and whether the job market improves."</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div id="template" class="pane" style="display: none;">
-    <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Use this 3-part structure to organize your prediction logically — not a script to memorize, but a guide to stay on track.</p>
+    <!-- ══════════════════════════════════════════
+         PANE: VOCAB BANK
+    ══════════════════════════════════════════ -->
+    <div id="pane-vocab" class="pane space-y-4">
+      <div class="flex flex-wrap gap-2">
+        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="conditional">Conditional</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="predictive">Predictive</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="consequence">Consequence</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="likelihood">Likelihood</button>
+      </div>
 
-    <div class="template-step">
-      <h3>Part 1: Acknowledge & Setup (10–15 seconds)</h3>
-      <p>Restate or acknowledge the scenario briefly. Show you understood it.</p>
-      <div class="template-example">
-        "If someone loses their job suddenly, I think there will be several immediate changes in their life..."
+      <div class="space-y-3">
+        <div class="vocab-word" data-category="conditional predictive">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">If... then...</p>
+            <p class="text-xs text-slate">Structure for stating hypothetical outcomes logically. "If X happens, then Y would occur."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="predictive">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Will likely</p>
+            <p class="text-xs text-slate">Express a confident prediction. "This will likely result in higher prices."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="conditional">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Would</p>
+            <p class="text-xs text-slate">Use in conditional sentences. "If X happens, Y would occur."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="predictive">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Might / Could</p>
+            <p class="text-xs text-slate">Express uncertain or possible outcomes. "It might lead to..." or "It could result in..."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="likelihood">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Probably / Likely / Unlikely</p>
+            <p class="text-xs text-slate">Indicate the degree of certainty. "It's unlikely that..." or "I'd say that's probably..."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="consequence">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">As a result</p>
+            <p class="text-xs text-slate">Link a prediction to its logical consequence. "As a result, unemployment might rise."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="predictive">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">I predict that...</p>
+            <p class="text-xs text-slate">Explicitly state a forecast. "I predict that companies will invest more in..."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="conditional">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">In the event that</p>
+            <p class="text-xs text-slate">Introduce hypothetical circumstances formally. "In the event that interest rates drop..."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="likelihood">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">It's unlikely / It's improbable</p>
+            <p class="text-xs text-slate">State predictions with lower probability. "It's unlikely that prices will decrease."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="consequence">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">This would lead to...</p>
+            <p class="text-xs text-slate">Explain the logical outcome. "This would lead to better work-life balance."</p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="template-step">
-      <h3>Part 2: Main Predictions (35–40 seconds)</h3>
-      <p>Present 2–3 specific predictions or outcomes. Use conditional and predictive language. Each prediction should be clear and logically connected.</p>
-      <div class="template-example">
-        "First, they will likely face financial stress. Second, they might decide to update their resume. Third, they could explore a new career direction."
+    <!-- ══════════════════════════════════════════
+         PANE: PRACTICE
+    ══════════════════════════════════════════ -->
+    <div id="pane-practice" class="pane space-y-4">
+      <p class="text-sm text-slate">Five realistic prediction scenarios. Pick one and speak for 60 seconds.</p>
+
+      <div class="space-y-3">
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Practice scenario 1</p>
+          <p class="text-sm font-semibold text-ink mb-3">Breakthrough in electric car technology</p>
+          <p class="text-sm text-slate leading-relaxed">Predict how this will affect car manufacturers, the oil industry, consumer behavior, and the environment. Link predictions to real-world factors.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Practice scenario 2</p>
+          <p class="text-sm font-semibold text-ink mb-3">Remote work becomes permanent in most industries</p>
+          <p class="text-sm text-slate leading-relaxed">Predict impacts on office real estate, employee morale, company productivity, hiring, and urban development.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Practice scenario 3</p>
+          <p class="text-sm font-semibold text-ink mb-3">A close friend receives a job offer abroad</p>
+          <p class="text-sm text-slate leading-relaxed">Predict how this decision will affect their career, relationships, financial security, and personal growth.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Practice scenario 4</p>
+          <p class="text-sm font-semibold text-ink mb-3">Social media platforms introduce strict privacy rules</p>
+          <p class="text-sm text-slate leading-relaxed">Predict how users, advertisers, and the platforms themselves will respond. Will adoption increase or decrease?</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Practice scenario 5</p>
+          <p class="text-sm font-semibold text-ink mb-3">Your city invests billions in public transportation</p>
+          <p class="text-sm text-slate leading-relaxed">Predict the effects on traffic congestion, property values, air quality, and how residents will adapt.</p>
+        </div>
       </div>
     </div>
 
-    <div class="template-step">
-      <h3>Part 3: Summary & Reasoning (10–15 seconds)</h3>
-      <p>Briefly recap or add a concluding thought that ties your predictions together.</p>
-      <div class="template-example">
-        "Overall, I believe the long-term impact will depend on whether they find support from family and whether the job market improves."
+    <!-- ══════════════════════════════════════════
+         PANE: SCORING
+    ══════════════════════════════════════════ -->
+    <div id="pane-scoring" class="pane space-y-4">
+      <p class="text-sm text-slate">How examiners score Task 4 on a 12-point scale. The bands below show typical language for each score tier.</p>
+
+      <div class="space-y-3">
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 10–12 (Advanced)</p>
+            <span class="font-display text-xl text-emerald2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Logic:</strong> Predictions are insightful, well-reasoned, and clearly supported. Connects to real-world factors naturally.</p>
+            <p><strong>Vocabulary:</strong> Uses sophisticated conditional and predictive structures. Range is impressive ("will likely," "might well," "I'd argue that").</p>
+            <p><strong>Fluency:</strong> Speaks naturally with clear organization. Minimal hesitation; pacing is conversational.</p>
+            <p><strong>Accuracy:</strong> Grammar is nearly always correct. Future tense and conditionals are used precisely.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 7–9 (Upper-Intermediate)</p>
+            <span class="font-display text-xl text-amber2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Logic:</strong> Predictions are logical and generally well-supported. Reasoning is clear.</p>
+            <p><strong>Vocabulary:</strong> Uses conditional and predictive language consistently. Some variety in phrasing but may repeat structures.</p>
+            <p><strong>Fluency:</strong> Mostly fluent with occasional pauses. Some hesitation but overall organized and natural.</p>
+            <p><strong>Accuracy:</strong> Grammar is mostly accurate. Minor errors in conditionals or tense don't disrupt meaning.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 4–6 (Intermediate)</p>
+            <span class="font-display text-xl text-rose2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Logic:</strong> Predictions are basic but sometimes vague. Reasoning may be weak or incomplete.</p>
+            <p><strong>Vocabulary:</strong> Limited range of conditional language. Repetitive. May not use conditional structures correctly.</p>
+            <p><strong>Fluency:</strong> Noticeable pauses and hesitations. Some filler sounds. May lose track of thought.</p>
+            <p><strong>Accuracy:</strong> Several grammatical errors. Tense errors are common. Meaning is usually clear but sometimes unclear.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 1–3 (Below Intermediate)</p>
+            <span class="font-display text-xl text-slate">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Logic:</strong> Predictions are unclear, illogical, or barely present. Little or no reasoning provided.</p>
+            <p><strong>Vocabulary:</strong> Very limited. Little to no use of conditional or predictive language.</p>
+            <p><strong>Fluency:</strong> Frequent hesitations or long silences. Choppy delivery. Difficult to follow.</p>
+            <p><strong>Accuracy:</strong> Many grammatical errors. Meaning is sometimes unclear. Tense control is weak.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-fog rounded-2xl p-6 mt-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">Key insight</p>
+        <p class="text-sm text-ink">A 9–10 speaker makes logical predictions with natural conditional language. They support predictions with reasons and speak confidently. They are <strong>not</strong> perfect; they may use simple structures alongside complex ones, and that's fine. What matters: do the predictions and reasoning feel intentional and credible?</p>
       </div>
     </div>
 
-    <div class="card" style="background: var(--color-background-secondary); border: none; margin-top: 1.5rem;">
-      <div class="card-title">Pro tips</div>
-      <div style="display: grid; gap: 8px; font-size: 14px; color: var(--color-text-primary); line-height: 1.6;">
-        <div>✦ Use <strong>conditional language</strong>: "will likely," "might," "could," "probably," "I predict that..."</div>
-        <div>✦ Always support predictions with <strong>why</strong> — give reasons, not just what will happen</div>
-        <div>✦ Don't say "I don't know" — even if uncertain, use speculative language: "I imagine," "It's possible that..."</div>
-        <div>✦ Link predictions to <strong>real-world factors</strong> (economy, technology, human behavior) to sound credible</div>
-        <div>✦ Speak at a natural pace — rushed predictions sound unconvincing</div>
+    <!-- ══════════════════════════════════════════
+         PANE: PRO TIPS
+    ══════════════════════════════════════════ -->
+    <div id="pane-tips" class="pane space-y-4">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="prep">Prep</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="delivery">Delivery</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="language">Language</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="logic">Logic</button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="prep">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Prep</p>
+          <p class="text-sm font-semibold text-ink mb-2">In 30 seconds, identify 2–3 predictions + one reason each.</p>
+          <p class="text-xs text-slate">Jot down bullet points, not sentences. This keeps you focused and prevents rambling.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="prep">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Prep</p>
+          <p class="text-sm font-semibold text-ink mb-2">Practice with real scenarios before the test.</p>
+          <p class="text-xs text-slate">Predicting real-world outcomes (inflation trends, tech changes) trains your brain to think logically on the fly.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="delivery">
+          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Delivery</p>
+          <p class="text-sm font-semibold text-ink mb-2">Speak with confidence, even if unsure.</p>
+          <p class="text-xs text-slate">Use confident language: "I predict," "It will," "This would" — not "maybe," "I think maybe," or "probably maybe."</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="delivery">
+          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Delivery</p>
+          <p class="text-sm font-semibold text-ink mb-2">Pause between predictions to organize thoughts.</p>
+          <p class="text-xs text-slate">Strategic pauses are better than rushing. "First, X will happen. [pause] Second, Y might happen." This sounds more fluent.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="language">
+          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Language</p>
+          <p class="text-sm font-semibold text-ink mb-2">Always explain your reasoning.</p>
+          <p class="text-xs text-slate">Don't just say what will happen. "Prices will rise because demand will increase" beats "prices will rise." Why matters.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="language">
+          <p class="text-xs font-semibold text-violet2 uppercase tracking-widest mb-2">Language</p>
+          <p class="text-sm font-semibold text-ink mb-2">Vary your conditional language.</p>
+          <p class="text-xs text-slate">Don't say "will probably" five times. Use: "will likely," "might," "could," "I imagine," "I'd argue," "it's probable that."</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="logic">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Logic</p>
+          <p class="text-sm font-semibold text-ink mb-2">Connect to real-world factors.</p>
+          <p class="text-xs text-slate">Reference economics, psychology, government policy, or social trends. "The job market will improve because companies are hiring again" sounds smarter than pure speculation.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="logic">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Logic</p>
+          <p class="text-sm font-semibold text-ink mb-2">Acknowledge uncertainty where it's realistic.</p>
+          <p class="text-xs text-slate">"This depends on..." or "assuming that..." shows sophisticated thinking. You don't need to sound 100% certain on everything.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="logic">
+          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Logic</p>
+          <p class="text-sm font-semibold text-ink mb-2">Make predictions plausible, not fantastical.</p>
+          <p class="text-xs text-slate">Examiners reward logical thinking. Wild predictions ("prices will go to $1000") signal weak reasoning.</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="vocab" class="pane" style="display: none;">
-    <div class="filter-buttons" id="vocab-filters">
-      <button class="filter-btn active" onclick="filterVocabByCategory('all')">All</button>
-      <button class="filter-btn" onclick="filterVocabByCategory('conditional')">Conditional</button>
-      <button class="filter-btn" onclick="filterVocabByCategory('predictive')">Predictive</button>
-      <button class="filter-btn" onclick="filterVocabByCategory('consequence')">Consequence</button>
-      <button class="filter-btn" onclick="filterVocabByCategory('likelihood')">Likelihood</button>
-    </div>
+  </main>
 
-    <div class="vocab-grid" id="vocab-list">
-      <div class="vocab-item" data-category="conditional predictive">
-        <div class="vocab-word">If... then...</div>
-        <div class="vocab-definition">Structure for stating hypothetical outcomes logically</div>
-      </div>
-      <div class="vocab-item" data-category="predictive">
-        <div class="vocab-word">Will likely</div>
-        <div class="vocab-definition">Express a confident prediction about the future</div>
-      </div>
-      <div class="vocab-item" data-category="conditional">
-        <div class="vocab-word">Would</div>
-        <div class="vocab-definition">Use in conditional sentences: "If X happens, Y would occur"</div>
-      </div>
-      <div class="vocab-item" data-category="predictive">
-        <div class="vocab-word">Might / Could</div>
-        <div class="vocab-definition">Express uncertain or possible outcomes</div>
-      </div>
-      <div class="vocab-item" data-category="likelihood">
-        <div class="vocab-word">Probably / Likely</div>
-        <div class="vocab-definition">Indicate the degree of certainty in a prediction</div>
-      </div>
-      <div class="vocab-item" data-category="consequence">
-        <div class="vocab-word">As a result</div>
-        <div class="vocab-definition">Link a prediction to its logical consequence</div>
-      </div>
-      <div class="vocab-item" data-category="predictive">
-        <div class="vocab-word">I predict that...</div>
-        <div class="vocab-definition">Explicitly state a forecast or prediction</div>
-      </div>
-      <div class="vocab-item" data-category="conditional">
-        <div class="vocab-word">In case</div>
-        <div class="vocab-definition">Introduce hypothetical circumstances</div>
-      </div>
-      <div class="vocab-item" data-category="likelihood">
-        <div class="vocab-word">It's unlikely that...</div>
-        <div class="vocab-definition">State predictions with lower probability</div>
-      </div>
-      <div class="vocab-item" data-category="consequence">
-        <div class="vocab-word">This would lead to...</div>
-        <div class="vocab-definition">Explain the logical outcome or consequence of a prediction</div>
-      </div>
-    </div>
-  </div>
+  <footer class="max-w-4xl mx-auto px-6 py-12 border-t border-mist mt-12">
+    <p class="text-xs text-slate mb-4">CELPIP Prep — Speaking Task 4 Study Guide</p>
+    <p class="text-xs text-slate/60">Master the art of logical prediction. Practice with real scenarios, support your thinking with reasoning, and let your confidence shine through.</p>
+  </footer>
 
-  <div id="practice" class="pane" style="display: none;">
-    <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Practice predicting outcomes for these scenarios. Use your 30 seconds of prep time to plan 2–3 predictions, then speak for 60 seconds.</p>
+  <script>
+    // Tab and pane management
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.pane');
 
-    <div class="practice-scenario">
-      <div style="margin-bottom: 0.5rem;">
-        <span class="scenario-num">1</span>
-        <span class="scenario-prompt">A sudden breakthrough in electric car technology...</span>
-      </div>
-      <div class="scenario-hint">Predict how this will affect car manufacturers, the oil industry, and consumer behavior.</div>
-    </div>
-
-    <div class="practice-scenario">
-      <div style="margin-bottom: 0.5rem;">
-        <span class="scenario-num">2</span>
-        <span class="scenario-prompt">Remote work becomes permanent in your industry...</span>
-      </div>
-      <div class="scenario-hint">Predict the impact on office real estate, employee morale, and companies' ability to hire talent.</div>
-    </div>
-
-    <div class="practice-scenario">
-      <div style="margin-bottom: 0.5rem;">
-        <span class="scenario-num">3</span>
-        <span class="scenario-prompt">A close friend receives an unexpected job offer abroad...</span>
-      </div>
-      <div class="scenario-hint">Predict how this decision will affect their career, relationships, and personal growth.</div>
-    </div>
-
-    <div class="practice-scenario">
-      <div style="margin-bottom: 0.5rem;">
-        <span class="scenario-num">4</span>
-        <span class="scenario-prompt">Social media platforms introduce strict new privacy rules...</span>
-      </div>
-      <div class="scenario-hint">Predict how users, advertisers, and the platforms themselves will respond.</div>
-    </div>
-
-    <div class="practice-scenario">
-      <div style="margin-bottom: 0.5rem;">
-        <span class="scenario-num">5</span>
-        <span class="scenario-prompt">Your city invests billions in public transportation...</span>
-      </div>
-      <div class="scenario-hint">Predict the effects on traffic congestion, property values, and pollution levels.</div>
-    </div>
-  </div>
-
-  <div id="scoring" class="pane" style="display: none;">
-    <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">CELPIP scores this task on a 12-point scale. Here's what each band typically sounds like:</p>
-
-    <div class="scoring-band">
-      <div class="band-score">10–12 Advanced</div>
-      <div class="band-description">Predictions are insightful, well-reasoned, and supported. Uses a range of conditional and predictive structures. Speaks fluently with clear organization. Grammar is nearly always correct. Vocabulary is sophisticated and precise.</div>
-    </div>
-
-    <div class="scoring-band">
-      <div class="band-score">7–9 Upper-Intermediate</div>
-      <div class="band-description">Predictions are logical and generally clear. Uses conditional and predictive language consistently. Some pauses or hesitations, but overall fluent. Minor grammatical errors. Vocabulary is appropriate and varied.</div>
-    </div>
-
-    <div class="scoring-band">
-      <div class="band-score">4–6 Intermediate</div>
-      <div class="band-description">Basic predictions are present but sometimes vague. Limited range of conditional language. Noticeable pauses and some filler sounds. Several grammatical errors. Vocabulary is basic and repetitive.</div>
-    </div>
-
-    <div class="scoring-band">
-      <div class="band-score">1–3 Below Intermediate</div>
-      <div class="band-description">Predictions are unclear or illogical. Little to no use of conditional or predictive language. Frequent hesitations or long silences. Many grammatical errors. Very limited vocabulary.</div>
-    </div>
-  </div>
-
-  <div id="tips" class="pane" style="display: none;">
-    <div class="filter-buttons" id="tips-filters">
-      <button class="filter-btn active" onclick="filterTipsByCategory('all')">All</button>
-      <button class="filter-btn" onclick="filterTipsByCategory('prep')">Prep</button>
-      <button class="filter-btn" onclick="filterTipsByCategory('delivery')">Delivery</button>
-      <button class="filter-btn" onclick="filterTipsByCategory('language')">Language</button>
-      <button class="filter-btn" onclick="filterTipsByCategory('logic')">Logic</button>
-    </div>
-
-    <div id="tips-list">
-      <div class="card" data-category="prep">
-        <div class="card-title">Prep: Organize your thoughts</div>
-        <p style="margin: 0;">In your 30 seconds, write down 2–3 bullet points: each prediction + one reason why. Don't write sentences — just key words. This keeps you on track without sounding like you're reading.</p>
-      </div>
-
-      <div class="card" data-category="delivery">
-        <div class="card-title">Delivery: Speak with confidence</div>
-        <p style="margin: 0;">Even if you're unsure, use confident language: "I predict," "It will," "This would" — not "maybe" or "I think maybe." Examiners reward confident speculation over hesitant certainty.</p>
-      </div>
-
-      <div class="card" data-category="language">
-        <div class="card-title">Language: Use signal phrases</div>
-        <p style="margin: 0;">Open with <strong>"If this happens, I think..."</strong> or <strong>"Looking ahead, I predict..."</strong> These phrases show you understand the task and use sophisticated grammar.</p>
-      </div>
-
-      <div class="card" data-category="logic">
-        <div class="card-title">Logic: Always explain your reasoning</div>
-        <p style="margin: 0;">Don't just say what will happen. Say <strong>why</strong>. "Prices will rise because demand will increase" is better than just "prices will rise."</p>
-      </div>
-
-      <div class="card" data-category="prep">
-        <div class="card-title">Prep: Practice with real scenarios</div>
-        <p style="margin: 0;">Before the test, practice predicting real events: "If interest rates drop, what happens to house prices?" This builds the habit of logical thinking.</p>
-      </div>
-
-      <div class="card" data-category="delivery">
-        <div class="card-title">Delivery: Pause between predictions</div>
-        <p style="margin: 0;">Use pauses strategically: "First, X will happen. Second, Y will happen." This creates structure and gives you time to breathe, not filler sounds.</p>
-      </div>
-
-      <div class="card" data-category="language">
-        <div class="card-title">Language: Avoid repetition</div>
-        <p style="margin: 0;">Don't say "I think" 10 times. Vary: "I predict," "It's likely," "My expectation is," "I would imagine." Vocabulary variety impresses examiners.</p>
-      </div>
-
-      <div class="card" data-category="logic">
-        <div class="card-title">Logic: Connect to real-world factors</div>
-        <p style="margin: 0;">Reference actual systems (economy, psychology, technology) rather than pure speculation. "The job market will improve because companies are hiring again" sounds smarter than "I think maybe it will be better."</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  function switchTab(tabName) {
-    document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-    event.target.classList.add('active');
-  }
-
-  function filterVocabByCategory(category) {
-    document.querySelectorAll('#vocab-filters .filter-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-
-    const items = document.querySelectorAll('#vocab-list .vocab-item');
-    items.forEach(item => {
-      const itemCategory = item.dataset.category || '';
-      if (category === 'all' || itemCategory.includes(category)) {
-        item.style.display = '';
-      } else {
-        item.style.display = 'none';
-      }
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.getAttribute('data-tab');
+        tabBtns.forEach(b => {
+          b.classList.remove('tab-active');
+          b.classList.add('tab-inactive');
+        });
+        btn.classList.add('tab-active');
+        btn.classList.remove('tab-inactive');
+        panes.forEach(pane => pane.classList.remove('active'));
+        document.getElementById(`pane-${tabName}`).classList.add('active');
+      });
     });
-  }
 
-  function filterTipsByCategory(category) {
-    document.querySelectorAll('#tips-filters .filter-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-
-    const items = document.querySelectorAll('#tips-list .card');
-    items.forEach(item => {
-      const itemCategory = item.dataset.category || '';
-      if (category === 'all' || itemCategory === category) {
-        item.style.display = '';
-      } else {
-        item.style.display = 'none';
-      }
+    // Accordion functionality
+    const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+    accordionTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const targetId = trigger.getAttribute('data-target');
+        const body = document.getElementById(targetId);
+        const chevron = trigger.querySelector('.chevron');
+        body.classList.toggle('open');
+        chevron.classList.toggle('rotated');
+      });
     });
-  }
-</script>
+
+    // Vocabulary and Tips filtering
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const vocabWords = document.querySelectorAll('.vocab-word');
+    const tipCards = document.querySelectorAll('.tip-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        filterBtns.forEach(b => {
+          b.classList.remove('filter-active');
+          b.classList.add('filter-inactive');
+        });
+        btn.classList.add('filter-active');
+        btn.classList.remove('filter-inactive');
+
+        vocabWords.forEach(word => {
+          if (category === 'all' || word.getAttribute('data-category') === category) {
+            word.style.display = 'block';
+          } else {
+            word.style.display = 'none';
+          }
+        });
+
+        tipCards.forEach(card => {
+          if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Mobile menu toggle
+    const navbarBurger = document.getElementById('navbar-burger');
+    const navbarMenu = document.getElementById('navbar-menu');
+    navbarBurger.addEventListener('click', () => {
+      navbarMenu.classList.toggle('hidden');
+    });
+
+    // Auth button placeholders (would integrate with actual auth system)
+    const authBtns = document.querySelectorAll('#nav-auth-btn, #nav-auth-btn-mobile');
+    authBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        alert('Sign in functionality would be integrated here');
+      });
+    });
+  </script>
+
 </body>
 </html>
