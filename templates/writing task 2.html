@@ -1,0 +1,674 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Writing — Task 2 Study Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .tab-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
+    .tab-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
+    .tab-inactive:hover { background-color: #eceae3; color: #0f0f0f; }
+    .filter-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
+    .filter-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
+    .filter-inactive:hover { background-color: #eceae3; }
+    .accordion-body { display: none; }
+    .accordion-body.open { display: block; }
+    .chevron { transition: transform 0.25s ease; }
+    .chevron.rotated { transform: rotate(180deg); }
+    .pane { display: none; animation: fadeIn 0.3s ease; }
+    .pane.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .score-bar { height: 6px; border-radius: 3px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .tip-card { border-left: 3px solid transparent; transition: border-color 0.2s ease, background 0.2s ease; }
+    .tip-card:hover { background: #eceae3; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ─── NAV ─── -->
+  <nav class="sticky top-0 z-50 bg-fog/95 backdrop-blur border-b border-mist">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-ink rounded-full flex items-center justify-center">
+          <span class="text-fog text-xs font-display italic">C</span>
+        </div>
+        <a href="/" class="font-display text-base text-ink hover:opacity-80 transition-opacity">CELPIP Prep</a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-6">
+        <a href="/" class="text-sm text-slate hover:text-ink transition-colors">Tasks</a>
+        <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors">Study Notes</a>
+        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors">History</a>
+        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors">Questions</a>
+        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors">Vocab</a>
+        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors">Logs</a>
+        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors">Settings</a>
+        <button id="nav-auth-btn" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors">Sign In</button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="navbar-burger" class="md:hidden flex flex-col gap-1" aria-label="Open navigation">
+        <span class="w-5 h-0.5 bg-ink block"></span>
+        <span class="w-5 h-0.5 bg-ink block"></span>
+        <span class="w-5 h-0.5 bg-ink block"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="navbar-menu" class="hidden md:hidden border-t border-mist bg-white">
+      <div class="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-3">
+        <a href="/" class="text-sm text-slate hover:text-ink transition-colors py-1">Tasks</a>
+        <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors py-1">Study Notes</a>
+        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors py-1">History</a>
+        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Questions</a>
+        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Vocab</a>
+        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Logs</a>
+        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Settings</a>
+        <button id="nav-auth-btn-mobile" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors w-fit">Sign In</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <header class="max-w-4xl mx-auto px-6 pt-16 pb-12">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Writing · Task 2 of 2</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-5">
+        Write a persuasive <span class="hero-line italic">essay</span>
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Compose an essay arguing a position on a topic or responding to a prompt. Demonstrate structured thinking, strong evidence, and clear persuasion.
+      </p>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 animate-fade-up" style="animation-delay:.1s">
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Word count</div>
+        <div class="font-display text-3xl text-ink">200<span class="text-lg">–250</span></div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Time limit</div>
+        <div class="font-display text-3xl text-ink">None</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Score scale</div>
+        <div class="font-display text-3xl text-ink">1–12</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Target band</div>
+        <div class="font-display text-3xl text-ink">8–10</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-4xl mx-auto px-6 pb-24">
+
+    <!-- TAB BAR -->
+    <div class="flex flex-wrap gap-2 mb-8 animate-fade-up" style="animation-delay:.15s" id="tab-bar">
+      <button data-tab="overview"  class="tab-btn tab-active  px-5 py-2 rounded-full border text-sm font-medium transition-all">Overview</button>
+      <button data-tab="structure" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">My Template</button>
+      <button data-tab="vocab"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Vocab Bank</button>
+      <button data-tab="practice" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Practice</button>
+      <button data-tab="scoring"  class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Scoring</button>
+      <button data-tab="tips"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Pro Tips</button>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: OVERVIEW
+    ══════════════════════════════════════════ -->
+    <div id="pane-overview" class="pane active space-y-5">
+      <div class="bg-white rounded-2xl border border-mist p-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">What the task involves</p>
+        <p class="text-base leading-relaxed text-ink">You are given a topic or statement and asked to write an essay taking a position on it. For example: <em class="text-steel">"Does technology help or harm modern education? Write an essay arguing your position."</em></p>
+        <p class="text-base leading-relaxed text-ink mt-3">The examiner is testing your ability to structure an argument, support claims with evidence, organize paragraphs logically, and demonstrate control of complex English.</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-mist p-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-4">What examiners score you on</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-sapphire-light text-sapphire-dark shrink-0 mt-0.5">Task fulfillment</span>
+            <p class="text-sm leading-relaxed text-ink">Taking a clear position and developing it throughout the essay. Fully addressing the prompt.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-emerald2-light text-emerald2-dark shrink-0 mt-0.5">Coherence</span>
+            <p class="text-sm leading-relaxed text-ink">Clear introduction, body paragraphs with topic sentences, and conclusion. Logical argument progression.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-amber2-light text-amber2-dark shrink-0 mt-0.5">Vocabulary</span>
+            <p class="text-sm leading-relaxed text-ink">Advanced vocabulary. Words that express opinion, reasoning, and persuasion. Varied word choice.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-rose2-light text-rose2-dark shrink-0 mt-0.5">Grammar</span>
+            <p class="text-sm leading-relaxed text-ink">Accurate complex sentences. Varied tenses. Few or no errors that impede meaning.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-ink rounded-2xl p-6 text-fog">
+        <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-4">Essay structure</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-gold text-sm">1</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gold">Introduction</p>
+              <p class="text-xs text-fog/80">Hook, context, and clear thesis statement</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-fog/20 border border-fog/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-fog text-sm">2</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-fog">Body (2–3 paragraphs)</p>
+              <p class="text-xs text-fog/80">Topic sentence, evidence, explanation for each point</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-gold text-sm">3</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gold">Conclusion</p>
+              <p class="text-xs text-fog/80">Restate thesis and summarize key points</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: STRUCTURE / TEMPLATE
+    ══════════════════════════════════════════ -->
+    <div id="pane-structure" class="pane space-y-4">
+      <p class="text-sm text-slate">A 5-paragraph essay formula for clear, persuasive writing.</p>
+
+      <!-- Part 1: Introduction -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-1">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-sapphire text-white text-xs font-semibold flex items-center justify-center shrink-0">1</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Introduction</span>
+              <span class="text-xs text-slate ml-2">Hook + thesis</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-1" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Open with a hook that grabs attention, provide context, and end with a clear thesis that states your position.</p>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Template</p>
+            <p class="text-sm text-ink italic leading-relaxed">[Hook statement]. [Context/background]. Therefore, I believe [your thesis].</p>
+          </div>
+          <div class="bg-sapphire-light rounded-xl p-4 border-l-4 border-sapphire" style="border-radius:0 12px 12px 0; border-top-left-radius:0; border-bottom-left-radius:0;">
+            <p class="text-xs font-semibold text-sapphire-dark uppercase tracking-wider mb-2">Example</p>
+            <p class="text-sm text-sapphire-dark italic leading-relaxed">"Many students struggle with traditional classroom learning. Increasingly, technology offers tools that personalize education and increase engagement. Therefore, I believe technology has significantly improved modern education."</p>
+          </div>
+          <ul class="space-y-1.5 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Hook with a question, statistic, or bold statement</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Thesis must be clear and arguable, not obvious</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Introduction should be 3–4 sentences</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part 2: Body -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-2">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald2 text-white text-xs font-semibold flex items-center justify-center shrink-0">2</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Body Paragraphs (2–3)</span>
+              <span class="text-xs text-slate ml-2">Topic sentence + evidence + analysis</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-2" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Each body paragraph should support your thesis with a single main idea, evidence, and explanation. Use transition words to connect paragraphs.</p>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Template</p>
+            <p class="text-sm text-ink italic leading-relaxed">[Topic sentence]. For example, [specific evidence/example]. This demonstrates [analysis of evidence].</p>
+          </div>
+          <div class="bg-emerald2-light rounded-xl p-4 border-l-4 border-emerald2" style="border-radius:0 12px 12px 0; border-top-left-radius:0; border-bottom-left-radius:0;">
+            <p class="text-xs font-semibold text-emerald2-dark uppercase tracking-wider mb-2">Example</p>
+            <p class="text-sm text-emerald2-dark italic leading-relaxed">"First, technology enables personalized learning. For example, adaptive learning software adjusts difficulty based on each student's pace. This demonstrates how technology can meet individual student needs in ways traditional classrooms cannot."</p>
+          </div>
+          <ul class="space-y-1.5 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Begin each paragraph with a strong topic sentence</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Support claims with specific examples or evidence</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Analyze how your evidence supports your thesis</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part 3: Conclusion -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-3">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose2 text-white text-xs font-semibold flex items-center justify-center shrink-0">3</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Conclusion</span>
+              <span class="text-xs text-slate ml-2">Restate thesis + summary</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-3" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Restate your thesis in fresh language, briefly summarize your main points, and end with a broader reflection or call to action.</p>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Template</p>
+            <p class="text-sm text-ink italic leading-relaxed">In conclusion, [restate thesis]. As demonstrated, [brief summary of key points]. Therefore, [broader implication or recommendation].</p>
+          </div>
+          <div class="bg-rose2-light rounded-xl p-4 border-l-4 border-rose2" style="border-radius:0 12px 12px 0; border-top-left-radius:0; border-bottom-left-radius:0;">
+            <p class="text-xs font-semibold text-rose2-dark uppercase tracking-wider mb-2">Example</p>
+            <p class="text-sm text-rose2-dark italic leading-relaxed">"In conclusion, technology has fundamentally transformed modern education for the better. As demonstrated, it enables personalized learning and increases student engagement. Therefore, educators should embrace technology as a tool to enhance, not replace, traditional instruction."</p>
+          </div>
+          <ul class="space-y-1.5 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Use closing phrases: "In conclusion," "To summarize," "In summary"</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Rephrase your thesis without simply repeating it</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>End with a strong closing statement or recommendation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: VOCAB BANK
+    ══════════════════════════════════════════ -->
+    <div id="pane-vocab" class="pane space-y-4">
+      <div class="flex flex-wrap gap-2">
+        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="argument">Argument</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="evidence">Evidence</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="transition">Transition</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="conclusion">Conclusion</button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="vocab-word" data-category="argument">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">It is clear that</p>
+            <p class="text-xs text-slate">States a definitive point. "It is clear that technology benefits education."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="argument">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">One could argue that</p>
+            <p class="text-xs text-slate">Introduces a perspective. "One could argue that traditional methods are outdated."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="evidence">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">For example</p>
+            <p class="text-xs text-slate">Introduces specific evidence. "For example, adaptive software personalizes learning."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="evidence">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">This demonstrates that</p>
+            <p class="text-xs text-slate">Connects evidence to argument. "This demonstrates that engagement improves."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="transition">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Furthermore</p>
+            <p class="text-xs text-slate">Adds another point. "Furthermore, technology reduces inequality."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="transition">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">In contrast</p>
+            <p class="text-xs text-slate">Presents opposing view. "In contrast, some argue technology distracts students."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="conclusion">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">In conclusion</p>
+            <p class="text-xs text-slate">Signals the end. "In conclusion, technology improves education."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="conclusion">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To summarize</p>
+            <p class="text-xs text-slate">Recaps main ideas. "To summarize, the evidence supports this position."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="argument">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Undoubtedly</p>
+            <p class="text-xs text-slate">Shows confidence. "Undoubtedly, this approach works best."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="evidence">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">As a result</p>
+            <p class="text-xs text-slate">Shows consequence. "As a result, student performance improves."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: PRACTICE
+    ══════════════════════════════════════════ -->
+    <div id="pane-practice" class="pane space-y-4">
+      <p class="text-sm text-slate">Five essay prompts. Choose one and write an essay within 200–250 words using the 5-paragraph structure.</p>
+
+      <div class="space-y-3">
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Prompt 1</p>
+          <p class="text-sm font-semibold text-ink mb-3">Does remote work improve quality of life for employees?</p>
+          <p class="text-sm text-slate leading-relaxed">Take a position and support it with evidence about flexibility, work-life balance, productivity, and isolation.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Prompt 2</p>
+          <p class="text-sm font-semibold text-ink mb-3">Should universities focus more on practical skills or theoretical knowledge?</p>
+          <p class="text-sm text-slate leading-relaxed">Argue your position using examples from career preparation, employability, and intellectual development.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Prompt 3</p>
+          <p class="text-sm font-semibold text-ink mb-3">Is social media more beneficial or harmful to society?</p>
+          <p class="text-sm text-slate leading-relaxed">Take a stance and support it with evidence about communication, mental health, information spread, and social connection.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Prompt 4</p>
+          <p class="text-sm font-semibold text-ink mb-3">Should governments prioritize environmental protection over economic growth?</p>
+          <p class="text-sm text-slate leading-relaxed">Develop a position using examples of climate change, business impact, sustainability, and future generations.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Prompt 5</p>
+          <p class="text-sm font-semibold text-ink mb-3">Is it better to pursue a career you love or one that pays well?</p>
+          <p class="text-sm text-slate leading-relaxed">Argue your position using evidence about fulfillment, financial security, long-term satisfaction, and life priorities.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: SCORING
+    ══════════════════════════════════════════ -->
+    <div id="pane-scoring" class="pane space-y-4">
+      <p class="text-sm text-slate">How examiners score Writing Task 2. Argument structure and evidence quality are most important.</p>
+
+      <div class="space-y-3">
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 10–12 (Advanced)</p>
+            <span class="font-display text-xl text-emerald2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Task fulfillment:</strong> Clear thesis with strong supporting arguments. Fully addresses the prompt with depth.</p>
+            <p><strong>Coherence:</strong> Well-organized with smooth transitions between ideas. Clear essay structure evident throughout.</p>
+            <p><strong>Vocabulary:</strong> Sophisticated, varied vocabulary. Words precisely chosen to strengthen argument.</p>
+            <p><strong>Grammar:</strong> Complex sentences used confidently with minimal errors. Demonstrates control of English.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 7–9 (Upper-Intermediate)</p>
+            <span class="font-display text-xl text-amber2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Task fulfillment:</strong> Clear position with adequate supporting points. Addresses the main aspects of the prompt.</p>
+            <p><strong>Coherence:</strong> Generally well-organized. Most paragraphs connect logically; some transitions could be stronger.</p>
+            <p><strong>Vocabulary:</strong> Good range of vocabulary. Some repetition acceptable. Generally appropriate word choice.</p>
+            <p><strong>Grammar:</strong> Minor errors present but don't significantly impact understanding. Generally accurate structures.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 4–6 (Intermediate)</p>
+            <span class="font-display text-xl text-rose2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Task fulfillment:</strong> Position present but may lack clear development. Some aspects of prompt overlooked.</p>
+            <p><strong>Coherence:</strong> Basic organization visible. Some paragraphs may lack focus or connection to thesis.</p>
+            <p><strong>Vocabulary:</strong> Limited range. Repetitive word choice. May be too formal or too informal.</p>
+            <p><strong>Grammar:</strong> Several errors present. Some affect clarity. Simple sentence structures dominate.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 1–3 (Below Intermediate)</p>
+            <span class="font-display text-xl text-slate">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Task fulfillment:</strong> Unclear or missing position. Does not adequately address the prompt.</p>
+            <p><strong>Coherence:</strong> Disorganized. Difficult to follow main argument. Poor paragraph structure.</p>
+            <p><strong>Vocabulary:</strong> Very limited range. Minimal variety in word choice. Inappropriate register.</p>
+            <p><strong>Grammar:</strong> Frequent errors that significantly obscure meaning. Minimal complex structures.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-fog rounded-2xl p-6 mt-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">Key insight</p>
+        <p class="text-sm text-ink">A high-scoring essay has a <strong>clear thesis, strong evidence, logical organization, and minimal errors</strong>. Stay within 200–250 words, use the 5-paragraph structure, and always support claims with specific examples. Quality of argument matters more than length.</p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: PRO TIPS
+    ══════════════════════════════════════════ -->
+    <div id="pane-tips" class="pane space-y-4">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="planning">Planning</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="structure">Structure</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="evidence">Evidence</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="mistakes">Mistakes</button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="planning">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Planning</p>
+          <p class="text-sm font-semibold text-ink mb-2">Before writing, plan your three main arguments.</p>
+          <p class="text-xs text-slate">Spend 2 minutes outlining your thesis and three supporting points. This prevents rambling and ensures focus.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="structure">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Structure</p>
+          <p class="text-sm font-semibold text-ink mb-2">Always use the 5-paragraph formula: intro, 3 body, conclusion.</p>
+          <p class="text-xs text-slate">This gives your essay clear organization examiners expect to see in advanced writing.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="evidence">
+          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Evidence</p>
+          <p class="text-sm font-semibold text-ink mb-2">Support every claim with a specific example.</p>
+          <p class="text-xs text-slate">"Technology improves education" is weak. "Educational software adapts to each student's pace, improving outcomes" is strong.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="evidence">
+          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Evidence</p>
+          <p class="text-sm font-semibold text-ink mb-2">Analyze your evidence; don't just state it.</p>
+          <p class="text-xs text-slate">After each example, explain WHY it supports your thesis. Show critical thinking, not just facts.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="mistakes">
+          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Mistakes</p>
+          <p class="text-sm font-semibold text-ink mb-2">Don't introduce new ideas in the conclusion.</p>
+          <p class="text-xs text-slate">The conclusion should restate and summarize, not raise new points. New arguments confuse the reader.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="mistakes">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Mistakes</p>
+          <p class="text-sm font-semibold text-ink mb-2">Avoid using "I think" or "in my opinion."</p>
+          <p class="text-xs text-slate">Formal essays state positions as fact: "This approach improves outcomes" not "I think it might help."</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="structure">
+          <p class="text-xs font-semibold text-violet2 uppercase tracking-widest mb-2">Structure</p>
+          <p class="text-sm font-semibold text-ink mb-2">Use transition words to connect paragraphs.</p>
+          <p class="text-xs text-slate">"Furthermore," "In addition," "However," "In contrast" guide readers through your argument.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="planning">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Planning</p>
+          <p class="text-sm font-semibold text-ink mb-2">Aim for 200–250 words; quality over quantity.</p>
+          <p class="text-xs text-slate">A concise essay with strong arguments scores higher than a padded one with filler sentences.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="max-w-4xl mx-auto px-6 py-12 border-t border-mist mt-12">
+    <p class="text-xs text-slate mb-4">CELPIP Prep — Writing Task 2 Study Guide</p>
+    <p class="text-xs text-slate/60">Persuasive essay writing requires a clear thesis, strong evidence, logical organization, and control of English. Master the 5-paragraph structure, support claims with specific examples, and demonstrate critical thinking. That is what earns high scores.</p>
+  </footer>
+
+  <script>
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.pane');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.getAttribute('data-tab');
+        tabBtns.forEach(b => {
+          b.classList.remove('tab-active');
+          b.classList.add('tab-inactive');
+        });
+        btn.classList.add('tab-active');
+        btn.classList.remove('tab-inactive');
+        panes.forEach(pane => pane.classList.remove('active'));
+        document.getElementById(`pane-${tabName}`).classList.add('active');
+      });
+    });
+
+    const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+    accordionTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const targetId = trigger.getAttribute('data-target');
+        const body = document.getElementById(targetId);
+        const chevron = trigger.querySelector('.chevron');
+        body.classList.toggle('open');
+        chevron.classList.toggle('rotated');
+      });
+    });
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const vocabWords = document.querySelectorAll('.vocab-word');
+    const tipCards = document.querySelectorAll('.tip-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        filterBtns.forEach(b => {
+          b.classList.remove('filter-active');
+          b.classList.add('filter-inactive');
+        });
+        btn.classList.add('filter-active');
+        btn.classList.remove('filter-inactive');
+
+        vocabWords.forEach(word => {
+          if (category === 'all' || word.getAttribute('data-category') === category) {
+            word.style.display = 'block';
+          } else {
+            word.style.display = 'none';
+          }
+        });
+
+        tipCards.forEach(card => {
+          if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    const navbarBurger = document.getElementById('navbar-burger');
+    const navbarMenu = document.getElementById('navbar-menu');
+    navbarBurger.addEventListener('click', () => {
+      navbarMenu.classList.toggle('hidden');
+    });
+
+    const authBtns = document.querySelectorAll('#nav-auth-btn, #nav-auth-btn-mobile');
+    authBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        alert('Sign in functionality would be integrated here');
+      });
+    });
+  </script>
+
+</body>
+</html>
