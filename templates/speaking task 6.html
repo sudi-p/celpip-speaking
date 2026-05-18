@@ -1,0 +1,674 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Speaking — Task 6 Study Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .tab-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
+    .tab-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
+    .tab-inactive:hover { background-color: #eceae3; color: #0f0f0f; }
+    .filter-active { background-color: #0f0f0f !important; color: #f5f4f0 !important; border-color: #0f0f0f !important; }
+    .filter-inactive { background-color: transparent; color: #6b6a64; border-color: #d4d2ca; }
+    .filter-inactive:hover { background-color: #eceae3; }
+    .accordion-body { display: none; }
+    .accordion-body.open { display: block; }
+    .chevron { transition: transform 0.25s ease; }
+    .chevron.rotated { transform: rotate(180deg); }
+    .pane { display: none; animation: fadeIn 0.3s ease; }
+    .pane.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .score-bar { height: 6px; border-radius: 3px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .tip-card { border-left: 3px solid transparent; transition: border-color 0.2s ease, background 0.2s ease; }
+    .tip-card:hover { background: #eceae3; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ─── NAV ─── -->
+  <nav class="sticky top-0 z-50 bg-fog/95 backdrop-blur border-b border-mist">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-ink rounded-full flex items-center justify-center">
+          <span class="text-fog text-xs font-display italic">C</span>
+        </div>
+        <a href="/" class="font-display text-base text-ink hover:opacity-80 transition-opacity">CELPIP Prep</a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-6">
+        <a href="/" class="text-sm text-slate hover:text-ink transition-colors">Tasks</a>
+        <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors">Study Notes</a>
+        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors">History</a>
+        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors">Questions</a>
+        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors">Vocab</a>
+        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors">Logs</a>
+        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors">Settings</a>
+        <button id="nav-auth-btn" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors">Sign In</button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="navbar-burger" class="md:hidden flex flex-col gap-1" aria-label="Open navigation">
+        <span class="w-5 h-0.5 bg-ink block"></span>
+        <span class="w-5 h-0.5 bg-ink block"></span>
+        <span class="w-5 h-0.5 bg-ink block"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="navbar-menu" class="hidden md:hidden border-t border-mist bg-white">
+      <div class="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-3">
+        <a href="/" class="text-sm text-slate hover:text-ink transition-colors py-1">Tasks</a>
+        <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors py-1">Study Notes</a>
+        <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors py-1">History</a>
+        <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Questions</a>
+        <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Vocab</a>
+        <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Logs</a>
+        <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors py-1">Settings</a>
+        <button id="nav-auth-btn-mobile" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors w-fit">Sign In</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <header class="max-w-4xl mx-auto px-6 pt-16 pb-12">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Speaking · Task 6 of 8</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-5">
+        Handle a <span class="hero-line italic">difficult</span> situation
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Master crisis communication — explain the problem, describe your response, and reflect on the outcome with poise.
+      </p>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 animate-fade-up" style="animation-delay:.1s">
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Speaking time</div>
+        <div class="font-display text-3xl text-ink">60<span class="text-lg">s</span></div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Prep time</div>
+        <div class="font-display text-3xl text-ink">60<span class="text-lg">s</span></div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Score scale</div>
+        <div class="font-display text-3xl text-ink">1–12</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-mist p-4 text-center card-hover">
+        <div class="text-xs text-slate uppercase tracking-wider mb-1">Target band</div>
+        <div class="font-display text-3xl text-ink">8–10</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-4xl mx-auto px-6 pb-24">
+
+    <!-- TAB BAR -->
+    <div class="flex flex-wrap gap-2 mb-8 animate-fade-up" style="animation-delay:.15s" id="tab-bar">
+      <button data-tab="overview"  class="tab-btn tab-active  px-5 py-2 rounded-full border text-sm font-medium transition-all">Overview</button>
+      <button data-tab="structure" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">My Template</button>
+      <button data-tab="vocab"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Vocab Bank</button>
+      <button data-tab="practice" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Practice</button>
+      <button data-tab="scoring"  class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Scoring</button>
+      <button data-tab="tips"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Pro Tips</button>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: OVERVIEW
+    ══════════════════════════════════════════ -->
+    <div id="pane-overview" class="pane active space-y-5">
+      <div class="bg-white rounded-2xl border border-mist p-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">What the task involves</p>
+        <p class="text-base leading-relaxed text-ink">You are presented with a challenging or problematic situation and asked how you would handle it. For example: <em class="text-steel">"Your coworker made an error that affects the team. What do you do?"</em></p>
+        <p class="text-base leading-relaxed text-ink mt-3">The examiner is testing your ability to think on your feet, communicate clearly under pressure, show problem-solving skills, and demonstrate maturity and composure.</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-mist p-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-4">What examiners score you on</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-sapphire-light text-sapphire-dark shrink-0 mt-0.5">Fluency</span>
+            <p class="text-sm leading-relaxed text-ink">Natural delivery despite the challenging content. Composure under pressure signals high fluency.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-emerald2-light text-emerald2-dark shrink-0 mt-0.5">Coherence</span>
+            <p class="text-sm leading-relaxed text-ink">Clear explanation of the problem, your actions, and the outcome. Logical progression through crisis.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-amber2-light text-amber2-dark shrink-0 mt-0.5">Vocabulary</span>
+            <p class="text-sm leading-relaxed text-ink">Problem-solving language, emotional vocabulary, and professional communication phrases.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-md bg-rose2-light text-rose2-dark shrink-0 mt-0.5">Grammar</span>
+            <p class="text-sm leading-relaxed text-ink">Complex structures and varied tenses. Conditional and past perfect tenses show sophistication.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-ink rounded-2xl p-6 text-fog">
+        <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-4">The 60-second blueprint</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-gold text-sm">1</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gold">The Situation (10s)</p>
+              <p class="text-xs text-fog/80">Describe the problem clearly and briefly</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-fog/20 border border-fog/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-fog text-sm">2</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-fog">Your Response (35s)</p>
+              <p class="text-xs text-fog/80">Explain the steps you would take to solve it</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center shrink-0">
+              <span class="font-display text-gold text-sm">3</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gold">Reflection (15s)</p>
+              <p class="text-xs text-fog/80">What you learned or how it would have been resolved</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: STRUCTURE / TEMPLATE
+    ══════════════════════════════════════════ -->
+    <div id="pane-structure" class="pane space-y-4">
+      <p class="text-sm text-slate">A 3-part framework for calmly addressing crises — show maturity and problem-solving skills.</p>
+
+      <!-- Part 1 -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-1">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-sapphire text-white text-xs font-semibold flex items-center justify-center shrink-0">1</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">The Situation</span>
+              <span class="text-xs text-slate ml-2">~10 seconds</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-1" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Briefly describe what happened without making excuses or blaming others.</p>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Template</p>
+            <p class="text-sm text-ink italic leading-relaxed">"If [difficult situation happened], I would first acknowledge that [what went wrong]. The key issue is [core problem]."</p>
+          </div>
+          <div class="bg-sapphire-light rounded-xl p-4 border-l-4 border-sapphire" style="border-radius:0 12px 12px 0; border-top-left-radius:0; border-bottom-left-radius:0;">
+            <p class="text-xs font-semibold text-sapphire-dark uppercase tracking-wider mb-2">Example</p>
+            <p class="text-sm text-sapphire-dark italic leading-relaxed">"If I made a mistake on a project that affected the deadline, I would first acknowledge the error. The key issue is that I need to communicate immediately and take responsibility."</p>
+          </div>
+          <ul class="space-y-1.5 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Be direct about what went wrong</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Identify the core problem, not minor details</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Avoid making excuses; focus on facts</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part 2 -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-2">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald2 text-white text-xs font-semibold flex items-center justify-center shrink-0">2</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Your Response</span>
+              <span class="text-xs text-slate ml-2">~35 seconds · 2–4 steps</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-2" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Outline 2–4 concrete steps you would take to address or mitigate the problem. This is where you show problem-solving.</p>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Template</p>
+            <p class="text-sm text-ink italic leading-relaxed">"First, I would [action 1]. Then, I would [action 2] to [purpose]. Finally, I would [action 3] to ensure [outcome]."</p>
+          </div>
+          <div class="bg-emerald2-light rounded-xl p-4 border-l-4 border-emerald2" style="border-radius:0 12px 12px 0; border-top-left-radius:0; border-bottom-left-radius:0;">
+            <p class="text-xs font-semibold text-emerald2-dark uppercase tracking-wider mb-2">Example</p>
+            <p class="text-sm text-emerald2-dark italic leading-relaxed">"First, I would notify my manager immediately to inform them of the error. Then, I would gather the relevant data to understand the full impact. Finally, I would propose a solution or timeline to fix it."</p>
+          </div>
+          <ul class="space-y-1.5 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Show initiative: what YOU would do, not delegate</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Use action words: "would investigate," "would communicate," "would propose"</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Demonstrate maturity: solve the problem, not blame others</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part 3 -->
+      <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-fog/50 transition-colors" data-target="struct-3">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-gold text-white text-xs font-semibold flex items-center justify-center shrink-0">3</span>
+            <div>
+              <span class="text-sm font-semibold text-ink">Reflection</span>
+              <span class="text-xs text-slate ml-2">~15 seconds</span>
+            </div>
+          </div>
+          <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="struct-3" class="accordion-body border-t border-mist px-6 py-5 space-y-4">
+          <p class="text-sm text-slate">Reflect on what you learned or the outcome. Show growth and forward-thinking.</p>
+          <div class="bg-fog rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Template</p>
+            <p class="text-sm text-ink italic leading-relaxed">"This situation would teach me that [lesson]. In the future, I would [preventive action]."</p>
+          </div>
+          <div class="bg-gold-light rounded-xl p-4 border-l-4 border-gold" style="border-radius:0 12px 12px 0; border-top-left-radius:0; border-bottom-left-radius:0;">
+            <p class="text-xs font-semibold text-gold-dark uppercase tracking-wider mb-2">Example</p>
+            <p class="text-sm text-gold-dark italic leading-relaxed">"This situation would teach me the importance of double-checking work before submission. In the future, I would build in a buffer time to review and catch errors early."</p>
+          </div>
+          <ul class="space-y-1.5 text-sm text-ink">
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Show that you learned something meaningful</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Describe how you'd prevent it from happening again</li>
+            <li class="flex gap-2"><span class="text-gold shrink-0">✦</span>Keep it brief — 2–3 sentences maximum</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: VOCAB BANK
+    ══════════════════════════════════════════ -->
+    <div id="pane-vocab" class="pane space-y-4">
+      <div class="flex flex-wrap gap-2">
+        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="problem">Problem</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="action">Action</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="emotion">Emotion</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="reflection">Reflection</button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="vocab-word" data-category="problem">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To acknowledge</p>
+            <p class="text-xs text-slate">Recognize the problem. "I would acknowledge the mistake immediately."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="problem">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Unforeseen circumstances</p>
+            <p class="text-xs text-slate">Unexpected events. Show that challenges can arise despite planning.</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="action">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To take initiative</p>
+            <p class="text-xs text-slate">Act without waiting. "I would take initiative to solve it."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="action">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To communicate transparently</p>
+            <p class="text-xs text-slate">Be open and honest. Shows professionalism.</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="action">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To mitigate the issue</p>
+            <p class="text-xs text-slate">Reduce the damage or impact of a problem.</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="emotion">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Composed</p>
+            <p class="text-xs text-slate">Calm and in control. "I would remain composed under pressure."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="emotion">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">Frustrating / Challenging</p>
+            <p class="text-xs text-slate">Describe the difficulty. "It would be a challenging situation."</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="reflection">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To learn from experience</p>
+            <p class="text-xs text-slate">Gain wisdom from setbacks. Shows growth mindset.</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="reflection">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To prevent future occurrences</p>
+            <p class="text-xs text-slate">Stop it from happening again. Shows foresight.</p>
+          </div>
+        </div>
+
+        <div class="vocab-word" data-category="action">
+          <div class="bg-white rounded-xl border border-mist p-4">
+            <p class="text-sm font-semibold text-ink mb-1">To propose a solution</p>
+            <p class="text-xs text-slate">Offer a way to fix it. Shows problem-solving.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: PRACTICE
+    ══════════════════════════════════════════ -->
+    <div id="pane-practice" class="pane space-y-4">
+      <p class="text-sm text-slate">Five realistic difficult situations. Pick one and respond calmly for 60 seconds.</p>
+
+      <div class="space-y-3">
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Scenario 1</p>
+          <p class="text-sm font-semibold text-ink mb-3">You made a significant error at work that affected the team's deadline.</p>
+          <p class="text-sm text-slate leading-relaxed">Focus on: taking responsibility, communicating immediately, proposing a fix, and what you'd do differently next time.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Scenario 2</p>
+          <p class="text-sm font-semibold text-ink mb-3">A friend cancels important plans with you at the last minute.</p>
+          <p class="text-sm text-slate leading-relaxed">Address: how you'd react maturely, how you'd communicate, and how you'd handle the situation going forward.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Scenario 3</p>
+          <p class="text-sm font-semibold text-ink mb-3">You received critical feedback from your boss in front of your colleagues.</p>
+          <p class="text-sm text-slate leading-relaxed">Think about: listening without getting defensive, asking for clarification, and demonstrating professionalism.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Scenario 4</p>
+          <p class="text-sm font-semibold text-ink mb-3">You discovered that someone took credit for your work.</p>
+          <p class="text-sm text-slate leading-relaxed">Consider: how you'd address it diplomatically, the steps you'd take, and preserving relationships.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Scenario 5</p>
+          <p class="text-sm font-semibold text-ink mb-3">You ran out of money during a trip with friends.</p>
+          <p class="text-sm text-slate leading-relaxed">Focus on: communicating honestly, problem-solving quickly, and maintaining relationships despite the awkward situation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: SCORING
+    ══════════════════════════════════════════ -->
+    <div id="pane-scoring" class="pane space-y-4">
+      <p class="text-sm text-slate">How examiners score Task 6. Composure and problem-solving are critical.</p>
+
+      <div class="space-y-3">
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 10–12 (Advanced)</p>
+            <span class="font-display text-xl text-emerald2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Fluency:</strong> Natural and composed delivery despite challenging content. No hesitation or filler words.</p>
+            <p><strong>Coherence:</strong> Problem, response, and reflection are clearly structured. Logical progression throughout.</p>
+            <p><strong>Vocabulary:</strong> Sophisticated problem-solving language. Shows maturity and professional communication.</p>
+            <p><strong>Grammar:</strong> Confident use of complex structures, conditionals, and past perfect tenses.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 7–9 (Upper-Intermediate)</p>
+            <span class="font-display text-xl text-amber2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Fluency:</strong> Generally fluent with minimal pauses. Handles the topic with reasonable composure.</p>
+            <p><strong>Coherence:</strong> Addresses the situation and describes steps taken. Mostly logical organization.</p>
+            <p><strong>Vocabulary:</strong> Good range of problem-solving words. Shows understanding of appropriate tone.</p>
+            <p><strong>Grammar:</strong> Mostly accurate; some errors in complex structures don't impede understanding.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 4–6 (Intermediate)</p>
+            <span class="font-display text-xl text-rose2">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Fluency:</strong> Noticeable pauses or hesitation. May struggle with the emotional aspect of the scenario.</p>
+            <p><strong>Coherence:</strong> Addresses the problem but may lack clear solution steps. Organization is somewhat unclear.</p>
+            <p><strong>Vocabulary:</strong> Basic words; limited range for expressing problem-solving ideas.</p>
+            <p><strong>Grammar:</strong> Mix of simple and complex sentences; errors don't always obscure meaning.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-mist p-6">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm font-semibold text-ink">Score 1–3 (Below Intermediate)</p>
+            <span class="font-display text-xl text-slate">●</span>
+          </div>
+          <div class="space-y-2 text-sm text-slate">
+            <p><strong>Fluency:</strong> Frequent hesitation or loss of composure. Difficulty with the challenging content.</p>
+            <p><strong>Coherence:</strong> May not clearly describe the problem or steps. Disjointed explanation.</p>
+            <p><strong>Vocabulary:</strong> Very limited; cannot adequately express problem-solving ideas.</p>
+            <p><strong>Grammar:</strong> Frequent errors in basic structures; meaning often obscured.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-fog rounded-2xl p-6 mt-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">Key insight</p>
+        <p class="text-sm text-ink">A high score requires <strong>composure and concrete problem-solving steps</strong>. Don't dwell on the problem; focus on YOUR actions. Show maturity: take responsibility, communicate, and demonstrate growth. Examiners reward candidates who handle adversity with grace.</p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         PANE: PRO TIPS
+    ══════════════════════════════════════════ -->
+    <div id="pane-tips" class="pane space-y-4">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="prep">Prep</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="delivery">Delivery</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="language">Language</button>
+        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="mistakes">Mistakes</button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="prep">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Prep</p>
+          <p class="text-sm font-semibold text-ink mb-2">Jot down 3 concrete steps you would take.</p>
+          <p class="text-xs text-slate">During prep, don't spend time panicking about the scenario. Instead, write down 3–4 specific actions you'd take to fix it.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="delivery">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Delivery</p>
+          <p class="text-sm font-semibold text-ink mb-2">Speak calmly and deliberately.</p>
+          <p class="text-xs text-slate">Even if the scenario is stressful, your delivery should be controlled. Slow down. Take pauses. This signals composure.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="language">
+          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Language</p>
+          <p class="text-sm font-semibold text-ink mb-2">Use conditional structures: "would," "would have," "if."</p>
+          <p class="text-xs text-slate">Conditional language shows you're thinking hypothetically and taking the scenario seriously.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="language">
+          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Language</p>
+          <p class="text-sm font-semibold text-ink mb-2">Avoid blame; use "I would."</p>
+          <p class="text-xs text-slate">"I would take responsibility" is better than "It wasn't my fault." Shows maturity.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="mistakes">
+          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Mistakes</p>
+          <p class="text-sm font-semibold text-ink mb-2">Don't blame others or make excuses.</p>
+          <p class="text-xs text-slate">Focus on what YOU would do, not why it's someone else's fault. This shows professionalism and maturity.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="mistakes">
+          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Mistakes</p>
+          <p class="text-sm font-semibold text-ink mb-2">Don't say "I don't know what I would do."</p>
+          <p class="text-xs text-slate">Even if you're unsure, propose something reasonable. Showing decision-making is better than admitting helplessness.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="delivery">
+          <p class="text-xs font-semibold text-violet2 uppercase tracking-widest mb-2">Delivery</p>
+          <p class="text-sm font-semibold text-ink mb-2">End on a positive note.</p>
+          <p class="text-xs text-slate">Finish with what you learned or how you'd prevent it. Ends on an optimistic, growth-minded tone.</p>
+        </div>
+
+        <div class="tip-card bg-white rounded-xl border border-mist p-4" data-category="prep">
+          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Prep</p>
+          <p class="text-sm font-semibold text-ink mb-2">Read the scenario carefully.</p>
+          <p class="text-xs text-slate">Spend 10 seconds understanding exactly what's being asked. Re-read if needed. This prevents misunderstanding your approach.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="max-w-4xl mx-auto px-6 py-12 border-t border-mist mt-12">
+    <p class="text-xs text-slate mb-4">CELPIP Prep — Speaking Task 6 Study Guide</p>
+    <p class="text-xs text-slate/60">Difficult situations test your composure and problem-solving skills. Show maturity: acknowledge the problem, take action, and demonstrate growth. Examiners listen for how you handle pressure, not whether you avoid it.</p>
+  </footer>
+
+  <script>
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.pane');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.getAttribute('data-tab');
+        tabBtns.forEach(b => {
+          b.classList.remove('tab-active');
+          b.classList.add('tab-inactive');
+        });
+        btn.classList.add('tab-active');
+        btn.classList.remove('tab-inactive');
+        panes.forEach(pane => pane.classList.remove('active'));
+        document.getElementById(`pane-${tabName}`).classList.add('active');
+      });
+    });
+
+    const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+    accordionTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const targetId = trigger.getAttribute('data-target');
+        const body = document.getElementById(targetId);
+        const chevron = trigger.querySelector('.chevron');
+        body.classList.toggle('open');
+        chevron.classList.toggle('rotated');
+      });
+    });
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const vocabWords = document.querySelectorAll('.vocab-word');
+    const tipCards = document.querySelectorAll('.tip-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        filterBtns.forEach(b => {
+          b.classList.remove('filter-active');
+          b.classList.add('filter-inactive');
+        });
+        btn.classList.add('filter-active');
+        btn.classList.remove('filter-inactive');
+
+        vocabWords.forEach(word => {
+          if (category === 'all' || word.getAttribute('data-category') === category) {
+            word.style.display = 'block';
+          } else {
+            word.style.display = 'none';
+          }
+        });
+
+        tipCards.forEach(card => {
+          if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    const navbarBurger = document.getElementById('navbar-burger');
+    const navbarMenu = document.getElementById('navbar-menu');
+    navbarBurger.addEventListener('click', () => {
+      navbarMenu.classList.toggle('hidden');
+    });
+
+    const authBtns = document.querySelectorAll('#nav-auth-btn, #nav-auth-btn-mobile');
+    authBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        alert('Sign in functionality would be integrated here');
+      });
+    });
+  </script>
+
+</body>
+</html>
