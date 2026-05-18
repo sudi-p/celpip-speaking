@@ -69,7 +69,7 @@
   {% include 'partials/navbar.html' %}
 
   <!-- ─── HERO ─── -->
-  <header class="max-w-4xl mx-auto px-6 pt-16 pb-12">
+  <header class="max-w-6xl mx-auto px-6 pt-16 pb-12">
     <div class="animate-fade-up">
       <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Practice & Master</p>
       <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-5">
@@ -102,7 +102,7 @@
   </header>
 
   <!-- ─── MAIN CONTENT ─── -->
-  <main class="max-w-4xl mx-auto px-6 pb-24">
+  <main class="max-w-6xl mx-auto px-6 pb-24">
 
     <!-- Speaking Tasks Section -->
     <section class="mb-16">
@@ -223,23 +223,25 @@
       };
       const color = colors[taskNum] || colors[1];
       card.innerHTML = `
-        <div class="flex items-start justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg ${color.bg} ${color.text} flex items-center justify-center font-display font-semibold">
-              ${taskNum}
+        <div class="bg-white rounded-2xl border ${color.border} p-6 h-full transition-all hover:shadow-lg">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg ${color.bg} ${color.text} flex items-center justify-center font-display font-semibold">
+                ${taskNum}
+              </div>
+              <div>
+                <div class="font-display text-lg text-ink">${escapeHtml(task.name)}</div>
+                <div class="text-xs text-slate">Speaking Task</div>
+              </div>
             </div>
-            <div>
-              <div class="font-display text-lg text-ink">${escapeHtml(task.name)}</div>
-              <div class="text-xs text-slate">Speaking Task</div>
-            </div>
+            <svg class="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
           </div>
-          <svg class="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-        <div class="flex gap-2 text-xs">
-          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">Prep ${task.prep}s</span>
-          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">Speak ${task.speak}s</span>
+          <div class="flex gap-2 text-xs">
+            <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">Prep ${task.prep}s</span>
+            <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">Speak ${task.speak}s</span>
+          </div>
         </div>
       `;
       card.addEventListener("click", () => openModal(Number(id)));
@@ -254,23 +256,25 @@
       const taskNum = Number(id);
       const color = { bg: 'bg-violet2-light', text: 'text-violet2-dark', border: 'border-violet2/20' };
       card.innerHTML = `
-        <div class="flex items-start justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg ${color.bg} ${color.text} flex items-center justify-center font-display font-semibold">
-              W${taskNum - 8}
+        <div class="bg-white rounded-2xl border ${color.border} p-6 h-full transition-all hover:shadow-lg">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg ${color.bg} ${color.text} flex items-center justify-center font-display font-semibold">
+                W${taskNum - 8}
+              </div>
+              <div>
+                <div class="font-display text-lg text-ink">${escapeHtml(task.name)}</div>
+                <div class="text-xs text-slate">Writing Task</div>
+              </div>
             </div>
-            <div>
-              <div class="font-display text-lg text-ink">${escapeHtml(task.name)}</div>
-              <div class="text-xs text-slate">Writing Task</div>
-            </div>
+            <svg class="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
           </div>
-          <svg class="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-        <div class="flex gap-2 text-xs">
-          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">28 min</span>
-          <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">${escapeHtml(task.label)}</span>
+          <div class="flex gap-2 text-xs">
+            <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">27 min</span>
+            <span class="px-3 py-1 rounded-full ${color.bg} ${color.text}">${escapeHtml(task.label)}</span>
+          </div>
         </div>
       `;
       card.addEventListener("click", () => openModal(Number(id)));
