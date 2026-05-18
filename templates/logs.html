@@ -223,7 +223,7 @@
         const timeStr = d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
         const userName = entry.user_name || "Unknown";
         const sessionLink = entry.session_id
-          ? `<a href="record.html?session=${entry.session_id}" class="tl-card-detail hover:underline">${escapeHtml(entry.session_name || "Session")}</a>`
+          ? `<a href="record?session=${entry.session_id}" class="tl-card-detail hover:underline">${escapeHtml(entry.session_name || "Session")}</a>`
           : escapeHtml(entry.session_name || "—");
 
         if (entry.type === "session_started") {
@@ -278,7 +278,7 @@
 
       [desktopBtn, mobileBtn].forEach(btn => {
         btn.addEventListener('click', () => {
-          window.location.href = '/login.html';
+          window.location.href = '/login';
         });
       });
     }

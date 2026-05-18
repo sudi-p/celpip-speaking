@@ -10,7 +10,7 @@
   <div class="container">
     <header>
       <h1 id="page-title">Loading…</h1>
-      <a href="history.html">&larr; History</a>
+      <a href="{% url 'history' %}">&larr; History</a>
     </header>
 
     <div id="error-area" class="error-msg"></div>
@@ -23,7 +23,7 @@
       const params    = new URLSearchParams(location.search);
       const id        = params.get("id");
       const sessionId = params.get("session");
-      const backHref  = sessionId ? `history.html?session=${sessionId}` : "history.html";
+      const backHref  = sessionId ? `{% url 'history' %}?session=${sessionId}` : "{% url 'history' %}";
       document.querySelector("header a").href = backHref;
 
       if (!id) {

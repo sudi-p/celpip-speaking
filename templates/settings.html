@@ -332,7 +332,7 @@
       try {
         const resp = await fetch('/api/auth/me', { credentials: 'include' });
         if (!resp.ok) {
-          window.location.href = '/login.html';
+          window.location.href = '/login';
           return;
         }
         const user = await resp.json();
@@ -556,7 +556,7 @@
 
       [desktopBtn, mobileBtn].forEach(btn => {
         btn.addEventListener('click', () => {
-          window.location.href = '/login.html';
+          window.location.href = '/login';
         });
       });
     }

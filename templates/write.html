@@ -8,7 +8,7 @@
   <div class="task-header" id="task-header" style="display:none">
     <div class="task-header-top">
       <h1 id="task-title"></h1>
-      <a href="history.html">History &rarr;</a>
+      <a href="{% url 'history' %}">History &rarr;</a>
     </div>
     <div id="question-panel" style="display:none">
       <div class="question-label">Question</div>
@@ -394,7 +394,7 @@ function renderAttemptCard(attempt, num, prevScore) {
       <button class="btn btn-secondary"
         style="font-size:.82rem;padding:.35rem .85rem"
         onclick="doReevaluate(${attempt.id}, this)">Re-evaluate</button>
-      <a href="detail.html?id=${attempt.id}&session=${sessionId}"
+      <a href="detail?id=${attempt.id}&session=${sessionId}"
          class="btn btn-secondary"
          style="font-size:.82rem;padding:.35rem .85rem">View Detail</a>
     </div>

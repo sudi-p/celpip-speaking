@@ -10,23 +10,23 @@ urlpatterns = [
     path("api/", include("attempts.urls")),
 
     # Auth pages
-    path("login.html", TemplateView.as_view(template_name="login.html")),
-    path("register.html", TemplateView.as_view(template_name="register.html")),
+    path("login", TemplateView.as_view(template_name="login.html"), name="login"),
+    path("register", TemplateView.as_view(template_name="register.html"), name="register"),
 
     # Frontend HTML pages — served through Django's template engine
     path("", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"}), name="index"),
-    path("index.html", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"})),
-    path("record.html", TemplateView.as_view(template_name="record.html", extra_context={"active_page": "record"})),
-    path("history.html", TemplateView.as_view(template_name="history.html", extra_context={"active_page": "history"})),
-    path("detail.html", TemplateView.as_view(template_name="detail.html", extra_context={"active_page": "record"})),
-    path("logs.html", TemplateView.as_view(template_name="logs.html", extra_context={"active_page": "logs"})),
-    path("write.html", TemplateView.as_view(template_name="write.html", extra_context={"active_page": "write"})),
-    path("questions.html", TemplateView.as_view(template_name="questions.html", extra_context={"active_page": "questions"})),
-    path("vocab.html", TemplateView.as_view(template_name="vocab.html", extra_context={"active_page": "vocab"})),
-    path("settings.html", TemplateView.as_view(template_name="settings.html", extra_context={"active_page": "settings"})),
+    path("index", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"}), name="index_html"),
+    path("record", TemplateView.as_view(template_name="record.html", extra_context={"active_page": "record"}), name="record"),
+    path("history", TemplateView.as_view(template_name="history.html", extra_context={"active_page": "history"}), name="history"),
+    path("detail", TemplateView.as_view(template_name="detail.html", extra_context={"active_page": "record"}), name="detail"),
+    path("logs", TemplateView.as_view(template_name="logs.html", extra_context={"active_page": "logs"}), name="logs"),
+    path("write", TemplateView.as_view(template_name="write.html", extra_context={"active_page": "write"}), name="write"),
+    path("questions", TemplateView.as_view(template_name="questions.html", extra_context={"active_page": "questions"}), name="questions"),
+    path("vocab", TemplateView.as_view(template_name="vocab.html", extra_context={"active_page": "vocab"}), name="vocab"),
+    path("settings", TemplateView.as_view(template_name="settings.html", extra_context={"active_page": "settings"}), name="settings"),
 
     # Study notes
-    path("notes", TemplateView.as_view(template_name="notes.html", extra_context={"active_page": "notes"})),
+    path("notes", TemplateView.as_view(template_name="notes.html", extra_context={"active_page": "notes"}), name="notes"),
 
     # CELPIP task study guides
     path("speaking-task-1", TemplateView.as_view(template_name="speaking task 1.html", extra_context={"active_page": "task_1"}), name="speaking_task_1"),
