@@ -6,7 +6,20 @@
 <title>CELPIP Reading — A Study Companion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"DM Serif Display"', 'serif'],
+          body: ['"DM Sans"', 'sans-serif'],
+        },
+      },
+    },
+  }
+</script>
 <style>
   :root{
     --ink:#1a1410;
@@ -19,7 +32,7 @@
     --rule:#3a2f25;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--paper);color:var(--ink);font-family:'Inter Tight',sans-serif;line-height:1.55}
+  html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.55}
   body{
     background-image:
       radial-gradient(ellipse at top left, rgba(200,68,42,.06), transparent 50%),
@@ -46,25 +59,25 @@
   }
   .ribbon{
     display:flex;justify-content:space-between;align-items:center;
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;
+    font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.15em;
     text-transform:uppercase;color:var(--mute);
     border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:18px;
   }
   .ribbon span:nth-child(2){color:var(--accent)}
   .title{
-    font-family:'Fraunces',serif;font-weight:900;
+    font-family:'DM Serif Display',serif;font-weight:900;
     font-size:clamp(40px,7vw,86px);line-height:.92;letter-spacing:-.02em;
     margin-bottom:8px;
   }
   .title em{font-style:italic;font-weight:400;color:var(--accent)}
   .sub{
-    font-family:'Fraunces',serif;font-style:italic;font-size:clamp(16px,2vw,20px);
+    font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(16px,2vw,20px);
     color:var(--mute);max-width:620px;margin-top:6px;
   }
   .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
   .pill{
     border:1.5px solid var(--ink);padding:5px 11px;font-size:11px;
-    font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;
+    font-family:'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;
     background:var(--paper);
   }
   .pill.accent{background:var(--ink);color:var(--paper)}
@@ -78,8 +91,8 @@
     padding:18px 16px;border-right:1.5px solid var(--ink);background:var(--paper);
   }
   .stat:last-child{border-right:none}
-  .stat-num{font-family:'Fraunces',serif;font-size:46px;font-weight:900;line-height:1;color:var(--accent)}
-  .stat-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;
+  .stat-num{font-family:'DM Serif Display',serif;font-size:46px;font-weight:900;line-height:1;color:var(--accent)}
+  .stat-lbl{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.12em;
     text-transform:uppercase;color:var(--mute);margin-top:8px}
 
   /* ---------- Section nav ---------- */
@@ -92,7 +105,7 @@
   .navbar-inner{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
   .nav-btn{
     background:transparent;border:1.5px solid var(--ink);color:var(--ink);
-    padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;
+    padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:11px;
     letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
     transition:all .18s ease;
   }
@@ -103,15 +116,15 @@
   .section{margin-bottom:64px}
   .section-head{display:flex;align-items:baseline;gap:18px;margin-bottom:24px;flex-wrap:wrap}
   .section-num{
-    font-family:'Fraunces',serif;font-size:90px;font-weight:900;line-height:.85;
+    font-family:'DM Serif Display',serif;font-size:90px;font-weight:900;line-height:.85;
     color:var(--accent);font-style:italic;
   }
   .section-title-wrap h2{
-    font-family:'Fraunces',serif;font-weight:700;font-size:clamp(28px,4vw,42px);
+    font-family:'DM Serif Display',serif;font-weight:700;font-size:clamp(28px,4vw,42px);
     letter-spacing:-.01em;line-height:1;
   }
   .section-title-wrap .meta{
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.1em;
     text-transform:uppercase;color:var(--mute);margin-top:6px;
   }
 
@@ -123,17 +136,17 @@
   .task-bar{
     display:flex;justify-content:space-between;align-items:center;
     background:var(--ink);color:var(--paper);padding:14px 20px;
-    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:.1em;
     text-transform:uppercase;
   }
   .task-bar span:last-child{color:var(--accent-3)}
   .task-body{padding:24px 22px}
   .task h3{
-    font-family:'Fraunces',serif;font-weight:700;font-size:26px;
+    font-family:'DM Serif Display',serif;font-weight:700;font-size:26px;
     margin-bottom:8px;line-height:1.15;
   }
   .task .tagline{
-    font-family:'Fraunces',serif;font-style:italic;color:var(--mute);
+    font-family:'DM Serif Display',serif;font-style:italic;color:var(--mute);
     margin-bottom:18px;font-size:16px;
   }
 
@@ -141,7 +154,7 @@
   .tabs{display:flex;gap:0;border-bottom:1.5px solid var(--ink);margin-bottom:18px;flex-wrap:wrap}
   .tab{
     background:transparent;border:none;border-bottom:3px solid transparent;
-    padding:10px 16px;cursor:pointer;font-family:'JetBrains Mono',monospace;
+    padding:10px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;
     font-size:11px;letter-spacing:.08em;text-transform:uppercase;
     color:var(--mute);transition:all .15s;margin-bottom:-1.5px;
   }
@@ -160,7 +173,7 @@
   .steps li::before{
     content:counter(step,decimal-leading-zero);
     position:absolute;left:14px;top:12px;
-    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+    font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;
     color:var(--accent);letter-spacing:.05em;
   }
   .steps li strong{font-weight:600;color:var(--ink)}
@@ -172,7 +185,7 @@
     position:relative;
   }
   .tip-head{
-    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;
+    font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.12em;
     text-transform:uppercase;color:var(--accent);margin-bottom:6px;
   }
   .tip-body{font-size:14.5px;line-height:1.5}
@@ -182,7 +195,7 @@
     background:#fff5e6;border:1.5px dashed var(--accent);padding:16px 18px;margin-top:14px;
   }
   .pitfalls-title{
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
+    font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.12em;
     text-transform:uppercase;color:var(--accent);margin-bottom:8px;
   }
   .pitfalls ul{list-style:none;display:grid;gap:6px;font-size:14.5px}
@@ -195,20 +208,20 @@
     margin:18px 0;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
   }
   .timer-display{
-    font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:700;
+    font-family:'DM Sans',sans-serif;font-size:44px;font-weight:700;
     letter-spacing:-.02em;min-width:170px;
   }
   .timer-controls{display:flex;gap:8px;flex-wrap:wrap}
   .timer-btn{
     background:var(--paper);color:var(--ink);border:none;padding:8px 16px;
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.1em;
     text-transform:uppercase;cursor:pointer;font-weight:700;
   }
   .timer-btn:hover{background:var(--accent-3)}
   .timer-presets{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .preset{
     background:transparent;color:var(--paper);border:1px solid var(--paper);
-    padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;
+    padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:10px;
     cursor:pointer;letter-spacing:.08em;
   }
   .preset:hover,.preset.active{background:var(--paper);color:var(--accent-2)}
@@ -219,12 +232,12 @@
     margin-top:24px;
   }
   .quiz-head{
-    font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin-bottom:6px;
+    font-family:'DM Serif Display',serif;font-size:28px;font-weight:700;margin-bottom:6px;
   }
-  .quiz-sub{font-family:'Fraunces',serif;font-style:italic;color:var(--mute);margin-bottom:18px}
+  .quiz-sub{font-family:'DM Serif Display',serif;font-style:italic;color:var(--mute);margin-bottom:18px}
   .q-card{background:var(--paper);border:1.5px solid var(--ink);padding:16px;margin-bottom:14px}
   .q-num{
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.1em;
     color:var(--accent);text-transform:uppercase;margin-bottom:6px;
   }
   .q-text{font-weight:500;margin-bottom:12px}
@@ -243,7 +256,7 @@
   }
   .q-explain.show{display:block}
   .quiz-score{
-    margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:13px;
+    margin-top:14px;font-family:'DM Sans',sans-serif;font-size:13px;
     letter-spacing:.06em;text-align:center;padding:12px;background:var(--ink);color:var(--paper);
   }
 
@@ -252,7 +265,7 @@
     background:var(--paper);border:2px solid var(--ink);padding:24px 22px;margin-top:16px;
   }
   .checklist h3{
-    font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:14px;
+    font-family:'DM Serif Display',serif;font-size:24px;font-weight:700;margin-bottom:14px;
   }
   .check-item{
     display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--rule);
@@ -277,7 +290,7 @@
   }
   .vocab-card:hover{background:var(--paper-2);transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
   .vocab-word{
-    font-family:'Fraunces',serif;font-weight:700;font-size:18px;color:var(--accent);
+    font-family:'DM Serif Display',serif;font-weight:700;font-size:18px;color:var(--accent);
     margin-bottom:2px;
   }
   .vocab-meaning{font-size:14px;color:var(--mute);display:none}
@@ -287,7 +300,7 @@
   /* ---------- Footer ---------- */
   .footer{
     border-top:2px solid var(--ink);margin-top:60px;padding-top:24px;
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
+    font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.08em;
     text-transform:uppercase;color:var(--mute);text-align:center;
   }
 
@@ -303,6 +316,8 @@
 </style>
 </head>
 <body>
+
+  {% include "partials/navbar.html" %}
 <div class="wrap">
 
   <!-- ============ MASTHEAD ============ -->
@@ -601,7 +616,7 @@
     </div>
 
     <div class="checklist">
-      <h3>Pre-Test Checklist <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mute);font-weight:400">— tap to mark done</span></h3>
+      <h3>Pre-Test Checklist <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--mute);font-weight:400">— tap to mark done</span></h3>
       <div class="check-item" data-key="c1"><div class="check-box"></div><div class="check-text">Take at least 3 full-length timed practice tests to internalize pacing.</div></div>
       <div class="check-item" data-key="c2"><div class="check-box"></div><div class="check-text">Read one Canadian news article daily (CBC, Globe and Mail) — builds context and vocabulary.</div></div>
       <div class="check-item" data-key="c3"><div class="check-box"></div><div class="check-text">Practice scanning skills: find a name, date, or fact in a long article within 20 seconds.</div></div>
@@ -613,42 +628,42 @@
     </div>
 
     <div style="margin-top:24px">
-      <h3 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:10px">Vocabulary You'll See Often</h3>
-      <p style="color:var(--mute);font-style:italic;font-family:'Fraunces',serif;margin-bottom:12px">Tap a card to reveal its meaning.</p>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;font-weight:700;margin-bottom:10px">Vocabulary You'll See Often</h3>
+      <p style="color:var(--mute);font-style:italic;font-family:'DM Serif Display',serif;margin-bottom:12px">Tap a card to reveal its meaning.</p>
       <div class="vocab-grid" id="vocabGrid">
         <!-- populated by JS -->
       </div>
     </div>
 
     <div style="margin-top:32px">
-      <h3 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:14px">Time Budget at a Glance</h3>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;font-weight:700;margin-bottom:14px">Time Budget at a Glance</h3>
       <div style="border:2px solid var(--ink);background:var(--paper)">
-        <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase">
+        <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;background:var(--ink);color:var(--paper);font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase">
           <div style="padding:10px 14px">Task</div><div style="padding:10px 14px">Focus</div><div style="padding:10px 14px;text-align:right">Questions</div><div style="padding:10px 14px;text-align:right">Time</div>
         </div>
         <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;border-bottom:1px solid var(--rule)">
-          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">01</div>
+          <div style="padding:12px 14px;font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--accent)">01</div>
           <div style="padding:12px 14px">Email + reply with blanks</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">11</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~11 min</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">11</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">~11 min</div>
         </div>
         <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;border-bottom:1px solid var(--rule)">
-          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">02</div>
+          <div style="padding:12px 14px;font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--accent)">02</div>
           <div style="padding:12px 14px">Diagram + email application</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">8</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~9 min</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">8</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">~9 min</div>
         </div>
         <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;border-bottom:1px solid var(--rule)">
-          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">03</div>
+          <div style="padding:12px 14px;font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--accent)">03</div>
           <div style="padding:12px 14px">4-paragraph informational article</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">9</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~13 min</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">9</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">~13 min</div>
         </div>
         <div style="display:grid;grid-template-columns:60px 1fr 100px 100px">
-          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">04</div>
+          <div style="padding:12px 14px;font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--accent)">04</div>
           <div style="padding:12px 14px">Opinion article + reader comment</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">10</div>
-          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~13 min</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">10</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'DM Sans',sans-serif">~13 min</div>
         </div>
       </div>
     </div>
