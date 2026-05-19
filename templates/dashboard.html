@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Practice Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .hero-line { position: relative; display: inline-block; }
+    .hero-line::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: #c9a84c; border-radius: 2px; }
+    .metric-card { background: white; border: 1px solid #eceae3; border-radius: 1.5rem; padding: 1.5rem; }
+    .metric-value { font-size: 2.5rem; font-weight: 700; color: #0f0f0f; }
+    .metric-label { font-size: 0.875rem; color: #6b6a64; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-avg { font-size: 1.25rem; font-weight: 600; margin-top: 0.5rem; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  {% include 'partials/navbar.html' %}
+
+  <!-- ─── HERO ─── -->
+  <header class="max-w-6xl mx-auto px-6 pt-16 pb-8">
+    <div class="animate-fade-up">
+      <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-4">Your Performance</p>
+      <h1 class="font-display text-5xl md:text-6xl leading-tight text-ink mb-3">
+        <span class="hero-line">Dashboard</span>
+      </h1>
+      <p class="text-lg text-slate max-w-xl leading-relaxed">
+        Track your progress across speaking and writing tasks. Select a month to view your metrics.
+      </p>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="max-w-6xl mx-auto px-6 pb-24">
+    <!-- Error message -->
+    <div id="error-area" class="mb-4"></div>
+
+    <!-- Month selector -->
+    <div class="mb-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+      <label for="month-input" class="text-sm font-semibold text-slate">Select Month:</label>
+      <input
+        type="month"
+        id="month-input"
+        class="px-4 py-2 border border-mist rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+      />
+    </div>
+
+    <!-- Metrics grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <!-- Speaking Count -->
+      <div class="metric-card animate-fade-in">
+        <div class="mb-4">
+          <svg class="w-8 h-8 text-sapphire" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4" />
+          </svg>
+        </div>
+        <div class="metric-value" id="speaking-count">0</div>
+        <div class="metric-label">Speaking Tasks</div>
+        <div class="metric-avg text-sapphire" id="speaking-avg">—</div>
+      </div>
+
+      <!-- Writing Count -->
+      <div class="metric-card animate-fade-in" style="animation-delay: 0.1s">
+        <div class="mb-4">
+          <svg class="w-8 h-8 text-violet2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h6m-11 0a2 2 0 012-2h6a2 2 0 012 2M7 7a2 2 0 012-2h6a2 2 0 012 2m0 0H5m16 0a2 2 0 00-2-2h-6a2 2 0 00-2 2m0 0v10a2 2 0 002 2h6a2 2 0 002-2V7" />
+          </svg>
+        </div>
+        <div class="metric-value" id="writing-count">0</div>
+        <div class="metric-label">Writing Tasks</div>
+        <div class="metric-avg text-violet2" id="writing-avg">—</div>
+      </div>
+
+      <!-- Total Attempts -->
+      <div class="metric-card animate-fade-in" style="animation-delay: 0.2s">
+        <div class="mb-4">
+          <svg class="w-8 h-8 text-emerald2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <div class="metric-value" id="total-attempts">0</div>
+        <div class="metric-label">Total Attempts</div>
+      </div>
+
+      <!-- Overall Average -->
+      <div class="metric-card animate-fade-in" style="animation-delay: 0.3s">
+        <div class="mb-4">
+          <svg class="w-8 h-8 text-amber2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="metric-value" id="overall-avg">—</div>
+        <div class="metric-label">Overall Average</div>
+      </div>
+    </div>
+
+    <!-- Summary message -->
+    <div id="summary-message" class="text-center text-slate mb-8">
+      <p>Select a month to view your metrics for that period.</p>
+    </div>
+  </main>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-mist bg-fog py-8 px-6 text-center">
+    <p class="text-xs text-slate">CELPIP Practice Dashboard · Monitor your progress and celebrate your improvements.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const monthInput = document.getElementById("month-input");
+    const errorArea = document.getElementById("error-area");
+
+    // Set month input to current month
+    const now = new Date();
+    const currentMonth = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+    monthInput.value = currentMonth;
+
+    async function loadMetrics(month) {
+      try {
+        errorArea.innerHTML = "";
+        const resp = await fetch(`/api/dashboard/metrics?month=${month}`, {
+          credentials: "include"
+        });
+
+        if (!resp.ok) {
+          throw new Error("Failed to load metrics");
+        }
+
+        const data = await resp.json();
+
+        // Update speaking metrics
+        document.getElementById("speaking-count").textContent = data.speaking.count;
+        const speakingAvg = data.speaking.avg_score;
+        document.getElementById("speaking-avg").textContent = speakingAvg !== null
+          ? `Avg: ${speakingAvg}/12`
+          : "—";
+
+        // Update writing metrics
+        document.getElementById("writing-count").textContent = data.writing.count;
+        const writingAvg = data.writing.avg_score;
+        document.getElementById("writing-avg").textContent = writingAvg !== null
+          ? `Avg: ${writingAvg}/12`
+          : "—";
+
+        // Update total attempts
+        document.getElementById("total-attempts").textContent = data.total_attempts;
+
+        // Update overall average
+        const overallAvg = data.overall_avg_score;
+        document.getElementById("overall-avg").textContent = overallAvg !== null
+          ? `${overallAvg}/12`
+          : "—";
+
+        // Update summary message
+        const summaryMsg = document.getElementById("summary-message");
+        const monthName = new Date(month + "-01").toLocaleDateString("en-US", { month: "long", year: "numeric" });
+        if (data.total_attempts === 0) {
+          summaryMsg.innerHTML = `<p>No practice sessions in <strong>${monthName}</strong>. Start practicing to build your metrics!</p>`;
+        } else {
+          summaryMsg.innerHTML = `<p>Great progress in <strong>${monthName}</strong>! Keep up the practice to continue improving.</p>`;
+        }
+      } catch (e) {
+        errorArea.innerHTML = `<div class="bg-rose2-light border border-rose2 text-rose2-dark px-4 py-3 rounded-lg text-sm">Error loading metrics: ${escapeHtml(e.message)}</div>`;
+      }
+    }
+
+    // Load metrics when month changes
+    monthInput.addEventListener("change", (e) => {
+      loadMetrics(e.target.value);
+    });
+
+    // Load initial metrics
+    loadMetrics(currentMonth);
+  </script>
+</body>
+</html>

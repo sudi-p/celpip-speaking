@@ -10,6 +10,7 @@
 
     <!-- Desktop Navigation -->
     <div class="hidden md:flex items-center gap-6">
+      <a href="/dashboard" class="auth-only text-sm text-slate hover:text-ink transition-colors" style="display:none">Dashboard</a>
       <a href="/" class="text-sm text-slate hover:text-ink transition-colors">Tasks</a>
       <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors">Study Notes</a>
       <a href="/vocab" class="btext-sm text-slate hover:text-ink transition-colors">Vocab</a>
@@ -56,6 +57,7 @@
           </svg>
         </button>
         <div id="mobile-dropdown-menu" class="hidden pl-4 flex flex-col gap-1 mt-1">
+          <a href="/dashboard.html" class="auth-only text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist" style="display:none">Dashboard</a>
           <a href="/history.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">History</a>
           <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Questions</a>
           <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Vocab</a>
@@ -149,5 +151,23 @@
 
     // Update auth buttons based on login status
     updateAuthButtons();
+
+    // Show/hide auth-only links based on login status
+    async function updateAuthLinks() {
+      try {
+        const resp = await fetch('/api/auth/me', { credentials: 'include' });
+        const authOnlyLinks = document.querySelectorAll('.auth-only');
+        if (resp.ok) {
+          authOnlyLinks.forEach(link => link.style.display = 'block');
+        } else {
+          authOnlyLinks.forEach(link => link.style.display = 'none');
+        }
+      } catch {
+        const authOnlyLinks = document.querySelectorAll('.auth-only');
+        authOnlyLinks.forEach(link => link.style.display = 'none');
+      }
+    }
+
+    updateAuthLinks();
   });
 </script>

@@ -1166,3 +1166,61 @@ def vocab_quiz_count(request):
 
     html = f'<p style="font-size: 1.1rem; color: #4f46e5; font-weight: 600; margin-top: 1rem; margin-bottom: 1rem;"><span style="font-size: 1.5rem;">{total}</span> questions for <strong>{task_label}</strong></p>'
     return HttpResponse(html)
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+@require_auth
+def dashboard_metrics(request):
+    """Get dashboard metrics (speaking/writing counts and avg scores) for a specific month"""
+    from django.db.models import Count, Avg
+    from datetime import datetime, timedelta
+
+    month_str = request.GET.get("month")
+    if not month_str:
+        # Default to current month
+        month_str = datetime.now().strftime("%Y-%m")
+
+    try:
+        year, month = map(int, month_str.split("-"))
+        start_date = datetime(year, month, 1)
+        # Get last day of month
+        if month == 12:
+            end_date = datetime(year + 1, 1, 1)
+        else:
+            end_date = datetime(year, month + 1, 1)
+    except (ValueError, AttributeError):
+        return JsonResponse({"error": "Invalid month format. Use YYYY-MM"}, status=400)
+
+    # Get user attempts for the month
+    attempts = Attempt.objects.filter(
+        user=request.user,
+        created_at__gte=start_date,
+        created_at__lt=end_date
+    )
+
+    # Speaking tasks (1-8)
+    speaking_attempts = attempts.filter(task_type="speaking")
+    writing_attempts = attempts.filter(task_type="writing")
+
+    speaking_count = speaking_attempts.count()
+    writing_count = writing_attempts.count()
+
+    speaking_avg = speaking_attempts.aggregate(Avg("score"))["score__avg"]
+    writing_avg = writing_attempts.aggregate(Avg("score"))["score__avg"]
+
+    overall_avg = attempts.aggregate(Avg("score"))["score__avg"]
+
+    return JsonResponse({
+        "month": month_str,
+        "speaking": {
+            "count": speaking_count,
+            "avg_score": round(speaking_avg, 1) if speaking_avg else None,
+        },
+        "writing": {
+            "count": writing_count,
+            "avg_score": round(writing_avg, 1) if writing_avg else None,
+        },
+        "total_attempts": attempts.count(),
+        "overall_avg_score": round(overall_avg, 1) if overall_avg else None,
+    })

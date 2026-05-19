@@ -39,4 +39,7 @@ urlpatterns = [
 
     # Vocab quiz
     path("vocab-quiz-count", views.vocab_quiz_count),
+
+    # Dashboard
+    path("dashboard/metrics", views.dashboard_metrics),
 ]
