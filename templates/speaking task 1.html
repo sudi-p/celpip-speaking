@@ -296,85 +296,8 @@
          PANE: VOCAB BANK
     ══════════════════════════════════════════ -->
     <div id="pane-vocab" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="empathy">Empathy</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="suggest">Suggest</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="reason">Reasoning</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="transition">Transition</button>
-      </div>
-
-      <div class="space-y-3">
-        <div class="vocab-word" data-category="empathy">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">That must be difficult/stressful/challenging</p>
-            <p class="text-xs text-slate">Shows understanding. "That must be stressful for you."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="empathy">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I understand/appreciate how you feel</p>
-            <p class="text-xs text-slate">Connects emotionally. "I understand how frustrating that is."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="suggest">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I would recommend/suggest</p>
-            <p class="text-xs text-slate">Professional suggestion. "I would recommend talking to your manager."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="suggest">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In your situation, I would</p>
-            <p class="text-xs text-slate">Personalized advice. "In your situation, I would prioritize sleep."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="reason">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Because/Since/As</p>
-            <p class="text-xs text-slate">Explains reasoning. "Do this because it will help you feel less overwhelmed."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="reason">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">This would help/benefit you by</p>
-            <p class="text-xs text-slate">Shows outcome. "This would help you by creating structure."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">First/Second/Additionally/Also</p>
-            <p class="text-xs text-slate">Connects suggestions. "First, I'd... Second, I'd..."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">To summarize/In summary</p>
-            <p class="text-xs text-slate">Concluding phrase. "To summarize, I think..."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="suggest">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I think/I believe you should</p>
-            <p class="text-xs text-slate">Gentle advice. "I think you should give yourself more time."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="empathy">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I'm confident you can</p>
-            <p class="text-xs text-slate">Encouragement. "I'm confident you can find a solution."</p>
-          </div>
-        </div>
-      </div>
+      <div id="vocab-filters" class="flex flex-wrap gap-2"></div>
+      <div id="vocab-content" class="space-y-4"></div>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -552,7 +475,61 @@
     <p class="text-xs text-slate/60">Great advice combines empathy, clear thinking, and practical suggestions. Show you understand the person's situation, offer concrete solutions with reasoning, and end with encouragement. That is what examiners want to hear.</p>
   </footer>
 
+  <script src="/vocab_data.js"></script>
   <script>
+    // Vocab bank rendering for Task 1
+    function initializeVocabBank() {
+      const vocabFilters = document.getElementById('vocab-filters');
+      const vocabContent = document.getElementById('vocab-content');
+
+      if (!vocabFilters) return;
+
+      // Get unique types for task 1
+      const task1Words = window.VOCAB.filter(v => v.task === '1');
+      const types = ['all', ...new Set(task1Words.map(v => v.type))];
+
+      // Create filter buttons
+      types.forEach(type => {
+        const btn = document.createElement('button');
+        btn.className = `vocab-filter-btn ${type === 'all' ? 'filter-active' : 'filter-inactive'} px-4 py-1.5 rounded-full border text-xs font-medium`;
+        btn.textContent = type === 'all' ? 'All Words' : type;
+        btn.dataset.vocabType = type;
+
+        btn.addEventListener('click', () => {
+          vocabFilters.querySelectorAll('.vocab-filter-btn').forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
+          renderVocabWords(type);
+        });
+
+        vocabFilters.appendChild(btn);
+      });
+
+      // Initial render
+      renderVocabWords('all');
+    }
+
+    function renderVocabWords(filterType) {
+      const vocabContent = document.getElementById('vocab-content');
+      let filtered = window.VOCAB.filter(v => v.task === '1');
+
+      if (filterType !== 'all') {
+        filtered = filtered.filter(v => v.type === filterType);
+      }
+
+      vocabContent.innerHTML = filtered.map(word => `
+        <div class="bg-white rounded-xl border border-mist p-4">
+          <p class="text-sm font-semibold text-ink mb-1">${word.word}</p>
+          <p class="text-xs text-slate mb-2"><strong>Meaning:</strong> ${word.meaning}</p>
+          <p class="text-xs text-slate italic"><strong>Example:</strong> "${word.example}"</p>
+          <span class="inline-block mt-3 text-xs font-medium text-sapphire bg-sapphire-light px-2 py-1 rounded">${word.type}</span>
+        </div>
+      `).join('');
+    }
+
     const tabBtns = document.querySelectorAll('.tab-btn');
     const panes = document.querySelectorAll('.pane');
 
@@ -581,41 +558,43 @@
       });
     });
 
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const vocabWords = document.querySelectorAll('.vocab-word');
-    const tipCards = document.querySelectorAll('.tip-card');
+    // Tips filtering (Pro Tips section only)
+    const tipPane = document.getElementById('pane-tips');
+    if (tipPane) {
+      const tipFilterBtns = tipPane.querySelectorAll('.filter-btn');
+      const tipCards = tipPane.querySelectorAll('.tip-card');
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const category = btn.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.remove('filter-active');
-          b.classList.add('filter-inactive');
-        });
-        btn.classList.add('filter-active');
-        btn.classList.remove('filter-inactive');
+      tipFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = btn.getAttribute('data-category');
+          tipFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
 
-        vocabWords.forEach(word => {
-          if (category === 'all' || word.getAttribute('data-category') === category) {
-            word.style.display = 'block';
-          } else {
-            word.style.display = 'none';
-          }
-        });
-
-        tipCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+          tipCards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
+    }
 
     document.getElementById('navbar-burger')?.addEventListener('click', function() {
       document.getElementById('navbar-menu')?.classList.toggle('hidden');
     });
+
+    // Initialize vocab bank on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeVocabBank);
+    } else {
+      initializeVocabBank();
+    }
   </script>
 
 </body>

@@ -12,12 +12,20 @@ window.VOCAB = [
   { word: "Remarkable", meaning: "Worthy of attention; striking", example: "Her progress was remarkable in just a few months.", type: "General", task: "0" },
 
   // ── Task 1: Giving Advice ──
-  { word: "Prudent", meaning: "Wise and careful in decision-making", example: "It's prudent to save money before making major purchases.", type: "Advice & Guidance", task: "1" },
-  { word: "Remedy", meaning: "A solution to a problem; a treatment", example: "The best remedy for stress is regular exercise.", type: "Advice & Guidance", task: "1" },
-  { word: "Elaborate", meaning: "To explain in detail; add more information", example: "Can you elaborate on your main point?", type: "Advice & Guidance", task: "1" },
-  { word: "Mitigate", meaning: "To make something less severe", example: "Wearing sunscreen helps mitigate sun damage.", type: "Advice & Guidance", task: "1" },
-  { word: "Feasible", meaning: "Possible to do; practicable", example: "The plan is feasible if we have enough budget.", type: "Advice & Guidance", task: "1" },
-  { word: "Advocate", meaning: "To recommend or support publicly", example: "I strongly advocate for investing in education.", type: "Advice & Guidance", task: "1" },
+  { word: "That must be difficult/stressful/challenging", meaning: "Shows understanding and empathy for the person's situation", example: "That must be stressful for you, balancing so many responsibilities at once.", type: "Empathy & Understanding", task: "1" },
+  { word: "I understand/appreciate how you feel", meaning: "Connects emotionally and validates their feelings", example: "I understand how frustrating that is when you've been working so hard.", type: "Empathy & Understanding", task: "1" },
+  { word: "I'm confident you can", meaning: "Encouragement and belief in their ability to succeed", example: "I'm confident you can find a solution that works for your situation.", type: "Empathy & Understanding", task: "1" },
+  { word: "I would recommend/suggest", meaning: "Professional and formal way to give suggestions", example: "I would recommend talking to your manager about flexible working arrangements.", type: "Suggestions & Advice", task: "1" },
+  { word: "In your situation, I would", meaning: "Personalized advice that shows you understand their specific context", example: "In your situation, I would prioritize getting enough sleep before anything else.", type: "Suggestions & Advice", task: "1" },
+  { word: "I think/I believe you should", meaning: "Gentle, humble way to offer advice without being preachy", example: "I think you should give yourself more credit for what you've already accomplished.", type: "Suggestions & Advice", task: "1" },
+  { word: "Because/Since/As", meaning: "Introduces reasoning and explains why advice will help", example: "You should create a schedule because it will help you manage your time better.", type: "Reasoning & Explanation", task: "1" },
+  { word: "This would help/benefit you by", meaning: "Shows the positive outcome or benefit of the suggestion", example: "This would help you by reducing stress and giving you a clearer plan to follow.", type: "Reasoning & Explanation", task: "1" },
+  { word: "First/Second/Additionally/Also", meaning: "Transitions that connect multiple pieces of advice logically", example: "First, I'd create a schedule. Second, I would talk to your manager. Additionally, try to set aside time for yourself.", type: "Transitions & Connectors", task: "1" },
+  { word: "To summarize/In summary", meaning: "Concluding phrases that recap main advice before ending", example: "To summarize, I think creating a schedule and having a conversation with your manager are your best options.", type: "Transitions & Connectors", task: "1" },
+  { word: "Prudent", meaning: "Wise and careful in decision-making", example: "It's prudent to save money before making major purchases.", type: "Wisdom & Judgment", task: "1" },
+  { word: "Remedy", meaning: "A solution to a problem; a treatment", example: "The best remedy for stress is regular exercise and adequate rest.", type: "Wisdom & Judgment", task: "1" },
+  { word: "Elaborate", meaning: "To explain in detail or provide more information", example: "Can you elaborate on why you think that approach would work best?", type: "Wisdom & Judgment", task: "1" },
+  { word: "Feasible", meaning: "Possible to do; practicable and achievable", example: "The plan is feasible if we have enough time and resources.", type: "Wisdom & Judgment", task: "1" },
 
   // ── Task 2: Personal Experience ──
   { word: "Exhilarating", meaning: "Thrilling and exciting", example: "Skydiving for the first time was absolutely exhilarating.", type: "Emotions & Reactions", task: "2" },
