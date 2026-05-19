@@ -434,7 +434,7 @@
     function navigate() {
       if (mState.pendingQuestion) sessionStorage.setItem("celpip_question", mState.pendingQuestion);
       else sessionStorage.removeItem("celpip_question");
-      const dest = WRITING_TASK_IDS.has(mState.taskId) ? "write.html" : "record.html";
+      const dest = WRITING_TASK_IDS.has(mState.taskId) ? "/write" : "/record";
       window.location.href = `${dest}?session=${mState.sessionId}`;
     }
 

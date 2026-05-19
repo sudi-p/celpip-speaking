@@ -415,7 +415,7 @@
       try {
         const s = await apiPost("/sessions", { task_id: taskId, question: questionText });
         sessionStorage.setItem("celpip_question", questionText);
-        const dest = WRITING_TASK_IDS.has(taskId) ? "write.html" : "record.html";
+        const dest = WRITING_TASK_IDS.has(taskId) ? "/write" : "/record";
         window.location.href = `${dest}?session=${s.id}`;
       } catch (e) {
         document.getElementById("error-area").innerHTML = `
@@ -544,7 +544,7 @@
 
     function navigateToPractice(sessionId) {
       sessionStorage.setItem("celpip_question", qState.text);
-      const dest = WRITING_TASK_IDS.has(qState.taskId) ? "write.html" : "record.html";
+      const dest = WRITING_TASK_IDS.has(qState.taskId) ? "/write" : "/record";
       window.location.href = `${dest}?session=${sessionId}`;
     }
 
