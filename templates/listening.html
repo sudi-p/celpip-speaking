@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CELPIP Listening — Interactive Prep Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1814;
+    --paper:#f4efe6;
+    --paper-2:#ebe3d3;
+    --accent:#c1432a;
+    --accent-2:#1f4d3f;
+    --gold:#b8893a;
+    --rule:#1a1814;
+    --muted:#6b6356;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'Inter Tight',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  body{
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(193,67,42,.05), transparent 40%),
+      radial-gradient(circle at 80% 60%, rgba(31,77,63,.06), transparent 45%);
+    min-height:100vh;
+  }
+  .grain{
+    position:fixed;inset:0;pointer-events:none;opacity:.35;z-index:1;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 28px 120px;position:relative;z-index:2}
+
+  /* MASTHEAD */
+  .masthead{border-top:3px double var(--ink);border-bottom:3px double var(--ink);padding:18px 0;margin-bottom:34px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+  .masthead .vol{color:var(--accent)}
+  .title-block{text-align:center;margin:30px 0 14px}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1.title{
+    font-family:'Fraunces',serif;font-weight:300;font-size:clamp(48px,8vw,108px);
+    line-height:.92;letter-spacing:-.03em;
+  }
+  h1.title em{font-style:italic;font-weight:400;color:var(--accent-2)}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:20px;margin-top:18px;color:var(--muted);max-width:640px;margin-left:auto;margin-right:auto}
+  .rule{border-bottom:1px solid var(--ink);margin:46px 0 30px}
+  .rule.thick{border-bottom:2px solid var(--ink)}
+
+  /* OVERVIEW BAR */
+  .overview{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--ink);
+    background:var(--paper-2);
+  }
+  .overview .cell{padding:18px 20px;border-right:1px solid var(--ink)}
+  .overview .cell:last-child{border-right:none}
+  .overview .label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .overview .val{font-family:'Fraunces',serif;font-size:28px;font-weight:400}
+  .overview .val small{font-size:13px;color:var(--muted);font-weight:400}
+  @media(max-width:720px){.overview{grid-template-columns:repeat(2,1fr)}.overview .cell:nth-child(2){border-right:none}.overview .cell:nth-child(1),.overview .cell:nth-child(2){border-bottom:1px solid var(--ink)}}
+
+  /* SECTION HEAD */
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin:60px 0 22px}
+  .sec-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:.2em}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(28px,4vw,42px);line-height:1.05;letter-spacing:-.01em}
+  .sec-head h2 em{font-style:italic;color:var(--accent-2)}
+
+  /* TASK CARD */
+  .task{
+    border:1px solid var(--ink);background:#faf6ec;margin:22px 0;overflow:hidden;
+    box-shadow:6px 6px 0 var(--ink);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .task:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 var(--ink)}
+  .task-header{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:22px 26px;cursor:pointer;
+    background:linear-gradient(180deg,#faf6ec,#f1ead8);border-bottom:1px solid var(--ink);
+  }
+  .task-header .ttl{flex:1}
+  .task-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:4px 10px;margin-bottom:10px}
+  .task-tag.alt{background:var(--accent)}
+  .task-tag.alt2{background:var(--accent-2)}
+  .task-tag.alt3{background:var(--gold);color:var(--ink)}
+  .task-header h3{font-family:'Fraunces',serif;font-weight:400;font-size:26px;line-height:1.15}
+  .task-header h3 em{font-style:italic;color:var(--accent)}
+  .task-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px}
+  .toggle{
+    font-family:'JetBrains Mono',monospace;font-size:24px;border:1px solid var(--ink);width:40px;height:40px;
+    display:grid;place-items:center;background:var(--paper);flex-shrink:0;transition:transform .3s ease, background .2s ease;
+  }
+  .task.open .toggle{transform:rotate(45deg);background:var(--accent);color:var(--paper)}
+  .task-body{max-height:0;overflow:hidden;transition:max-height .5s ease}
+  .task.open .task-body{max-height:6000px}
+  .task-inner{padding:28px 26px 32px}
+
+  /* CONTENT BLOCKS */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media(max-width:720px){.grid-2{grid-template-columns:1fr}}
+  .block{padding:18px 20px;border:1px dashed var(--ink);background:rgba(255,255,255,.4)}
+  .block h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;color:var(--accent)}
+  .block.green h4{color:var(--accent-2)}
+  .block ul{list-style:none}
+  .block li{padding-left:22px;position:relative;margin-bottom:10px;font-size:15px}
+  .block li::before{content:'→';position:absolute;left:0;color:var(--accent);font-weight:600}
+  .block.green li::before{color:var(--accent-2)}
+
+  .approach{margin:22px 0}
+  .approach h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+  .step{padding:16px;background:var(--paper-2);border-left:4px solid var(--accent);position:relative}
+  .step .n{font-family:'Fraunces',serif;font-size:34px;font-weight:300;color:var(--accent);line-height:1;font-style:italic}
+  .step .t{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:6px 0}
+  .step p{font-size:14px}
+
+  .pullquote{
+    font-family:'Fraunces',serif;font-style:italic;font-size:22px;line-height:1.35;
+    border-left:3px solid var(--accent);padding:14px 22px;margin:24px 0;color:var(--ink);
+    background:linear-gradient(90deg,rgba(193,67,42,.08),transparent);
+  }
+  .pullquote::before{content:'“';font-size:42px;line-height:0;vertical-align:-18px;color:var(--accent);margin-right:4px}
+
+  /* TIPS LIST */
+  .tips{margin-top:18px}
+  .tips h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .tip{
+    display:flex;gap:14px;padding:14px 0;border-bottom:1px dotted var(--ink);
+  }
+  .tip:last-child{border-bottom:none}
+  .tip .badge{
+    flex-shrink:0;width:30px;height:30px;background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;
+    font-size:12px;display:grid;place-items:center;border-radius:50%;
+  }
+  .tip p{font-size:15px}
+  .tip strong{font-weight:600;color:var(--accent-2)}
+
+  /* GENERAL STRATEGY */
+  .strat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:22px}
+  .strat-card{
+    border:1px solid var(--ink);padding:22px;background:#faf6ec;position:relative;
+  }
+  .strat-card::before{
+    content:'';position:absolute;top:8px;left:8px;right:8px;bottom:8px;border:1px solid var(--ink);pointer-events:none;opacity:.3;
+  }
+  .strat-card h4{font-family:'Fraunces',serif;font-weight:400;font-style:italic;font-size:22px;margin-bottom:10px;color:var(--accent)}
+  .strat-card p{font-size:14px}
+
+  /* QUIZ */
+  .quiz{border:2px solid var(--ink);background:linear-gradient(135deg,#faf6ec,#f0e7d2);padding:30px;margin-top:30px}
+  .quiz h3{font-family:'Fraunces',serif;font-weight:400;font-size:28px;margin-bottom:8px}
+  .quiz h3 em{font-style:italic;color:var(--accent)}
+  .quiz .desc{color:var(--muted);font-size:14px;margin-bottom:22px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+  .q{margin:18px 0;padding:18px;background:var(--paper);border-left:4px solid var(--accent-2)}
+  .q .qnum{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.2em;margin-bottom:8px}
+  .q .qtext{font-family:'Fraunces',serif;font-size:18px;margin-bottom:14px}
+  .opts{display:grid;gap:8px}
+  .opt{
+    padding:10px 14px;border:1px solid var(--ink);background:var(--paper);cursor:pointer;font-size:14px;
+    transition:all .15s ease;font-family:'Inter Tight',sans-serif;text-align:left;
+  }
+  .opt:hover{background:var(--paper-2)}
+  .opt.correct{background:#cfe5d8;border-color:var(--accent-2);color:var(--accent-2);font-weight:600}
+  .opt.wrong{background:#f4d4cc;border-color:var(--accent);color:var(--accent);text-decoration:line-through}
+  .opt.disabled{cursor:default}
+  .explain{margin-top:12px;padding:12px;background:rgba(31,77,63,.08);border-left:3px solid var(--accent-2);font-size:14px;font-style:italic;display:none}
+  .explain.show{display:block}
+  .score{
+    margin-top:24px;padding:18px;text-align:center;border:2px dashed var(--ink);
+    font-family:'Fraunces',serif;font-size:24px;display:none;
+  }
+  .score.show{display:block}
+  .score em{font-style:italic;color:var(--accent)}
+
+  /* CHECKLIST */
+  .checklist{margin-top:30px;padding:26px;border:1px solid var(--ink);background:#faf6ec}
+  .checklist h3{font-family:'Fraunces',serif;font-weight:400;font-size:26px;margin-bottom:18px}
+  .checklist h3 em{font-style:italic;color:var(--accent)}
+  .check-item{
+    display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dotted var(--ink);cursor:pointer;
+    user-select:none;
+  }
+  .check-item:last-child{border-bottom:none}
+  .check-box{
+    flex-shrink:0;width:22px;height:22px;border:1.5px solid var(--ink);display:grid;place-items:center;
+    font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--paper);transition:all .2s ease;
+  }
+  .check-item.done .check-box{background:var(--accent-2);color:var(--paper);border-color:var(--accent-2)}
+  .check-item.done .check-text{text-decoration:line-through;color:var(--muted)}
+  .check-text{font-size:15px;padding-top:1px}
+  .progress-bar{margin-top:18px;height:6px;background:var(--paper-2);border:1px solid var(--ink);overflow:hidden}
+  .progress-fill{height:100%;background:var(--accent-2);width:0%;transition:width .4s ease}
+  .progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;margin-top:10px;color:var(--muted)}
+
+  /* FOOTER */
+  footer{
+    margin-top:80px;padding-top:24px;border-top:3px double var(--ink);
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    display:flex;justify-content:space-between;color:var(--muted);
+  }
+  footer .star{color:var(--accent)}
+
+  /* DECORATIVE */
+  .ornament{text-align:center;font-family:'Fraunces',serif;font-style:italic;color:var(--accent);font-size:24px;margin:40px 0;letter-spacing:.5em}
+
+  /* INTRO PARA */
+  .intro p{font-family:'Fraunces',serif;font-size:18px;line-height:1.65;max-width:760px;margin-bottom:14px}
+  .intro p:first-of-type::first-letter{
+    font-family:'Fraunces',serif;font-weight:300;font-size:78px;line-height:.85;float:left;
+    padding:8px 12px 0 0;color:var(--accent);font-style:italic;
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+
+  <header class="masthead">
+    <div>The Listening Quarterly <span class="vol">— Vol. I</span></div>
+    <div>Field Guide № 04</div>
+    <div>Est. for Test-Takers</div>
+  </header>
+
+  <div class="title-block">
+    <div class="kicker">A Complete Interactive Field Guide</div>
+    <h1 class="title">CELPIP <em>Listening</em><br>Decoded</h1>
+    <p class="subtitle">Everything you need to know about the six tasks — from setup screens to scoring tricks — distilled into a single, navigable manual.</p>
+  </div>
+
+  <section class="overview">
+    <div class="cell"><div class="label">Total Time</div><div class="val">47–55 <small>min</small></div></div>
+    <div class="cell"><div class="label">Tasks</div><div class="val">6 <small>sections + practice</small></div></div>
+    <div class="cell"><div class="label">Questions</div><div class="val">38</div></div>
+    <div class="cell"><div class="label">Replays</div><div class="val">0 <small>one chance only</small></div></div>
+  </section>
+
+  <div class="rule thick"></div>
+
+  <div class="intro">
+    <p>The Listening section is deceptively short. Audio plays once, headphones stay on, and the questions arrive while your brain is still translating the last sentence you heard. Most candidates lose points not because they can't understand English — but because they haven't learned <em>how to listen on a clock</em>.</p>
+    <p>This guide breaks down each of the six tasks, the traps each one sets, and the listening posture you should walk in with. Tap any task below to expand its strategy notes, scan the rapid tips, then test yourself with the mini-quiz at the end.</p>
+  </div>
+
+  <div class="ornament">❦ ❦ ❦</div>
+
+  <!-- SECTION: TASKS -->
+  <div class="sec-head">
+    <span class="sec-num">PART ONE</span>
+    <h2>The Six <em>Tasks</em>, Explained</h2>
+  </div>
+
+  <!-- TASK 1 -->
+  <article class="task" data-task="1">
+    <div class="task-header">
+      <div class="ttl">
+        <span class="task-tag">Task 01</span>
+        <h3>Listening to <em>Problem Solving</em></h3>
+        <div class="task-meta">~ 8 questions · 1 conversation · everyday situation</div>
+      </div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+
+      <p style="font-size:16px;margin-bottom:18px">You hear a conversation in three parts: someone <strong>describes a problem</strong>, the listener <strong>offers options or asks questions</strong>, and finally the speaker <strong>chooses a solution and explains why</strong>. Questions appear after each part — not all at the end.</p>
+
+      <div class="approach">
+        <h4>How to Approach</h4>
+        <div class="steps">
+          <div class="step"><div class="n">01</div><div class="t">Part A</div><p>Identify <em>who</em> has the problem, <em>what</em> exactly is wrong, and any specifics (dates, names, products).</p></div>
+          <div class="step"><div class="n">02</div><div class="t">Part B</div><p>Track every option the responder mentions. There are usually 3–4 — and one will become the answer in Part C.</p></div>
+          <div class="step"><div class="n">03</div><div class="t">Part C</div><p>Listen for the <em>reason</em> behind the chosen solution — that's almost always a question.</p></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="block">
+          <h4>Common Traps</h4>
+          <ul>
+            <li>Distractor answers repeat exact words from the audio — but in the wrong context.</li>
+            <li>The speaker may reject an option after first sounding interested in it.</li>
+            <li>Numbers (prices, room numbers, dates) are often paraphrased.</li>
+          </ul>
+        </div>
+        <div class="block green">
+          <h4>What to Note Mentally</h4>
+          <ul>
+            <li>Each option discussed + a one-word reason it was kept or dropped.</li>
+            <li>Reversal words: "actually," "but," "on second thought."</li>
+            <li>The final choice and the justification ("because…").</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pullquote">If you only remember one thing for Task 1: the answer often hinges on <em>why</em> a solution was chosen — not just <em>what</em> was chosen.</div>
+
+      <div class="tips">
+        <h4>Rapid Tips</h4>
+        <div class="tip"><div class="badge">1</div><p><strong>Don't pre-read</strong> in Task 1 — questions appear one at a time, mid-conversation. Stay focused on the audio.</p></div>
+        <div class="tip"><div class="badge">2</div><p>Eliminate answers using <strong>opposite logic</strong>: if two options say opposite things, one is usually the trap.</p></div>
+        <div class="tip"><div class="badge">3</div><p>Watch for <strong>tone shifts</strong> — hesitation ("hmm, well…") usually signals rejection of an option.</p></div>
+      </div>
+
+    </div></div>
+  </article>
+
+  <!-- TASK 2 -->
+  <article class="task" data-task="2">
+    <div class="task-header">
+      <div class="ttl">
+        <span class="task-tag alt">Task 02</span>
+        <h3>Listening to a <em>Daily Life Conversation</em></h3>
+        <div class="task-meta">~ 5 questions · 1 dialogue · two speakers</div>
+      </div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+
+      <p style="font-size:16px;margin-bottom:18px">A casual exchange — friends, family, neighbours, coworkers chatting. The relationship and the emotional content matter as much as the facts.</p>
+
+      <div class="approach">
+        <h4>How to Approach</h4>
+        <div class="steps">
+          <div class="step"><div class="n">01</div><div class="t">Setting</div><p>Decide instantly: who are these two, and what's their relationship?</p></div>
+          <div class="step"><div class="n">02</div><div class="t">Topic</div><p>The first 20 seconds almost always reveal the central topic — anchor everything else to it.</p></div>
+          <div class="step"><div class="n">03</div><div class="t">Feelings</div><p>Note each speaker's <em>attitude</em> — happy, frustrated, surprised, sceptical.</p></div>
+          <div class="step"><div class="n">04</div><div class="t">Outcome</div><p>What do they agree to do, or what's left unresolved?</p></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="block">
+          <h4>Common Traps</h4>
+          <ul>
+            <li>Idioms and slang ("a piece of cake," "spill the beans") — translate the <em>meaning</em>, not the words.</li>
+            <li>Sarcasm is rare but does appear. Tone tells you everything.</li>
+            <li>Questions ask about inference, not literal lines.</li>
+          </ul>
+        </div>
+        <div class="block green">
+          <h4>What to Note</h4>
+          <ul>
+            <li>Mood words: "annoyed," "excited," "worried."</li>
+            <li>Action verbs in the future tense — these often map to questions.</li>
+            <li>Names and roles (Sarah = sister, Mark = manager).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pullquote">In Task 2, the <em>feeling</em> behind the words is the answer.</div>
+
+      <div class="tips">
+        <h4>Rapid Tips</h4>
+        <div class="tip"><div class="badge">1</div><p>Practice with podcasts and sitcoms — <strong>How I Met Your Mother</strong> or <strong>The Office (US)</strong> mirror the register.</p></div>
+        <div class="tip"><div class="badge">2</div><p>If an option uses an extreme word like <strong>"never"</strong> or <strong>"always,"</strong> be sceptical — daily-life answers are usually moderate.</p></div>
+        <div class="tip"><div class="badge">3</div><p>Train your ear for <strong>connected speech</strong>: "whaddya," "gonna," "kinda" — these aren't typos, they're real CELPIP English.</p></div>
+      </div>
+
+    </div></div>
+  </article>
+
+  <!-- TASK 3 -->
+  <article class="task" data-task="3">
+    <div class="task-header">
+      <div class="ttl">
+        <span class="task-tag alt2">Task 03</span>
+        <h3>Listening for <em>Information</em></h3>
+        <div class="task-meta">~ 6 questions · long monologue or interview · detail-heavy</div>
+      </div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+
+      <p style="font-size:16px;margin-bottom:18px">A long, factual conversation or interview — usually about a place, programme, study, or service. This task is the densest with names, dates, and numbers.</p>
+
+      <div class="approach">
+        <h4>How to Approach</h4>
+        <div class="steps">
+          <div class="step"><div class="n">01</div><div class="t">Pre-Read</div><p>You DO get time to read questions before audio plays. Use every second — circle keywords mentally.</p></div>
+          <div class="step"><div class="n">02</div><div class="t">Predict</div><p>From the questions, guess the topic and what kind of facts you'll need (a date? a place? a job title?).</p></div>
+          <div class="step"><div class="n">03</div><div class="t">Track</div><p>Mentally tally specifics as they come: numbers, percentages, locations.</p></div>
+          <div class="step"><div class="n">04</div><div class="t">Move On</div><p>If you miss one detail, do <em>not</em> dwell. The next question is already coming.</p></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="block">
+          <h4>Common Traps</h4>
+          <ul>
+            <li>The audio mentions a number that <em>sounds</em> right but applies to a different thing entirely.</li>
+            <li>"Up to 50%" and "exactly 50%" are different answers.</li>
+            <li>Names of people, places, or programmes get rapidly paraphrased.</li>
+          </ul>
+        </div>
+        <div class="block green">
+          <h4>What to Note</h4>
+          <ul>
+            <li>Sequence words: "first," "later," "after that" — order matters.</li>
+            <li>Cause/effect markers: "due to," "because of," "as a result."</li>
+            <li>Quantifiers: "most," "some," "few," "many."</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pullquote">Task 3 rewards <em>active prediction</em>. Read the question, picture the answer, then listen for confirmation.</div>
+
+      <div class="tips">
+        <h4>Rapid Tips</h4>
+        <div class="tip"><div class="badge">1</div><p>Practice with <strong>CBC Radio, BBC News, TED Talks</strong> — same factual register, similar speed.</p></div>
+        <div class="tip"><div class="badge">2</div><p>When two answers are numerically close, the speaker usually gives a hint with <strong>"about," "roughly," "exactly,"</strong> or <strong>"more than."</strong> That hint <em>is</em> the answer.</p></div>
+        <div class="tip"><div class="badge">3</div><p>If a question asks about a <strong>future plan</strong>, listen for "will," "going to," "we're planning to."</p></div>
+      </div>
+
+    </div></div>
+  </article>
+
+  <!-- TASK 4 -->
+  <article class="task" data-task="4">
+    <div class="task-header">
+      <div class="ttl">
+        <span class="task-tag alt3">Task 04</span>
+        <h3>Listening to a <em>News Item</em></h3>
+        <div class="task-meta">~ 5 questions · short broadcast · journalistic tone</div>
+      </div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+
+      <p style="font-size:16px;margin-bottom:18px">A short news report — usually 60–90 seconds. Fast, formal, packed with facts. The structure mimics real news: headline → details → context → quote → consequence.</p>
+
+      <div class="approach">
+        <h4>How to Approach</h4>
+        <div class="steps">
+          <div class="step"><div class="n">01</div><div class="t">Headline</div><p>The first sentence is the story's spine. Lock onto it immediately.</p></div>
+          <div class="step"><div class="n">02</div><div class="t">5 W's</div><p>Who, What, Where, When, Why — the news structure gives all five within a minute.</p></div>
+          <div class="step"><div class="n">03</div><div class="t">Quotes</div><p>Statements from officials or witnesses often appear in questions verbatim.</p></div>
+          <div class="step"><div class="n">04</div><div class="t">Consequence</div><p>"As a result…" or "This means…" — the final lines often answer the last question.</p></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="block">
+          <h4>Common Traps</h4>
+          <ul>
+            <li>News audio uses passive voice heavily ("was announced," "is being investigated") — don't lose track of <em>who did what</em>.</li>
+            <li>Numbers come fast and back-to-back. Mentally group them ("$2M = investment, 30 = workers").</li>
+          </ul>
+        </div>
+        <div class="block green">
+          <h4>What to Note</h4>
+          <ul>
+            <li>Source attributions: "according to," "officials say."</li>
+            <li>Time references: "yesterday," "this morning," "later this week."</li>
+            <li>Reactions: "the public has criticized," "experts warn."</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pullquote">News reports follow a pyramid. The top is everything — listen hardest in the first 15 seconds.</div>
+
+      <div class="tips">
+        <h4>Rapid Tips</h4>
+        <div class="tip"><div class="badge">1</div><p>Listen to <strong>CBC Radio One news bulletins</strong> daily. The cadence is identical to Task 4 audio.</p></div>
+        <div class="tip"><div class="badge">2</div><p>Be wary of options that mention a real fact from the report but answer a <em>different</em> question.</p></div>
+        <div class="tip"><div class="badge">3</div><p>Tone in news is <strong>neutral</strong>. Options that sound emotional or biased are usually wrong.</p></div>
+      </div>
+
+    </div></div>
+  </article>
+
+  <!-- TASK 5 -->
+  <article class="task" data-task="5">
+    <div class="task-header">
+      <div class="ttl">
+        <span class="task-tag">Task 05</span>
+        <h3>Listening to a <em>Discussion</em></h3>
+        <div class="task-meta">~ 8 questions · video clip · three speakers, multiple viewpoints</div>
+      </div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+
+      <p style="font-size:16px;margin-bottom:18px">This is the only task where you see <em>video</em>. Two or three speakers debate or discuss a topic. The challenge: keeping track of <strong>who said what</strong> and <strong>who agrees with whom</strong>.</p>
+
+      <div class="approach">
+        <h4>How to Approach</h4>
+        <div class="steps">
+          <div class="step"><div class="n">01</div><div class="t">Faces</div><p>Look at the video — names and faces are paired. Mentally tag each speaker.</p></div>
+          <div class="step"><div class="n">02</div><div class="t">Positions</div><p>Identify each speaker's <em>stance</em> in their first 10 seconds. For/against/neutral?</p></div>
+          <div class="step"><div class="n">03</div><div class="t">Agreement</div><p>Watch for "I agree, but…" — partial agreement is often tested.</p></div>
+          <div class="step"><div class="n">04</div><div class="t">Examples</div><p>Each speaker usually gives a personal example. These are gold for the questions.</p></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="block">
+          <h4>Common Traps</h4>
+          <ul>
+            <li>Quoting the wrong speaker — questions ask "What does <em>Maria</em> think?" not what was said in general.</li>
+            <li>One speaker may shift their view mid-discussion. Catch the shift.</li>
+            <li>Visuals can distract — eyes on the speaker, ears on the content.</li>
+          </ul>
+        </div>
+        <div class="block green">
+          <h4>What to Note</h4>
+          <ul>
+            <li>Name → one-word stance ("Tom = pro, Lisa = skeptical").</li>
+            <li>Concession words: "however," "still," "even so," "that said."</li>
+            <li>Group-vs-individual claims.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pullquote">In a discussion, <em>who</em> said it matters as much as <em>what</em> was said.</div>
+
+      <div class="tips">
+        <h4>Rapid Tips</h4>
+        <div class="tip"><div class="badge">1</div><p>The video isn't decoration — body language and head nods can confirm agreement.</p></div>
+        <div class="tip"><div class="badge">2</div><p>Practice with panel shows like <strong>The Agenda with Steve Paikin</strong> or <strong>Q&amp;A</strong> debates.</p></div>
+        <div class="tip"><div class="badge">3</div><p>If you genuinely can't remember who said something, eliminate the most extreme option — moderate speakers usually win this round.</p></div>
+      </div>
+
+    </div></div>
+  </article>
+
+  <!-- TASK 6 -->
+  <article class="task" data-task="6">
+    <div class="task-header">
+      <div class="ttl">
+        <span class="task-tag alt">Task 06</span>
+        <h3>Listening to <em>Viewpoints</em></h3>
+        <div class="task-meta">~ 6 questions · long monologue · opinion + reasoning</div>
+      </div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+
+      <p style="font-size:16px;margin-bottom:18px">One speaker, one extended argument (about 2–3 minutes). They state a position, support it with reasons, address counter-arguments, and conclude. This is the most academic task in the section.</p>
+
+      <div class="approach">
+        <h4>How to Approach</h4>
+        <div class="steps">
+          <div class="step"><div class="n">01</div><div class="t">Thesis</div><p>The speaker's central claim is usually stated in the first 30 seconds. Lock it down.</p></div>
+          <div class="step"><div class="n">02</div><div class="t">Reasons</div><p>Expect 2–3 supporting points. Mark them by their signal words ("firstly," "another reason").</p></div>
+          <div class="step"><div class="n">03</div><div class="t">Counter</div><p>"Some people argue…" introduces opposition — questions love this section.</p></div>
+          <div class="step"><div class="n">04</div><div class="t">Conclusion</div><p>The final line often paraphrases the thesis — and matches an answer choice.</p></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="block">
+          <h4>Common Traps</h4>
+          <ul>
+            <li>The speaker's <em>opinion</em> is asked about, not yours. Stay neutral.</li>
+            <li>Counter-arguments are often misread as the speaker's view. Distinguish carefully.</li>
+            <li>Words like "should," "must," and "ought to" reveal stance.</li>
+          </ul>
+        </div>
+        <div class="block green">
+          <h4>What to Note</h4>
+          <ul>
+            <li>Thesis statement in your own words.</li>
+            <li>2–3 reasons stated, in order.</li>
+            <li>One concession + the speaker's rebuttal.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pullquote">A viewpoint task is an essay read aloud. Find the thesis, count the body paragraphs, and watch for the conclusion.</div>
+
+      <div class="tips">
+        <h4>Rapid Tips</h4>
+        <div class="tip"><div class="badge">1</div><p>Practice with <strong>TED Talks</strong> on familiar topics — the structure is identical.</p></div>
+        <div class="tip"><div class="badge">2</div><p>If a question asks about <em>tone</em> or <em>purpose</em>, focus on the speaker's adjectives — "alarming," "promising," "outdated" all leak the stance.</p></div>
+        <div class="tip"><div class="badge">3</div><p>The conclusion is almost always tested. Don't tune out in the last 20 seconds.</p></div>
+      </div>
+
+    </div></div>
+  </article>
+
+  <div class="ornament">❦ ❦ ❦</div>
+
+  <!-- SECTION: GENERAL STRATEGY -->
+  <div class="sec-head">
+    <span class="sec-num">PART TWO</span>
+    <h2>General <em>Strategies</em> Across All Tasks</h2>
+  </div>
+
+  <div class="strat-grid">
+    <div class="strat-card"><h4>Headphones Check</h4><p>The first thing on test day. Adjust volume during the practice task — once Task 1 starts, you can't change it. Set it slightly louder than feels natural.</p></div>
+    <div class="strat-card"><h4>One Listen Only</h4><p>There is no replay. No "go back" button. Train at home by listening to audio <em>once</em> and answering — never twice.</p></div>
+    <div class="strat-card"><h4>Mental Notes, Not Paper</h4><p>You won't write much. Build the habit of holding 3–4 key facts in working memory while listening.</p></div>
+    <div class="strat-card"><h4>The 5-Second Rule</h4><p>If you don't know an answer in 5 seconds, guess and move on. The next question is already loading.</p></div>
+    <div class="strat-card"><h4>Paraphrase Awareness</h4><p>Correct answers almost <em>never</em> reuse the audio's exact wording. If an option matches verbatim, suspect it.</p></div>
+    <div class="strat-card"><h4>Accent Familiarity</h4><p>CELPIP uses Canadian English. Expect "about" (not "aboot"), "process," "schedule" with sk-, and everyday Canadian references.</p></div>
+    <div class="strat-card"><h4>Predict Before You Hear</h4><p>When you get pre-reading time, use it to guess the answer type, not memorize options. You'll listen sharper.</p></div>
+    <div class="strat-card"><h4>Manage the Clock</h4><p>Each question has a soft timer. Don't get stuck — every second on Q3 is borrowed from Q4.</p></div>
+  </div>
+
+  <div class="ornament">❦ ❦ ❦</div>
+
+  <!-- SECTION: COMMON MISTAKES -->
+  <div class="sec-head">
+    <span class="sec-num">PART THREE</span>
+    <h2>Common <em>Mistakes</em> & How to Dodge Them</h2>
+  </div>
+
+  <div class="task" data-task="m1">
+    <div class="task-header">
+      <div class="ttl"><span class="task-tag alt2">Mistake 01</span><h3>Trying to <em>understand every word</em></h3></div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+      <p>You don't need to. CELPIP is testing whether you grasp <em>meaning</em>, not vocabulary. If you miss a word, keep moving — context will usually fill the gap. Obsessing over one unknown word is how candidates miss the next three sentences.</p>
+    </div></div>
+  </div>
+
+  <div class="task" data-task="m2">
+    <div class="task-header">
+      <div class="ttl"><span class="task-tag">Mistake 02</span><h3>Choosing the <em>option that sounds familiar</em></h3></div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+      <p>Familiarity is a trap. The test designs distractors that <em>echo</em> the audio without matching its meaning. Always ask: "Does this option answer the question that was actually asked?"</p>
+    </div></div>
+  </div>
+
+  <div class="task" data-task="m3">
+    <div class="task-header">
+      <div class="ttl"><span class="task-tag alt">Mistake 03</span><h3>Ignoring the <em>pre-reading window</em></h3></div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+      <p>You're given a few seconds to skim questions before some tasks. Most candidates stare at the screen blankly. Instead, scan keywords and predict the answer type — this can shift your score by a full band.</p>
+    </div></div>
+  </div>
+
+  <div class="task" data-task="m4">
+    <div class="task-header">
+      <div class="ttl"><span class="task-tag alt3">Mistake 04</span><h3>Panicking after <em>one missed question</em></h3></div>
+      <div class="toggle">+</div>
+    </div>
+    <div class="task-body"><div class="task-inner">
+      <p>Every test-taker misses a few. Panic only spreads the damage. Treat each question as independent — the previous one no longer exists.</p>
+    </div></div>
+  </div>
+
+  <div class="ornament">❦ ❦ ❦</div>
+
+  <!-- QUIZ -->
+  <div class="sec-head">
+    <span class="sec-num">PART FOUR</span>
+    <h2>Quick <em>Self-Check</em></h2>
+  </div>
+
+  <div class="quiz">
+    <h3>Test Your <em>Strategy IQ</em></h3>
+    <p class="desc">Six questions · No audio · Pure strategy</p>
+
+    <div class="q" data-correct="b">
+      <div class="qnum">Question 01</div>
+      <div class="qtext">In Task 1 (Problem Solving), the most important thing to track in Part C is:</div>
+      <div class="opts">
+        <button class="opt" data-val="a">The names of the speakers.</button>
+        <button class="opt" data-val="b">The reason behind the chosen solution.</button>
+        <button class="opt" data-val="c">The number of options discussed earlier.</button>
+        <button class="opt" data-val="d">The setting of the conversation.</button>
+      </div>
+      <div class="explain">Correct — Part C almost always asks <em>why</em> a solution was selected, not just which one.</div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qnum">Question 02</div>
+      <div class="qtext">If an answer option uses the exact same words as the audio, you should:</div>
+      <div class="opts">
+        <button class="opt" data-val="a">Always select it — verbatim matches are correct.</button>
+        <button class="opt" data-val="b">Ignore it entirely.</button>
+        <button class="opt" data-val="c">Be suspicious — verbatim matches are often traps.</button>
+        <button class="opt" data-val="d">Choose it only if it's option A.</button>
+      </div>
+      <div class="explain">Correct answers usually <em>paraphrase</em>. Exact wording is a known distractor pattern.</div>
+    </div>
+
+    <div class="q" data-correct="b">
+      <div class="qnum">Question 03</div>
+      <div class="qtext">Task 5 (Discussion) is unique because:</div>
+      <div class="opts">
+        <button class="opt" data-val="a">It has no questions.</button>
+        <button class="opt" data-val="b">You can see the speakers on video.</button>
+        <button class="opt" data-val="c">You can replay the audio.</button>
+        <button class="opt" data-val="d">It is graded only on accent.</button>
+      </div>
+      <div class="explain">Task 5 is the only video-based task — use the visuals to tag who said what.</div>
+    </div>
+
+    <div class="q" data-correct="d">
+      <div class="qnum">Question 04</div>
+      <div class="qtext">When you don't know an answer, the best move is:</div>
+      <div class="opts">
+        <button class="opt" data-val="a">Leave it blank to be safe.</button>
+        <button class="opt" data-val="b">Spend extra time re-thinking until certain.</button>
+        <button class="opt" data-val="c">Always pick option C.</button>
+        <button class="opt" data-val="d">Guess quickly and move to the next question.</button>
+      </div>
+      <div class="explain">There's no penalty for wrong answers. Blank answers cost you — but so do the questions you miss while overthinking.</div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qnum">Question 05</div>
+      <div class="qtext">In Task 6 (Viewpoints), you are tested on:</div>
+      <div class="opts">
+        <button class="opt" data-val="a">The speaker's opinion and reasoning, not your own.</button>
+        <button class="opt" data-val="b">Whether you agree with the speaker.</button>
+        <button class="opt" data-val="c">Your ability to summarize aloud.</button>
+        <button class="opt" data-val="d">Your knowledge of the topic.</button>
+      </div>
+      <div class="explain">The speaker's stance is what matters — keep your own views out of it.</div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qnum">Question 06</div>
+      <div class="qtext">The best way to use the pre-reading window before a task is to:</div>
+      <div class="opts">
+        <button class="opt" data-val="a">Read the full options word by word.</button>
+        <button class="opt" data-val="b">Close your eyes and breathe.</button>
+        <button class="opt" data-val="c">Scan keywords and predict what type of answer you'll need.</button>
+        <button class="opt" data-val="d">Re-listen to the previous audio.</button>
+      </div>
+      <div class="explain">Active prediction sharpens your listening more than passive reading.</div>
+    </div>
+
+    <div class="score" id="score"></div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist">
+    <h3>Your <em>Pre-Test Day</em> Checklist</h3>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Practice listening to <strong>one</strong> full mock listening section in a single sitting (no pauses, no replays).</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Spend 15 min/day on <strong>CBC Radio or BBC podcasts</strong> for two weeks before the test.</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Master <strong>paraphrasing</strong>: pick a sentence, write 3 ways to say the same thing.</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Train <strong>note-free listening</strong> — hold 4 facts in your head while watching a 2-minute clip.</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Learn the <strong>20 most common signal words</strong> (however, therefore, in addition, on the other hand…).</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Watch <strong>at least one panel discussion</strong> to prep for Task 5.</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Do a full <strong>timed practice test</strong> 3 days before exam day, not the night before.</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Test your <strong>headphones</strong> the morning of — comfort + clarity matter more than people think.</div></div>
+    <div class="check-item"><div class="check-box">✓</div><div class="check-text">Sleep <strong>7+ hours</strong> the night before. Listening fatigue is the silent score-killer.</div></div>
+
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">Preparation progress · 0 of 9 complete</div>
+  </div>
+
+  <footer>
+    <div><span class="star">★</span> End of Field Guide</div>
+    <div>Good luck — go listen sharply</div>
+    <div>№ 04 · The Listening Quarterly</div>
+  </footer>
+
+</div>
+
+<script>
+  // EXPANDABLE TASKS
+  document.querySelectorAll('.task').forEach(task=>{
+    const header = task.querySelector('.task-header');
+    header.addEventListener('click', ()=>{
+      task.classList.toggle('open');
+    });
+  });
+
+  // Open Task 1 by default to invite exploration
+  document.querySelector('.task[data-task="1"]')?.classList.add('open');
+
+  // QUIZ
+  const questions = document.querySelectorAll('.q');
+  let answered = 0, correct = 0;
+  questions.forEach(q=>{
+    const correctVal = q.dataset.correct;
+    const opts = q.querySelectorAll('.opt');
+    const explain = q.querySelector('.explain');
+    opts.forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        if(q.dataset.done) return;
+        q.dataset.done = 'true';
+        const val = opt.dataset.val;
+        opts.forEach(o=>{
+          o.classList.add('disabled');
+          if(o.dataset.val === correctVal) o.classList.add('correct');
+        });
+        if(val !== correctVal){
+          opt.classList.add('wrong');
+        } else {
+          correct++;
+        }
+        explain.classList.add('show');
+        answered++;
+        if(answered === questions.length){
+          const score = document.getElementById('score');
+          let msg = '';
+          if(correct === 6) msg = `Perfect — <em>${correct}/6</em>. You're test-ready.`;
+          else if(correct >= 4) msg = `Strong — <em>${correct}/6</em>. Review the missed ones.`;
+          else msg = `<em>${correct}/6</em> — reread the strategy notes above.`;
+          score.innerHTML = msg;
+          score.classList.add('show');
+        }
+      });
+    });
+  });
+
+  // CHECKLIST
+  const items = document.querySelectorAll('.check-item');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  function updateProgress(){
+    const done = document.querySelectorAll('.check-item.done').length;
+    const total = items.length;
+    const pct = (done/total)*100;
+    fill.style.width = pct + '%';
+    label.textContent = `Preparation progress · ${done} of ${total} complete`;
+  }
+  items.forEach(i=>{
+    i.addEventListener('click', ()=>{
+      i.classList.toggle('done');
+      updateProgress();
+    });
+  });
+</script>
+</body>
+</html>

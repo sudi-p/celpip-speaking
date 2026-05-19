@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CELPIP Reading — A Study Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1410;
+    --paper:#f5efe4;
+    --paper-2:#ede4d3;
+    --accent:#c8442a;
+    --accent-2:#1f3a3d;
+    --accent-3:#d4a017;
+    --mute:#6b5d4f;
+    --rule:#3a2f25;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'Inter Tight',sans-serif;line-height:1.55}
+  body{
+    background-image:
+      radial-gradient(ellipse at top left, rgba(200,68,42,.06), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(31,58,61,.08), transparent 50%);
+    background-attachment: fixed;
+    min-height:100vh;
+  }
+
+  /* ---------- Layout ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 28px 80px}
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    border:2px solid var(--ink);
+    padding:28px 24px 22px;
+    margin-bottom:32px;
+    background:var(--paper-2);
+    position:relative;
+    overflow:hidden;
+  }
+  .masthead::before{
+    content:'';position:absolute;top:8px;left:8px;right:8px;bottom:8px;
+    border:1px solid var(--ink);pointer-events:none;
+  }
+  .ribbon{
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--mute);
+    border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:18px;
+  }
+  .ribbon span:nth-child(2){color:var(--accent)}
+  .title{
+    font-family:'Fraunces',serif;font-weight:900;
+    font-size:clamp(40px,7vw,86px);line-height:.92;letter-spacing:-.02em;
+    margin-bottom:8px;
+  }
+  .title em{font-style:italic;font-weight:400;color:var(--accent)}
+  .sub{
+    font-family:'Fraunces',serif;font-style:italic;font-size:clamp(16px,2vw,20px);
+    color:var(--mute);max-width:620px;margin-top:6px;
+  }
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .pill{
+    border:1.5px solid var(--ink);padding:5px 11px;font-size:11px;
+    font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--paper);
+  }
+  .pill.accent{background:var(--ink);color:var(--paper)}
+
+  /* ---------- Overview grid ---------- */
+  .overview{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    border:2px solid var(--ink);margin-bottom:40px;
+  }
+  .stat{
+    padding:18px 16px;border-right:1.5px solid var(--ink);background:var(--paper);
+  }
+  .stat:last-child{border-right:none}
+  .stat-num{font-family:'Fraunces',serif;font-size:46px;font-weight:900;line-height:1;color:var(--accent)}
+  .stat-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--mute);margin-top:8px}
+
+  /* ---------- Section nav ---------- */
+  .navbar{
+    position:sticky;top:0;z-index:10;background:var(--paper);
+    border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+    padding:10px 0;margin-bottom:32px;
+    backdrop-filter:blur(8px);
+  }
+  .navbar-inner{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .nav-btn{
+    background:transparent;border:1.5px solid var(--ink);color:var(--ink);
+    padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+    transition:all .18s ease;
+  }
+  .nav-btn:hover{background:var(--ink);color:var(--paper)}
+  .nav-btn.active{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+
+  /* ---------- Section headers ---------- */
+  .section{margin-bottom:64px}
+  .section-head{display:flex;align-items:baseline;gap:18px;margin-bottom:24px;flex-wrap:wrap}
+  .section-num{
+    font-family:'Fraunces',serif;font-size:90px;font-weight:900;line-height:.85;
+    color:var(--accent);font-style:italic;
+  }
+  .section-title-wrap h2{
+    font-family:'Fraunces',serif;font-weight:700;font-size:clamp(28px,4vw,42px);
+    letter-spacing:-.01em;line-height:1;
+  }
+  .section-title-wrap .meta{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--mute);margin-top:6px;
+  }
+
+  /* ---------- Task cards ---------- */
+  .task{
+    border:2px solid var(--ink);background:var(--paper-2);
+    padding:0;margin-bottom:28px;overflow:hidden;
+  }
+  .task-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--ink);color:var(--paper);padding:14px 20px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;
+  }
+  .task-bar span:last-child{color:var(--accent-3)}
+  .task-body{padding:24px 22px}
+  .task h3{
+    font-family:'Fraunces',serif;font-weight:700;font-size:26px;
+    margin-bottom:8px;line-height:1.15;
+  }
+  .task .tagline{
+    font-family:'Fraunces',serif;font-style:italic;color:var(--mute);
+    margin-bottom:18px;font-size:16px;
+  }
+
+  /* ---------- Tab system ---------- */
+  .tabs{display:flex;gap:0;border-bottom:1.5px solid var(--ink);margin-bottom:18px;flex-wrap:wrap}
+  .tab{
+    background:transparent;border:none;border-bottom:3px solid transparent;
+    padding:10px 16px;cursor:pointer;font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--mute);transition:all .15s;margin-bottom:-1.5px;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab-content{display:none;animation:fade .25s ease}
+  .tab-content.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* ---------- Step lists ---------- */
+  .steps{list-style:none;counter-reset:step;display:grid;gap:12px}
+  .steps li{
+    counter-increment:step;position:relative;padding:12px 14px 12px 52px;
+    background:var(--paper);border-left:3px solid var(--accent);
+  }
+  .steps li::before{
+    content:counter(step,decimal-leading-zero);
+    position:absolute;left:14px;top:12px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+    color:var(--accent);letter-spacing:.05em;
+  }
+  .steps li strong{font-weight:600;color:var(--ink)}
+
+  /* ---------- Tip boxes ---------- */
+  .tip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .tip{
+    background:var(--paper);border:1.5px solid var(--ink);padding:14px;
+    position:relative;
+  }
+  .tip-head{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:6px;
+  }
+  .tip-body{font-size:14.5px;line-height:1.5}
+
+  /* ---------- Warning / pitfall ---------- */
+  .pitfalls{
+    background:#fff5e6;border:1.5px dashed var(--accent);padding:16px 18px;margin-top:14px;
+  }
+  .pitfalls-title{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:8px;
+  }
+  .pitfalls ul{list-style:none;display:grid;gap:6px;font-size:14.5px}
+  .pitfalls li{padding-left:18px;position:relative}
+  .pitfalls li::before{content:'✕';position:absolute;left:0;color:var(--accent);font-weight:700}
+
+  /* ---------- Timer widget ---------- */
+  .timer-box{
+    background:var(--accent-2);color:var(--paper);padding:18px 20px;
+    margin:18px 0;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  .timer-display{
+    font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:700;
+    letter-spacing:-.02em;min-width:170px;
+  }
+  .timer-controls{display:flex;gap:8px;flex-wrap:wrap}
+  .timer-btn{
+    background:var(--paper);color:var(--ink);border:none;padding:8px 16px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;cursor:pointer;font-weight:700;
+  }
+  .timer-btn:hover{background:var(--accent-3)}
+  .timer-presets{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .preset{
+    background:transparent;color:var(--paper);border:1px solid var(--paper);
+    padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;
+    cursor:pointer;letter-spacing:.08em;
+  }
+  .preset:hover,.preset.active{background:var(--paper);color:var(--accent-2)}
+
+  /* ---------- Quiz ---------- */
+  .quiz{
+    border:2px solid var(--ink);background:var(--paper-2);padding:24px 22px;
+    margin-top:24px;
+  }
+  .quiz-head{
+    font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin-bottom:6px;
+  }
+  .quiz-sub{font-family:'Fraunces',serif;font-style:italic;color:var(--mute);margin-bottom:18px}
+  .q-card{background:var(--paper);border:1.5px solid var(--ink);padding:16px;margin-bottom:14px}
+  .q-num{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    color:var(--accent);text-transform:uppercase;margin-bottom:6px;
+  }
+  .q-text{font-weight:500;margin-bottom:12px}
+  .q-opts{display:grid;gap:6px}
+  .q-opt{
+    border:1.5px solid var(--ink);padding:9px 12px;cursor:pointer;
+    background:var(--paper);transition:all .15s;font-size:14.5px;
+  }
+  .q-opt:hover{background:var(--paper-2)}
+  .q-opt.correct{background:#d4ecd5;border-color:#2d6a2f}
+  .q-opt.wrong{background:#f5d1cc;border-color:var(--accent)}
+  .q-opt.disabled{cursor:default;opacity:.7}
+  .q-explain{
+    margin-top:12px;padding:10px 12px;background:#fff5e6;
+    border-left:3px solid var(--accent-3);font-size:14px;display:none;
+  }
+  .q-explain.show{display:block}
+  .quiz-score{
+    margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:13px;
+    letter-spacing:.06em;text-align:center;padding:12px;background:var(--ink);color:var(--paper);
+  }
+
+  /* ---------- Checklist ---------- */
+  .checklist{
+    background:var(--paper);border:2px solid var(--ink);padding:24px 22px;margin-top:16px;
+  }
+  .checklist h3{
+    font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:14px;
+  }
+  .check-item{
+    display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--rule);
+    cursor:pointer;align-items:flex-start;
+  }
+  .check-item:last-child{border-bottom:none}
+  .check-box{
+    width:20px;height:20px;border:2px solid var(--ink);flex-shrink:0;
+    margin-top:2px;display:flex;align-items:center;justify-content:center;
+    background:var(--paper);transition:all .15s;
+  }
+  .check-item.done .check-box{background:var(--accent);border-color:var(--accent)}
+  .check-item.done .check-box::after{content:'✓';color:var(--paper);font-weight:700;font-size:13px}
+  .check-item.done .check-text{text-decoration:line-through;color:var(--mute)}
+  .check-text{flex:1;font-size:15px}
+
+  /* ---------- Word bank / vocab ---------- */
+  .vocab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:14px}
+  .vocab-card{
+    background:var(--paper);border:1.5px solid var(--ink);padding:12px 14px;
+    cursor:pointer;transition:all .15s;
+  }
+  .vocab-card:hover{background:var(--paper-2);transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+  .vocab-word{
+    font-family:'Fraunces',serif;font-weight:700;font-size:18px;color:var(--accent);
+    margin-bottom:2px;
+  }
+  .vocab-meaning{font-size:14px;color:var(--mute);display:none}
+  .vocab-card.flipped .vocab-meaning{display:block}
+  .vocab-card.flipped .vocab-word{color:var(--ink)}
+
+  /* ---------- Footer ---------- */
+  .footer{
+    border-top:2px solid var(--ink);margin-top:60px;padding-top:24px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--mute);text-align:center;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:680px){
+    .overview{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(2){border-right:none}
+    .stat:nth-child(1),.stat:nth-child(2){border-bottom:1.5px solid var(--ink)}
+    .section-num{font-size:60px}
+    .timer-display{font-size:34px;min-width:140px}
+    .timer-presets{margin-left:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="masthead">
+    <div class="ribbon">
+      <span>Issue 01 · Study Companion</span>
+      <span>● Reading Section</span>
+      <span>~ 55–60 minutes</span>
+    </div>
+    <h1 class="title">The CELPIP <em>Reader's</em><br>Handbook.</h1>
+    <p class="sub">A field guide to the four reading tasks — how each one works, what graders reward, and the small habits that separate a CLB 9 from a CLB 11.</p>
+    <div class="pill-row">
+      <span class="pill accent">4 Tasks</span>
+      <span class="pill">38 Questions</span>
+      <span class="pill">Computer-based</span>
+      <span class="pill">No going back</span>
+    </div>
+  </header>
+
+  <!-- ============ OVERVIEW STATS ============ -->
+  <div class="overview">
+    <div class="stat"><div class="stat-num">4</div><div class="stat-lbl">Distinct Tasks</div></div>
+    <div class="stat"><div class="stat-num">38</div><div class="stat-lbl">Scored Items</div></div>
+    <div class="stat"><div class="stat-num">~11</div><div class="stat-lbl">Min / Task</div></div>
+    <div class="stat"><div class="stat-num">12</div><div class="stat-lbl">Max CLB Level</div></div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <button class="nav-btn active" data-target="t1">01 · Correspondence</button>
+      <button class="nav-btn" data-target="t2">02 · Diagram</button>
+      <button class="nav-btn" data-target="t3">03 · Information</button>
+      <button class="nav-btn" data-target="t4">04 · Viewpoints</button>
+      <button class="nav-btn" data-target="strategy">Strategy</button>
+      <button class="nav-btn" data-target="quiz">Practice</button>
+    </div>
+  </nav>
+
+  <!-- ============ TIMER ============ -->
+  <div class="timer-box" id="timerBox">
+    <div class="timer-display" id="timer">11:00</div>
+    <div class="timer-controls">
+      <button class="timer-btn" id="startBtn">Start</button>
+      <button class="timer-btn" id="pauseBtn">Pause</button>
+      <button class="timer-btn" id="resetBtn">Reset</button>
+    </div>
+    <div class="timer-presets">
+      <button class="preset active" data-mins="11">Task 1 · 11m</button>
+      <button class="preset" data-mins="9">Task 2 · 9m</button>
+      <button class="preset" data-mins="13">Task 3 · 13m</button>
+      <button class="preset" data-mins="13">Task 4 · 13m</button>
+    </div>
+  </div>
+
+  <!-- ============ TASK 1 ============ -->
+  <section class="section" id="t1">
+    <div class="section-head">
+      <div class="section-num">01</div>
+      <div class="section-title-wrap">
+        <h2>Reading Correspondence</h2>
+        <div class="meta">Email or letter · 11 questions · ~11 minutes</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-bar"><span>What you'll see</span><span>11 questions</span></div>
+      <div class="task-body">
+        <h3>A message, then a reply.</h3>
+        <p class="tagline">You read an email or letter, answer 6 questions about it, then fill in 5 blanks in a short reply.</p>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="t1-a">Approach</button>
+          <button class="tab" data-tab="t1-b">Tips & Tricks</button>
+          <button class="tab" data-tab="t1-c">Pitfalls</button>
+        </div>
+
+        <div class="tab-content active" id="t1-a">
+          <ol class="steps">
+            <li><strong>Read the opening lines first.</strong> The sender, recipient, and subject reveal the situation — who is writing to whom, and why. This frames every question that follows.</li>
+            <li><strong>Skim the whole email once</strong> at normal pace before touching the questions. Don't try to memorize — you're building a mental map of where things live.</li>
+            <li><strong>Read each question carefully, then scan back.</strong> Don't answer from memory. Locate the exact paragraph that contains the answer and re-read those 2–3 sentences.</li>
+            <li><strong>For the reply (Part B),</strong> read the entire reply first to feel the tone and direction. Then go blank by blank — each blank usually has 4 options that test grammar, vocabulary, or logical flow.</li>
+            <li><strong>Plug each option in mentally</strong> and ask: does the sentence still flow naturally? Eliminate options that break grammar or contradict the original email.</li>
+          </ol>
+        </div>
+
+        <div class="tab-content" id="t1-b">
+          <div class="tip-grid">
+            <div class="tip"><div class="tip-head">Tone Match</div><div class="tip-body">The reply must echo the tone of the original. Formal email = formal reply. A friendly note doesn't suddenly become "Dear Sir/Madam."</div></div>
+            <div class="tip"><div class="tip-head">Watch Connectors</div><div class="tip-body">"However," "therefore," "in addition" — these almost always test logical relationships. Read the sentence before AND after the blank.</div></div>
+            <div class="tip"><div class="tip-head">Pronoun Anchors</div><div class="tip-body">When you see "this," "they," or "it" — find what it refers to in the previous sentence. Questions often test this.</div></div>
+            <div class="tip"><div class="tip-head">Implication ≠ Statement</div><div class="tip-body">Questions like "What can be inferred?" want you to read between the lines. The literal answer is usually a trap.</div></div>
+            <div class="tip"><div class="tip-head">Mark & Move</div><div class="tip-body">Stuck for 45+ seconds? Flag, guess your best option, keep going. You can return if time allows within the part.</div></div>
+            <div class="tip"><div class="tip-head">Vocabulary in Context</div><div class="tip-body">If a word is unfamiliar, look at the surrounding sentence. Synonyms or contrast words usually reveal meaning.</div></div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t1-c">
+          <div class="pitfalls">
+            <div class="pitfalls-title">Common Pitfalls</div>
+            <ul>
+              <li>Choosing an answer because the words "match" the passage — CELPIP rewards meaning, not word-spotting.</li>
+              <li>Skipping the subject line or sign-off (they often hint at relationship and purpose).</li>
+              <li>Filling all reply blanks in one pass without re-reading the surrounding sentences.</li>
+              <li>Letting one tricky question eat 3 minutes — you'll lose easier marks at the end.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TASK 2 ============ -->
+  <section class="section" id="t2">
+    <div class="section-head">
+      <div class="section-num">02</div>
+      <div class="section-title-wrap">
+        <h2>Reading to Apply a Diagram</h2>
+        <div class="meta">Diagram + email · 8 questions · ~9 minutes</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-bar"><span>What you'll see</span><span>8 questions</span></div>
+      <div class="task-body">
+        <h3>Visual on the left, message on the right.</h3>
+        <p class="tagline">A schedule, brochure, map, or product comparison sits beside a short email asking for advice based on that diagram.</p>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="t2-a">Approach</button>
+          <button class="tab" data-tab="t2-b">Tips & Tricks</button>
+          <button class="tab" data-tab="t2-c">Pitfalls</button>
+        </div>
+
+        <div class="tab-content active" id="t2-a">
+          <ol class="steps">
+            <li><strong>Look at the diagram first.</strong> Understand the structure — categories, headings, dates, prices, conditions. Read every footnote and asterisk; that's where exceptions hide.</li>
+            <li><strong>Then read the email.</strong> Note the writer's constraints: budget, dates available, food allergies, kids, accessibility — these are filters.</li>
+            <li><strong>For each question, return to the diagram with the constraint in mind.</strong> Don't trust memory; the diagram is dense and details are precise.</li>
+            <li><strong>Cross-reference systematically.</strong> If the question says "Which option suits a family of four with a dog?" — scan rows for both criteria, not one.</li>
+            <li><strong>Trust the diagram over assumptions.</strong> If the brochure says "no pets allowed on weekends," that overrides any common-sense guess.</li>
+          </ol>
+        </div>
+
+        <div class="tab-content" id="t2-b">
+          <div class="tip-grid">
+            <div class="tip"><div class="tip-head">Star the Footnotes</div><div class="tip-body">Asterisks and small print almost always become a question. Read them before you start answering.</div></div>
+            <div class="tip"><div class="tip-head">Underline Constraints</div><div class="tip-body">In the email, mentally circle every number, date, condition, and preference. These are your filters.</div></div>
+            <div class="tip"><div class="tip-head">One Variable at a Time</div><div class="tip-body">Eliminate options by checking one constraint at a time. It feels slower but stops careless errors.</div></div>
+            <div class="tip"><div class="tip-head">Beware "All of the Above"</div><div class="tip-body">If two answers seem right, re-check the diagram — usually one violates a constraint you missed.</div></div>
+            <div class="tip"><div class="tip-head">Pace: 1 Min/Question</div><div class="tip-body">9 minutes for 8 questions. If you're spending 90+ seconds, mark and move.</div></div>
+            <div class="tip"><div class="tip-head">Same-Day Differences</div><div class="tip-body">Weekday vs weekend pricing, peak vs off-peak — CELPIP loves to test this distinction.</div></div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t2-c">
+          <div class="pitfalls">
+            <div class="pitfalls-title">Common Pitfalls</div>
+            <ul>
+              <li>Spending too long reading the diagram top to bottom — scan it like a chart, not prose.</li>
+              <li>Forgetting a constraint from the email by question 5. Re-anchor before each question.</li>
+              <li>Picking the option that "sounds best" instead of the one that fits the writer's specific situation.</li>
+              <li>Missing exceptions in fine print (closed Mondays, requires booking, members only).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TASK 3 ============ -->
+  <section class="section" id="t3">
+    <div class="section-head">
+      <div class="section-num">03</div>
+      <div class="section-title-wrap">
+        <h2>Reading for Information</h2>
+        <div class="meta">4-paragraph article · 9 questions · ~13 minutes</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-bar"><span>What you'll see</span><span>9 questions</span></div>
+      <div class="task-body">
+        <h3>One long passage. Four labeled paragraphs.</h3>
+        <p class="tagline">An informational article (often about Canadian history, science, society) where each question asks: "Which paragraph contains this idea?" plus a few specific-detail questions.</p>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="t3-a">Approach</button>
+          <button class="tab" data-tab="t3-b">Tips & Tricks</button>
+          <button class="tab" data-tab="t3-c">Pitfalls</button>
+        </div>
+
+        <div class="tab-content active" id="t3-a">
+          <ol class="steps">
+            <li><strong>Skim each paragraph for its main idea</strong> before reading questions. Jot a 2–3 word label in your head: "early history," "modern impact," "economic effects," "criticism."</li>
+            <li><strong>Read the questions, identify the keyword</strong> in each. Is it about a date? A cause? A consequence? A person's view?</li>
+            <li><strong>Match keywords to your paragraph labels.</strong> If a question asks about economic consequences, you already know which paragraph to check.</li>
+            <li><strong>Confirm with the actual text.</strong> Don't pick a paragraph just because a word appears there — make sure the idea matches.</li>
+            <li><strong>"Not given" is rare here</strong> but possible. If you can't find support in any paragraph after careful scanning, the answer is often the option that paraphrases an idea most accurately.</li>
+          </ol>
+        </div>
+
+        <div class="tab-content" id="t3-b">
+          <div class="tip-grid">
+            <div class="tip"><div class="tip-head">Label Paragraphs</div><div class="tip-body">Give each paragraph a one-word mental tag. You'll match questions to tags in seconds.</div></div>
+            <div class="tip"><div class="tip-head">Paraphrase Detection</div><div class="tip-body">Answers rarely copy text word-for-word. Look for synonyms: "began" = "originated," "harmed" = "had adverse effects."</div></div>
+            <div class="tip"><div class="tip-head">Beware Word Traps</div><div class="tip-body">A paragraph might mention "economic" once but not be about economics. Read the surrounding sentence to confirm.</div></div>
+            <div class="tip"><div class="tip-head">Topic Sentences</div><div class="tip-body">First and last sentences of each paragraph usually contain the main idea. Re-read these when stuck.</div></div>
+            <div class="tip"><div class="tip-head">Numbers & Dates Lie</div><div class="tip-body">If a date appears in two paragraphs, check what it refers to in each — the question wants a specific event.</div></div>
+            <div class="tip"><div class="tip-head">Pace: ~1.4 Min/Q</div><div class="tip-body">13 minutes ÷ 9 questions, minus skim time. Aim for 60–80 seconds per question.</div></div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t3-c">
+          <div class="pitfalls">
+            <div class="pitfalls-title">Common Pitfalls</div>
+            <ul>
+              <li>Reading the entire passage in detail before looking at questions — wastes 4+ minutes.</li>
+              <li>Picking a paragraph because a single word matches the question. Confirm the idea, not the word.</li>
+              <li>Confusing cause with effect — read carefully when questions ask "why" vs "what happened."</li>
+              <li>Forgetting that one paragraph may answer multiple questions (and one may answer none).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TASK 4 ============ -->
+  <section class="section" id="t4">
+    <div class="section-head">
+      <div class="section-num">04</div>
+      <div class="section-title-wrap">
+        <h2>Reading for Viewpoints</h2>
+        <div class="meta">Opinion article + reader comment · 10 questions · ~13 minutes</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-bar"><span>What you'll see</span><span>10 questions</span></div>
+      <div class="task-body">
+        <h3>An article with multiple opinions. Then a reader comment with blanks.</h3>
+        <p class="tagline">A newspaper-style article presents 2–3 viewpoints on an issue. Five questions follow. Then a reader's response has 5 blanks to fill — testing whether you grasped the perspectives.</p>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="t4-a">Approach</button>
+          <button class="tab" data-tab="t4-b">Tips & Tricks</button>
+          <button class="tab" data-tab="t4-c">Pitfalls</button>
+        </div>
+
+        <div class="tab-content active" id="t4-a">
+          <ol class="steps">
+            <li><strong>Identify the speakers and their positions</strong> as you read. Who supports the policy? Who opposes? Who is neutral? Mentally tag each one.</li>
+            <li><strong>Note the writer's own stance.</strong> The article's author may be neutral, supportive, or skeptical — questions often test this.</li>
+            <li><strong>For Part A questions,</strong> match each question to the right viewpoint. "What does the researcher believe?" — go to the researcher's quote, not the critic's.</li>
+            <li><strong>For the reader comment (Part B),</strong> read the whole comment first to see whether the reader agrees, disagrees, or partly agrees with someone in the article.</li>
+            <li><strong>Fill blanks using viewpoint logic.</strong> The blank options will all be grammatical — the right one captures the reader's specific opinion and matches the surrounding sentences.</li>
+          </ol>
+        </div>
+
+        <div class="tab-content" id="t4-b">
+          <div class="tip-grid">
+            <div class="tip"><div class="tip-head">Map the Voices</div><div class="tip-body">Quickly note who says what: Person A = pro, Person B = con, Person C = cautious. Crucial for accuracy.</div></div>
+            <div class="tip"><div class="tip-head">Identify the Reader's Side</div><div class="tip-body">Before answering blanks, decide: does the reader agree with the writer? With which expert? This frames every blank.</div></div>
+            <div class="tip"><div class="tip-head">Hedge Words Matter</div><div class="tip-body">"Might," "could," "tends to" signal qualified opinions. "Clearly," "always," "must" signal strong positions.</div></div>
+            <div class="tip"><div class="tip-head">Implicit Bias</div><div class="tip-body">2025 updates emphasize spotting unstated bias — what the author chooses to include, emphasize, or omit.</div></div>
+            <div class="tip"><div class="tip-head">Watch the Connectors</div><div class="tip-body">In the reader comment, words before each blank ("but," "moreover," "in contrast") direct the answer's logic.</div></div>
+            <div class="tip"><div class="tip-head">Tone of the Reader</div><div class="tip-body">A frustrated reader picks emotional words. A measured reader uses cautious ones. Match the register.</div></div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t4-c">
+          <div class="pitfalls">
+            <div class="pitfalls-title">Common Pitfalls</div>
+            <ul>
+              <li>Attributing one expert's view to another — mix-ups happen when speakers blur together.</li>
+              <li>Assuming the writer agrees with the first expert quoted. They often don't.</li>
+              <li>Picking blank answers based only on grammar — all four options usually fit grammatically.</li>
+              <li>Missing sarcasm or skepticism in the reader comment ("Oh, sure, that'll definitely work").</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STRATEGY ============ -->
+  <section class="section" id="strategy">
+    <div class="section-head">
+      <div class="section-num">05</div>
+      <div class="section-title-wrap">
+        <h2>Cross-Task Strategy</h2>
+        <div class="meta">Time, pacing, preparation</div>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h3>Pre-Test Checklist <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mute);font-weight:400">— tap to mark done</span></h3>
+      <div class="check-item" data-key="c1"><div class="check-box"></div><div class="check-text">Take at least 3 full-length timed practice tests to internalize pacing.</div></div>
+      <div class="check-item" data-key="c2"><div class="check-box"></div><div class="check-text">Read one Canadian news article daily (CBC, Globe and Mail) — builds context and vocabulary.</div></div>
+      <div class="check-item" data-key="c3"><div class="check-box"></div><div class="check-text">Practice scanning skills: find a name, date, or fact in a long article within 20 seconds.</div></div>
+      <div class="check-item" data-key="c4"><div class="check-box"></div><div class="check-text">Learn 50 high-frequency academic connectors (however, moreover, consequently, etc.).</div></div>
+      <div class="check-item" data-key="c5"><div class="check-box"></div><div class="check-text">Drill paraphrase recognition — practice spotting synonyms and rewordings.</div></div>
+      <div class="check-item" data-key="c6"><div class="check-box"></div><div class="check-text">Familiarize yourself with the official CELPIP interface — the digital reading experience.</div></div>
+      <div class="check-item" data-key="c7"><div class="check-box"></div><div class="check-text">On test day: pen, paper, water, ID, and arrive 30 min early.</div></div>
+      <div class="check-item" data-key="c8"><div class="check-box"></div><div class="check-text">Sleep 7+ hours the night before. Reading needs a fresh brain more than any other section.</div></div>
+    </div>
+
+    <div style="margin-top:24px">
+      <h3 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:10px">Vocabulary You'll See Often</h3>
+      <p style="color:var(--mute);font-style:italic;font-family:'Fraunces',serif;margin-bottom:12px">Tap a card to reveal its meaning.</p>
+      <div class="vocab-grid" id="vocabGrid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div style="margin-top:32px">
+      <h3 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:14px">Time Budget at a Glance</h3>
+      <div style="border:2px solid var(--ink);background:var(--paper)">
+        <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase">
+          <div style="padding:10px 14px">Task</div><div style="padding:10px 14px">Focus</div><div style="padding:10px 14px;text-align:right">Questions</div><div style="padding:10px 14px;text-align:right">Time</div>
+        </div>
+        <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;border-bottom:1px solid var(--rule)">
+          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">01</div>
+          <div style="padding:12px 14px">Email + reply with blanks</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">11</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~11 min</div>
+        </div>
+        <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;border-bottom:1px solid var(--rule)">
+          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">02</div>
+          <div style="padding:12px 14px">Diagram + email application</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">8</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~9 min</div>
+        </div>
+        <div style="display:grid;grid-template-columns:60px 1fr 100px 100px;border-bottom:1px solid var(--rule)">
+          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">03</div>
+          <div style="padding:12px 14px">4-paragraph informational article</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">9</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~13 min</div>
+        </div>
+        <div style="display:grid;grid-template-columns:60px 1fr 100px 100px">
+          <div style="padding:12px 14px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent)">04</div>
+          <div style="padding:12px 14px">Opinion article + reader comment</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">10</div>
+          <div style="padding:12px 14px;text-align:right;font-family:'JetBrains Mono',monospace">~13 min</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRACTICE QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-head">
+      <div class="section-num">06</div>
+      <div class="section-title-wrap">
+        <h2>Self-Check Quiz</h2>
+        <div class="meta">8 strategy questions · pick the best answer</div>
+      </div>
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-head">How well do you know the section?</div>
+      <div class="quiz-sub">No timer. Tap to answer. Get instant feedback.</div>
+      <div id="quizContainer"></div>
+      <div class="quiz-score" id="quizScore">Answer questions to see your score</div>
+    </div>
+  </section>
+
+  <div class="footer">
+    A study companion · Not affiliated with Paragon Testing Enterprises · Practice with official CELPIP materials too
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   TAB SWITCHING (per-task)
+   ========================================================= */
+document.querySelectorAll('.tabs').forEach(group=>{
+  const tabs = group.querySelectorAll('.tab');
+  tabs.forEach(t=>{
+    t.addEventListener('click',()=>{
+      const target = t.dataset.tab;
+      const parent = t.closest('.task-body');
+      parent.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      parent.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      parent.querySelector('#'+target).classList.add('active');
+    });
+  });
+});
+
+/* =========================================================
+   NAV SMOOTH SCROLL + ACTIVE STATE
+   ========================================================= */
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const el = document.getElementById(btn.dataset.target);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+let timerSecs = 11*60;
+let timerInt = null;
+const display = document.getElementById('timer');
+function fmt(s){
+  const m=Math.floor(s/60), sec=s%60;
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+function render(){display.textContent = fmt(timerSecs);}
+document.getElementById('startBtn').onclick = ()=>{
+  if(timerInt) return;
+  timerInt = setInterval(()=>{
+    if(timerSecs<=0){clearInterval(timerInt);timerInt=null;display.style.color='#ffd166';return;}
+    timerSecs--; render();
+    if(timerSecs<=60) display.style.color='#ffd166';
+    if(timerSecs<=30) display.style.color='#ff6b6b';
+  },1000);
+};
+document.getElementById('pauseBtn').onclick = ()=>{
+  if(timerInt){clearInterval(timerInt);timerInt=null;}
+};
+document.getElementById('resetBtn').onclick = ()=>{
+  if(timerInt){clearInterval(timerInt);timerInt=null;}
+  const active = document.querySelector('.preset.active');
+  timerSecs = parseInt(active.dataset.mins)*60;
+  display.style.color='';
+  render();
+};
+document.querySelectorAll('.preset').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.preset').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+    if(timerInt){clearInterval(timerInt);timerInt=null;}
+    timerSecs = parseInt(p.dataset.mins)*60;
+    display.style.color='';
+    render();
+  });
+});
+render();
+
+/* =========================================================
+   CHECKLIST (persist via in-memory state)
+   ========================================================= */
+document.querySelectorAll('.check-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    item.classList.toggle('done');
+  });
+});
+
+/* =========================================================
+   VOCAB CARDS
+   ========================================================= */
+const vocab = [
+  {w:'Implication', m:'A conclusion that can be drawn from something, although not explicitly stated.'},
+  {w:'Inference', m:'A conclusion reached on the basis of evidence and reasoning.'},
+  {w:'Albeit', m:'Although; even though. Often introduces a qualifying statement.'},
+  {w:'Concur', m:'To agree with someone or with an opinion.'},
+  {w:'Refute', m:'To prove a statement or theory to be wrong or false.'},
+  {w:'Advocate', m:'To publicly support or recommend a particular cause or policy.'},
+  {w:'Mitigate', m:'To make less severe, serious, or painful.'},
+  {w:'Underscore', m:'To emphasize or highlight the importance of something.'},
+  {w:'Predominantly', m:'Mainly; for the most part.'},
+  {w:'Albeit', m:'Although (more formal). Often used in academic writing.'},
+  {w:'Contingent on', m:'Dependent on a particular condition.'},
+  {w:'Inevitably', m:'In a way that cannot be avoided.'}
+];
+const vg = document.getElementById('vocabGrid');
+vocab.forEach(v=>{
+  const card = document.createElement('div');
+  card.className='vocab-card';
+  card.innerHTML = `<div class="vocab-word">${v.w}</div><div class="vocab-meaning">${v.m}</div>`;
+  card.addEventListener('click',()=>card.classList.toggle('flipped'));
+  vg.appendChild(card);
+});
+
+/* =========================================================
+   QUIZ
+   ========================================================= */
+const quizQs = [
+  {
+    q:'In Task 1 (Reading Correspondence), what is the BEST first step before answering questions?',
+    opts:[
+      'Memorize the entire email word-for-word.',
+      'Skim the full email once to build a mental map of where information lives.',
+      'Read the questions first, then guess answers without reading the email.',
+      'Translate the email into your native language.'
+    ],
+    correct:1,
+    explain:'A quick skim gives you the layout. You won\'t memorize details, but you\'ll know where to find them when questions point you back.'
+  },
+  {
+    q:'In Task 2 (Diagram), where do exceptions and special conditions usually hide?',
+    opts:[
+      'In the title of the diagram.',
+      'In the email body.',
+      'In footnotes, asterisks, and fine print on the diagram.',
+      'They don\'t exist in CELPIP diagrams.'
+    ],
+    correct:2,
+    explain:'Asterisks, footnotes, and "*conditions apply" notes almost always become test questions. Read them first.'
+  },
+  {
+    q:'Task 3 asks "Which paragraph discusses economic effects?" The word "economic" appears in paragraphs 2 and 4. What should you do?',
+    opts:[
+      'Always pick the first paragraph where the word appears.',
+      'Skip the question.',
+      'Read both surrounding sentences to confirm which paragraph is actually ABOUT economic effects.',
+      'Pick paragraph 4 because it\'s usually the answer.'
+    ],
+    correct:2,
+    explain:'A word can appear in passing without being the paragraph\'s main idea. Confirm the concept, not just the keyword.'
+  },
+  {
+    q:'In Task 4 (Viewpoints), the reader comment has 5 blanks. Each blank has 4 grammatically correct options. How do you choose?',
+    opts:[
+      'Pick whichever option sounds most sophisticated.',
+      'Identify the reader\'s overall stance first, then pick the option that fits their specific opinion and the surrounding logic.',
+      'Pick the longest option.',
+      'Pick the option closest to dictionary definition.'
+    ],
+    correct:1,
+    explain:'All options will pass grammar. The right one matches the reader\'s viewpoint AND fits with connector words like "however," "moreover," "in contrast."'
+  },
+  {
+    q:'You\'re stuck on a question for 90 seconds. What\'s the smart move?',
+    opts:[
+      'Keep going until you solve it — every question matters.',
+      'Skip it entirely and leave it blank.',
+      'Flag it, take your best guess, and move on. Return only if time permits.',
+      'Restart the section.'
+    ],
+    correct:2,
+    explain:'Time spent stuck on one question costs you easier marks later. Always guess, mark, and move — never leave blanks.'
+  },
+  {
+    q:'Which section is MOST likely to test paraphrase recognition (synonyms and rewordings)?',
+    opts:[
+      'Only Task 1.',
+      'Only Task 2.',
+      'All four tasks, especially Task 3.',
+      'None — CELPIP uses literal word matches.'
+    ],
+    correct:2,
+    explain:'CELPIP rewards meaning, not word-spotting. Answers rarely copy text verbatim — they paraphrase. Task 3 is the most paraphrase-heavy.'
+  },
+  {
+    q:'After moving from Task 1 to Task 2, you realize you wanted to change an answer in Task 1. Can you?',
+    opts:[
+      'Yes, you can flip back anytime within the Reading section.',
+      'No — once you move to the next part, you cannot return to a previous one.',
+      'Only if you raise your hand to ask the proctor.',
+      'Only during the last 5 minutes of the test.'
+    ],
+    correct:1,
+    explain:'CELPIP is linear. Once you advance to the next part, you cannot return. Use your time wisely within each part.'
+  },
+  {
+    q:'For the 2025 updates, what skill has gained extra emphasis in Task 4?',
+    opts:[
+      'Memorizing vocabulary lists.',
+      'Identifying implicit biases and what authors emphasize or omit.',
+      'Speed reading at 600 WPM.',
+      'Drawing diagrams from the text.'
+    ],
+    correct:1,
+    explain:'2025 CELPIP updates lean into media literacy. Task 4 tests your ability to spot bias and recognize what perspectives are framed or left out.'
+  }
+];
+
+const qc = document.getElementById('quizContainer');
+let answered = 0, correct = 0;
+quizQs.forEach((Q,i)=>{
+  const card = document.createElement('div');
+  card.className='q-card';
+  card.innerHTML = `
+    <div class="q-num">Question ${String(i+1).padStart(2,'0')}</div>
+    <div class="q-text">${Q.q}</div>
+    <div class="q-opts" data-idx="${i}">
+      ${Q.opts.map((o,j)=>`<div class="q-opt" data-opt="${j}">${String.fromCharCode(65+j)}. ${o}</div>`).join('')}
+    </div>
+    <div class="q-explain" id="ex-${i}">${Q.explain}</div>
+  `;
+  qc.appendChild(card);
+});
+
+document.querySelectorAll('.q-opts').forEach(group=>{
+  const idx = parseInt(group.dataset.idx);
+  group.querySelectorAll('.q-opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      if(group.classList.contains('locked')) return;
+      group.classList.add('locked');
+      const chosen = parseInt(opt.dataset.opt);
+      const right = quizQs[idx].correct;
+      group.querySelectorAll('.q-opt').forEach((o,j)=>{
+        o.classList.add('disabled');
+        if(j===right) o.classList.add('correct');
+        if(j===chosen && chosen!==right) o.classList.add('wrong');
+      });
+      document.getElementById('ex-'+idx).classList.add('show');
+      answered++;
+      if(chosen===right) correct++;
+      updateScore();
+    });
+  });
+});
+
+function updateScore(){
+  const pct = answered ? Math.round((correct/answered)*100) : 0;
+  document.getElementById('quizScore').textContent =
+    `Score: ${correct} / ${answered} answered · ${pct}% correct · ${quizQs.length-answered} remaining`;
+}
+
+/* =========================================================
+   SCROLL SPY for nav
+   ========================================================= */
+const sections = ['t1','t2','t3','t4','strategy','quiz'].map(id=>document.getElementById(id));
+window.addEventListener('scroll',()=>{
+  const scrollY = window.scrollY + 140;
+  let current = sections[0].id;
+  sections.forEach(s=>{
+    if(s.offsetTop <= scrollY) current = s.id;
+  });
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.target===current);
+  });
+});
+</script>
+</body>
+</html>

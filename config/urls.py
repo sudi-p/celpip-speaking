@@ -39,6 +39,8 @@ urlpatterns = [
     path("speaking-task-8", TemplateView.as_view(template_name="speaking task 8.html", extra_context={"active_page": "task_8"}), name="speaking_task_8"),
     path("writing-task-1", TemplateView.as_view(template_name="writing task 1.html", extra_context={"active_page": "writing_task_1"}), name="writing_task_1"),
     path("writing-task-2", TemplateView.as_view(template_name="writing task 2.html", extra_context={"active_page": "writing_task_2"}), name="writing_task_2"),
+    path("listening", TemplateView.as_view(template_name="listening.html", extra_context={"active_page": "listening"}), name="listening"),
+    path("reading", TemplateView.as_view(template_name="reading.html", extra_context={"active_page": "reading"}), name="reading"),
 
     # Media files (audio recordings) — must come BEFORE the catch-all
     re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
