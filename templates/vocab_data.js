@@ -186,4 +186,16 @@ window.VOCAB = [
   { word: "With regard to / Regarding", meaning: "Professional way to reference a specific topic", example: "Regarding your earlier email, I have some concerns.", type: "Polite Language", task: "W1" },
   { word: "Thank you for your", meaning: "Express gratitude politely and professionally", example: "Thank you for your time and consideration.", type: "Email Closing", task: "W1" },
   { word: "I look forward to", meaning: "Show positive anticipation about future communication", example: "I look forward to hearing from you soon.", type: "Email Closing", task: "W1" },
+
+  // ── Writing Task 2: Essay Writing ──
+  { word: "It is clear that", meaning: "State your position confidently and definitively", example: "It is clear that government action is necessary.", type: "Thesis Statement", task: "W2" },
+  { word: "I believe that / I argue that", meaning: "Classic thesis phrasing that shows personal stance", example: "I believe that education should be free for all.", type: "Thesis Statement", task: "W2" },
+  { word: "One could argue that", meaning: "Introduce a supporting argument thoughtfully to show nuance", example: "One could argue that innovation drives economic growth.", type: "Argument Development", task: "W2" },
+  { word: "It is essential that / It is vital that", meaning: "Emphasize the importance of a point or action", example: "It is essential that we take action now.", type: "Argument Development", task: "W2" },
+  { word: "To summarize / In conclusion", meaning: "Introduce your final paragraph and recap main points", example: "To summarize, the evidence strongly supports this position.", type: "Argument Development", task: "W2" },
+  { word: "For example / For instance", meaning: "Introduce specific examples or concrete evidence", example: "For example, research shows that exercise improves mental health.", type: "Transition Words", task: "W2" },
+  { word: "Furthermore / Moreover / In addition", meaning: "Add supporting points to strengthen your argument", example: "Furthermore, the economic impact cannot be ignored.", type: "Transition Words", task: "W2" },
+  { word: "In contrast / However / Nevertheless", meaning: "Present opposing views or acknowledge counterarguments", example: "However, this approach has significant limitations.", type: "Transition Words", task: "W2" },
+  { word: "This demonstrates that", meaning: "Connect evidence directly to your argument", example: "This demonstrates the effectiveness of the proposed policy.", type: "Evidence Integration", task: "W2" },
+  { word: "As a result / Consequently / Therefore", meaning: "Show clear cause-and-effect relationships", example: "As a result, the proposal should be implemented immediately.", type: "Evidence Integration", task: "W2" },
 ];
