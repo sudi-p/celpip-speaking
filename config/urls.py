@@ -17,6 +17,7 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"}), name="index"),
     path("index", TemplateView.as_view(template_name="index.html", extra_context={"active_page": "tasks"}), name="index_html"),
     path("record", TemplateView.as_view(template_name="record.html", extra_context={"active_page": "record"}), name="record"),
+    path("dashboard", TemplateView.as_view(template_name="dashboard.html", extra_context={"active_page": "dashboard"}), name="dashboard"),
     path("history", TemplateView.as_view(template_name="history.html", extra_context={"active_page": "history"}), name="history"),
     path("detail", TemplateView.as_view(template_name="detail.html", extra_context={"active_page": "record"}), name="detail"),
     path("logs", TemplateView.as_view(template_name="logs.html", extra_context={"active_page": "logs"}), name="logs"),

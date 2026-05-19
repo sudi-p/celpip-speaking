@@ -159,7 +159,7 @@
           : `<span class="score-badge low">—</span>`;
         const date = new Date(s.created_at).toLocaleDateString();
         const isWriting = WRITING_TASK_IDS.has(s.task_id);
-        const viewHref = `${isWriting ? "write" : "record"}.html?session=${s.id}`;
+        const viewHref = `/${isWriting ? "write" : "record"}?session=${s.id}`;
         const questionSnippet = s.question
           ? `<p class="text-xs text-slate italic mt-2 line-clamp-2">"${escapeHtml(s.question)}"</p>`
           : "";

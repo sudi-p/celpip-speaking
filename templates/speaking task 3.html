@@ -292,85 +292,8 @@
          PANE: VOCAB BANK
     ══════════════════════════════════════════ -->
     <div id="pane-vocab" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="spatial">Spatial</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="color">Color</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="mood">Mood</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="action">Action</button>
-      </div>
-
-      <div class="space-y-3">
-        <div class="vocab-word" data-category="spatial">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In the foreground</p>
-            <p class="text-xs text-slate">The closest/nearest part of the image. "In the foreground, I can see children playing."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="spatial">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In the background</p>
-            <p class="text-xs text-slate">The farthest/rear part of the image. "In the background, mountains are visible."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="spatial">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In the center</p>
-            <p class="text-xs text-slate">The middle of the image. "In the center, there's a large fountain."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="spatial">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Surrounding / Nestled</p>
-            <p class="text-xs text-slate">Describing things around or within other things. "Buildings nestled among trees."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="color">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Vibrant / Vivid</p>
-            <p class="text-xs text-slate">Bright and full of life. "The market has vibrant red and yellow colors."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="color">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Muted / Dull / Pale</p>
-            <p class="text-xs text-slate">Soft, subtle colors. "The sky is a pale blue."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="mood">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Bustling / Lively</p>
-            <p class="text-xs text-slate">Full of activity and energy. "A bustling marketplace scene."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="mood">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Serene / Peaceful / Tranquil</p>
-            <p class="text-xs text-slate">Calm and quiet. "The beach looks very serene."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="mood">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Chaotic / Hectic</p>
-            <p class="text-xs text-slate">Disorganized or busy in a stressful way.</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="action">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Strolling / Wandering / Gathered</p>
-            <p class="text-xs text-slate">Movement actions. Always use present continuous: "people are strolling," "visitors are gathered."</p>
-          </div>
-        </div>
-      </div>
+      <div id="vocab-filters" class="flex flex-wrap gap-2"></div>
+      <div id="vocab-content" class="space-y-4"></div>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -554,7 +477,61 @@
     <p class="text-xs text-slate/60">Master the art of scene description. Practice with diverse images, organize your thoughts spatially, and let your vocabulary shine through.</p>
   </footer>
 
+  <script src="/vocab_data.js"></script>
   <script>
+    // Vocab bank rendering for Task 3
+    function initializeVocabBank() {
+      const vocabFilters = document.getElementById('vocab-filters');
+      const vocabContent = document.getElementById('vocab-content');
+
+      if (!vocabFilters) return;
+
+      // Get unique types for task 3
+      const task3Words = window.VOCAB.filter(v => v.task === '3');
+      const types = ['all', ...new Set(task3Words.map(v => v.type))];
+
+      // Create filter buttons
+      types.forEach(type => {
+        const btn = document.createElement('button');
+        btn.className = `vocab-filter-btn ${type === 'all' ? 'filter-active' : 'filter-inactive'} px-4 py-1.5 rounded-full border text-xs font-medium`;
+        btn.textContent = type === 'all' ? 'All Words' : type;
+        btn.dataset.vocabType = type;
+
+        btn.addEventListener('click', () => {
+          vocabFilters.querySelectorAll('.vocab-filter-btn').forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
+          renderVocabWords(type);
+        });
+
+        vocabFilters.appendChild(btn);
+      });
+
+      // Initial render
+      renderVocabWords('all');
+    }
+
+    function renderVocabWords(filterType) {
+      const vocabContent = document.getElementById('vocab-content');
+      let filtered = window.VOCAB.filter(v => v.task === '3');
+
+      if (filterType !== 'all') {
+        filtered = filtered.filter(v => v.type === filterType);
+      }
+
+      vocabContent.innerHTML = filtered.map(word => `
+        <div class="bg-white rounded-xl border border-mist p-4">
+          <p class="text-sm font-semibold text-ink mb-1">${word.word}</p>
+          <p class="text-xs text-slate mb-2"><strong>Meaning:</strong> ${word.meaning}</p>
+          <p class="text-xs text-slate italic"><strong>Example:</strong> "${word.example}"</p>
+          <span class="inline-block mt-3 text-xs font-medium text-amber2 bg-amber2-light px-2 py-1 rounded">${word.type}</span>
+        </div>
+      `).join('');
+    }
+
     // Tab and pane management
     const tabBtns = document.querySelectorAll('.tab-btn');
     const panes = document.querySelectorAll('.pane');
@@ -585,38 +562,32 @@
       });
     });
 
-    // Vocabulary and Tips filtering
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const vocabWords = document.querySelectorAll('.vocab-word');
-    const tipCards = document.querySelectorAll('.tip-card');
+    // Tips filtering (Pro Tips section only)
+    const tipPane = document.getElementById('pane-tips');
+    if (tipPane) {
+      const tipFilterBtns = tipPane.querySelectorAll('.filter-btn');
+      const tipCards = tipPane.querySelectorAll('.tip-card');
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const category = btn.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.remove('filter-active');
-          b.classList.add('filter-inactive');
-        });
-        btn.classList.add('filter-active');
-        btn.classList.remove('filter-inactive');
+      tipFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = btn.getAttribute('data-category');
+          tipFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
 
-        vocabWords.forEach(word => {
-          if (category === 'all' || word.getAttribute('data-category') === category) {
-            word.style.display = 'block';
-          } else {
-            word.style.display = 'none';
-          }
-        });
-
-        tipCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+          tipCards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
+    }
 
     // Mobile menu toggle
     const navbarBurger = document.getElementById('navbar-burger');
@@ -632,6 +603,13 @@
         alert('Sign in functionality would be integrated here');
       });
     });
+
+    // Initialize vocab bank on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeVocabBank);
+    } else {
+      initializeVocabBank();
+    }
   </script>
 
 </body>
