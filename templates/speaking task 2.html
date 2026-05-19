@@ -292,99 +292,8 @@
          PANE: VOCAB BANK
     ══════════════════════════════════════════ -->
     <div id="pane-vocab" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="emotion">Emotion & Reaction</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="transition">Transition</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="sensory">Sensory</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="closing">Closing</button>
-      </div>
-
-      <div class="space-y-3">
-        <div class="vocab-word" data-category="emotion">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Exhilarating</p>
-            <p class="text-xs text-slate">Thrilling and exciting. "It was an exhilarating climb."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="emotion">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Humbling</p>
-            <p class="text-xs text-slate">Making you feel small in a meaningful way. Teaches perspective.</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="emotion">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Apprehensive</p>
-            <p class="text-xs text-slate">Slightly anxious, unsure of what's coming. "I felt apprehensive before starting."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="emotion">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Awestruck</p>
-            <p class="text-xs text-slate">Overwhelmed by something impressive or beautiful.</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="emotion">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Relieved</p>
-            <p class="text-xs text-slate">Free from worry after something resolves. Strong for emotional shifts.</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Shortly after</p>
-            <p class="text-xs text-slate">Useful for moving from opening to body. "Shortly after arriving, I realized..."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In that moment</p>
-            <p class="text-xs text-slate">Creates immediacy. "In that moment, everything changed."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Looking back</p>
-            <p class="text-xs text-slate">Perfect for closing. Shows reflection.</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="sensory">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">The air smelled of...</p>
-            <p class="text-xs text-slate">Olfactory details are rare and memorable. "The air smelled like pine and rain."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="sensory">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">My hands were shaking</p>
-            <p class="text-xs text-slate">Physical sensation that shows emotion. Very fluent.</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="closing">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">It taught me...</p>
-            <p class="text-xs text-slate">Standard closing frame. "It taught me I'm capable of more than I thought."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="closing">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I'd do it again</p>
-            <p class="text-xs text-slate">Simple, strong way to end. Shows confidence.</p>
-          </div>
-        </div>
-      </div>
+      <div id="vocab-filters" class="flex flex-wrap gap-2"></div>
+      <div id="vocab-content" class="space-y-4"></div>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -568,7 +477,61 @@
     <p class="text-xs text-slate/60">Build your fluency one story at a time. Practice with real scenarios, internalize the structure, and let your natural voice shine through.</p>
   </footer>
 
+  <script src="/vocab_data.js"></script>
   <script>
+    // Vocab bank rendering for Task 2
+    function initializeVocabBank() {
+      const vocabFilters = document.getElementById('vocab-filters');
+      const vocabContent = document.getElementById('vocab-content');
+
+      if (!vocabFilters) return;
+
+      // Get unique types for task 2
+      const task2Words = window.VOCAB.filter(v => v.task === '2');
+      const types = ['all', ...new Set(task2Words.map(v => v.type))];
+
+      // Create filter buttons
+      types.forEach(type => {
+        const btn = document.createElement('button');
+        btn.className = `vocab-filter-btn ${type === 'all' ? 'filter-active' : 'filter-inactive'} px-4 py-1.5 rounded-full border text-xs font-medium`;
+        btn.textContent = type === 'all' ? 'All Words' : type;
+        btn.dataset.vocabType = type;
+
+        btn.addEventListener('click', () => {
+          vocabFilters.querySelectorAll('.vocab-filter-btn').forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
+          renderVocabWords(type);
+        });
+
+        vocabFilters.appendChild(btn);
+      });
+
+      // Initial render
+      renderVocabWords('all');
+    }
+
+    function renderVocabWords(filterType) {
+      const vocabContent = document.getElementById('vocab-content');
+      let filtered = window.VOCAB.filter(v => v.task === '2');
+
+      if (filterType !== 'all') {
+        filtered = filtered.filter(v => v.type === filterType);
+      }
+
+      vocabContent.innerHTML = filtered.map(word => `
+        <div class="bg-white rounded-xl border border-mist p-4">
+          <p class="text-sm font-semibold text-ink mb-1">${word.word}</p>
+          <p class="text-xs text-slate mb-2"><strong>Meaning:</strong> ${word.meaning}</p>
+          <p class="text-xs text-slate italic"><strong>Example:</strong> "${word.example}"</p>
+          <span class="inline-block mt-3 text-xs font-medium text-emerald2 bg-emerald2-light px-2 py-1 rounded">${word.type}</span>
+        </div>
+      `).join('');
+    }
+
     // Tab and pane management
     const tabBtns = document.querySelectorAll('.tab-btn');
     const panes = document.querySelectorAll('.pane');
@@ -599,38 +562,32 @@
       });
     });
 
-    // Vocabulary and Tips filtering
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const vocabWords = document.querySelectorAll('.vocab-word');
-    const tipCards = document.querySelectorAll('.tip-card');
+    // Tips filtering (Pro Tips section only)
+    const tipPane = document.getElementById('pane-tips');
+    if (tipPane) {
+      const tipFilterBtns = tipPane.querySelectorAll('.filter-btn');
+      const tipCards = tipPane.querySelectorAll('.tip-card');
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const category = btn.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.remove('filter-active');
-          b.classList.add('filter-inactive');
-        });
-        btn.classList.add('filter-active');
-        btn.classList.remove('filter-inactive');
+      tipFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = btn.getAttribute('data-category');
+          tipFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
 
-        vocabWords.forEach(word => {
-          if (category === 'all' || word.getAttribute('data-category') === category) {
-            word.style.display = 'block';
-          } else {
-            word.style.display = 'none';
-          }
-        });
-
-        tipCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+          tipCards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
+    }
 
     // Mobile menu toggle
     const navbarBurger = document.getElementById('navbar-burger');
@@ -646,6 +603,13 @@
         alert('Sign in functionality would be integrated here');
       });
     });
+
+    // Initialize vocab bank on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeVocabBank);
+    } else {
+      initializeVocabBank();
+    }
   </script>
 
 </body>
