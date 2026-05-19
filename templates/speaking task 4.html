@@ -290,85 +290,8 @@
          PANE: VOCAB BANK
     ══════════════════════════════════════════ -->
     <div id="pane-vocab" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="conditional">Conditional</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="predictive">Predictive</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="consequence">Consequence</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="likelihood">Likelihood</button>
-      </div>
-
-      <div class="space-y-3">
-        <div class="vocab-word" data-category="conditional predictive">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">If... then...</p>
-            <p class="text-xs text-slate">Structure for stating hypothetical outcomes logically. "If X happens, then Y would occur."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="predictive">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Will likely</p>
-            <p class="text-xs text-slate">Express a confident prediction. "This will likely result in higher prices."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="conditional">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Would</p>
-            <p class="text-xs text-slate">Use in conditional sentences. "If X happens, Y would occur."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="predictive">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Might / Could</p>
-            <p class="text-xs text-slate">Express uncertain or possible outcomes. "It might lead to..." or "It could result in..."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="likelihood">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Probably / Likely / Unlikely</p>
-            <p class="text-xs text-slate">Indicate the degree of certainty. "It's unlikely that..." or "I'd say that's probably..."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="consequence">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">As a result</p>
-            <p class="text-xs text-slate">Link a prediction to its logical consequence. "As a result, unemployment might rise."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="predictive">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I predict that...</p>
-            <p class="text-xs text-slate">Explicitly state a forecast. "I predict that companies will invest more in..."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="conditional">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In the event that</p>
-            <p class="text-xs text-slate">Introduce hypothetical circumstances formally. "In the event that interest rates drop..."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="likelihood">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">It's unlikely / It's improbable</p>
-            <p class="text-xs text-slate">State predictions with lower probability. "It's unlikely that prices will decrease."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="consequence">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">This would lead to...</p>
-            <p class="text-xs text-slate">Explain the logical outcome. "This would lead to better work-life balance."</p>
-          </div>
-        </div>
-      </div>
+      <div id="vocab-filters" class="flex flex-wrap gap-2"></div>
+      <div id="vocab-content" class="space-y-4"></div>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -552,7 +475,61 @@
     <p class="text-xs text-slate/60">Master the art of logical prediction. Practice with real scenarios, support your thinking with reasoning, and let your confidence shine through.</p>
   </footer>
 
+  <script src="/vocab_data.js"></script>
   <script>
+    // Vocab bank rendering for Task 4
+    function initializeVocabBank() {
+      const vocabFilters = document.getElementById('vocab-filters');
+      const vocabContent = document.getElementById('vocab-content');
+
+      if (!vocabFilters) return;
+
+      // Get unique types for task 4
+      const task4Words = window.VOCAB.filter(v => v.task === '4');
+      const types = ['all', ...new Set(task4Words.map(v => v.type))];
+
+      // Create filter buttons
+      types.forEach(type => {
+        const btn = document.createElement('button');
+        btn.className = `vocab-filter-btn ${type === 'all' ? 'filter-active' : 'filter-inactive'} px-4 py-1.5 rounded-full border text-xs font-medium`;
+        btn.textContent = type === 'all' ? 'All Words' : type;
+        btn.dataset.vocabType = type;
+
+        btn.addEventListener('click', () => {
+          vocabFilters.querySelectorAll('.vocab-filter-btn').forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
+          renderVocabWords(type);
+        });
+
+        vocabFilters.appendChild(btn);
+      });
+
+      // Initial render
+      renderVocabWords('all');
+    }
+
+    function renderVocabWords(filterType) {
+      const vocabContent = document.getElementById('vocab-content');
+      let filtered = window.VOCAB.filter(v => v.task === '4');
+
+      if (filterType !== 'all') {
+        filtered = filtered.filter(v => v.type === filterType);
+      }
+
+      vocabContent.innerHTML = filtered.map(word => `
+        <div class="bg-white rounded-xl border border-mist p-4">
+          <p class="text-sm font-semibold text-ink mb-1">${word.word}</p>
+          <p class="text-xs text-slate mb-2"><strong>Meaning:</strong> ${word.meaning}</p>
+          <p class="text-xs text-slate italic"><strong>Example:</strong> "${word.example}"</p>
+          <span class="inline-block mt-3 text-xs font-medium text-rose2 bg-rose2-light px-2 py-1 rounded">${word.type}</span>
+        </div>
+      `).join('');
+    }
+
     // Tab and pane management
     const tabBtns = document.querySelectorAll('.tab-btn');
     const panes = document.querySelectorAll('.pane');
@@ -583,38 +560,32 @@
       });
     });
 
-    // Vocabulary and Tips filtering
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const vocabWords = document.querySelectorAll('.vocab-word');
-    const tipCards = document.querySelectorAll('.tip-card');
+    // Tips filtering (Pro Tips section only)
+    const tipPane = document.getElementById('pane-tips');
+    if (tipPane) {
+      const tipFilterBtns = tipPane.querySelectorAll('.filter-btn');
+      const tipCards = tipPane.querySelectorAll('.tip-card');
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const category = btn.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.remove('filter-active');
-          b.classList.add('filter-inactive');
-        });
-        btn.classList.add('filter-active');
-        btn.classList.remove('filter-inactive');
+      tipFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = btn.getAttribute('data-category');
+          tipFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
 
-        vocabWords.forEach(word => {
-          if (category === 'all' || word.getAttribute('data-category') === category) {
-            word.style.display = 'block';
-          } else {
-            word.style.display = 'none';
-          }
-        });
-
-        tipCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+          tipCards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
+    }
 
     // Mobile menu toggle
     const navbarBurger = document.getElementById('navbar-burger');
@@ -630,6 +601,13 @@
         alert('Sign in functionality would be integrated here');
       });
     });
+
+    // Initialize vocab bank on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeVocabBank);
+    } else {
+      initializeVocabBank();
+    }
   </script>
 
 </body>
