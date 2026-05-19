@@ -296,85 +296,8 @@
          PANE: VOCAB BANK
     ══════════════════════════════════════════ -->
     <div id="pane-vocab" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="compare">Comparison</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="persuade">Persuasion</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="reason">Reasoning</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="transition">Transitions</button>
-      </div>
-
-      <div class="space-y-3">
-        <div class="vocab-word" data-category="compare">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In contrast to</p>
-            <p class="text-xs text-slate">Shows differences. "In contrast to public transit, cars offer flexibility."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="compare">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">While / Whereas</p>
-            <p class="text-xs text-slate">Comparing two things. "While option A is cheaper, option B is more sustainable."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="persuade">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">It is crucial that</p>
-            <p class="text-xs text-slate">Emphasizes importance. "It is crucial that we prioritize sustainability."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="persuade">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Undeniably</p>
-            <p class="text-xs text-slate">Strong assertion. "This is undeniably the better choice."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="reason">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">The primary reason</p>
-            <p class="text-xs text-slate">Introduces main argument. "The primary reason is cost-effectiveness."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="reason">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">This means that</p>
-            <p class="text-xs text-slate">Draws conclusions. "This means that long-term savings are significant."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Furthermore</p>
-            <p class="text-xs text-slate">Adds another point. "Furthermore, reliability is also important."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="transition">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">In conclusion</p>
-            <p class="text-xs text-slate">Signals closing. "In conclusion, the evidence supports this choice."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="persuade">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Superior to</p>
-            <p class="text-xs text-slate">Shows preference. "This option is superior to the alternative."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="compare">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Similarly</p>
-            <p class="text-xs text-slate">Shows similarities. "Similarly, both options require initial investment."</p>
-          </div>
-        </div>
-      </div>
+      <div id="vocab-filters" class="flex flex-wrap gap-2"></div>
+      <div id="vocab-content" class="space-y-4"></div>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -552,7 +475,55 @@
     <p class="text-xs text-slate/60">Strong arguments are built, not inherited. Practice defending positions you believe in — and some you don't. Flexibility and confidence are what examiners listen for.</p>
   </footer>
 
+  <script src="/vocab_data.js"></script>
   <script>
+    function initializeVocabBank() {
+      const filterContainer = document.getElementById('vocab-filters');
+      const contentContainer = document.getElementById('vocab-content');
+
+      if (!window.VOCAB) return;
+
+      const taskVocab = window.VOCAB.filter(v => v.task === '5');
+      const types = ['All', ...new Set(taskVocab.map(v => v.type))];
+
+      filterContainer.innerHTML = types.map(type =>
+        `<button class="vocab-filter-btn ${type === 'All' ? 'filter-active' : 'filter-inactive'} px-4 py-1.5 rounded-full border text-xs font-medium" data-type="${type}">${type}</button>`
+      ).join('');
+
+      renderVocabWords('All');
+
+      const vocabFilterBtns = filterContainer.querySelectorAll('.vocab-filter-btn');
+      vocabFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          vocabFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
+          const type = btn.getAttribute('data-type');
+          renderVocabWords(type);
+        });
+      });
+    }
+
+    function renderVocabWords(filterType) {
+      const contentContainer = document.getElementById('vocab-content');
+
+      if (!window.VOCAB) return;
+
+      const taskVocab = window.VOCAB.filter(v => v.task === '5');
+      const filtered = filterType === 'All' ? taskVocab : taskVocab.filter(v => v.type === filterType);
+
+      contentContainer.innerHTML = filtered.map(word => `
+        <div class="bg-white rounded-xl border border-mist p-4">
+          <p class="text-sm font-semibold text-ink mb-1">${word.word}</p>
+          <p class="text-xs text-slate mb-2">${word.meaning}</p>
+          <p class="text-xs text-violet2 italic">"${word.example}"</p>
+        </div>
+      `).join('');
+    }
+
     const tabBtns = document.querySelectorAll('.tab-btn');
     const panes = document.querySelectorAll('.pane');
 
@@ -581,37 +552,31 @@
       });
     });
 
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const vocabWords = document.querySelectorAll('.vocab-word');
-    const tipCards = document.querySelectorAll('.tip-card');
+    const tipPane = document.getElementById('pane-tips');
+    if (tipPane) {
+      const tipFilterBtns = tipPane.querySelectorAll('.filter-btn');
+      const tipCards = tipPane.querySelectorAll('.tip-card');
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const category = btn.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.remove('filter-active');
-          b.classList.add('filter-inactive');
-        });
-        btn.classList.add('filter-active');
-        btn.classList.remove('filter-inactive');
+      tipFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = btn.getAttribute('data-category');
+          tipFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
 
-        vocabWords.forEach(word => {
-          if (category === 'all' || word.getAttribute('data-category') === category) {
-            word.style.display = 'block';
-          } else {
-            word.style.display = 'none';
-          }
-        });
-
-        tipCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+          tipCards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
+    }
 
     const navbarBurger = document.getElementById('navbar-burger');
     const navbarMenu = document.getElementById('navbar-menu');
@@ -625,6 +590,8 @@
         alert('Sign in functionality would be integrated here');
       });
     });
+
+    initializeVocabBank();
   </script>
 
 </body>
