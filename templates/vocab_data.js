@@ -174,4 +174,16 @@ window.VOCAB = [
   { word: "Viable", meaning: "Capable of working successfully; feasible", example: "The proposed solution is viable and cost-effective.", type: "Evaluation & Results", task: "10" },
   { word: "Quantify", meaning: "To express in numbers or measurable terms", example: "It's difficult to quantify the impact of this change.", type: "Reasoning & Logic", task: "10" },
   { word: "Notable", meaning: "Worthy of attention; striking or remarkable", example: "There were several notable trends in the survey results.", type: "Feedback & Evaluation", task: "10" },
+
+  // ── Writing Task 1: Email Writing ──
+  { word: "I am writing to", meaning: "Classic opening for stating your purpose clearly", example: "I am writing to request an extension on the deadline.", type: "Email Opening", task: "W1" },
+  { word: "I would like to inquire about", meaning: "Professional way to ask questions politely", example: "I would like to inquire about the availability of the position.", type: "Email Opening", task: "W1" },
+  { word: "Furthermore / In addition", meaning: "Add another supporting point to strengthen argument", example: "In addition, I have five years of experience in this field.", type: "Linking Words", task: "W1" },
+  { word: "As a result / Consequently", meaning: "Show cause and effect relationships clearly", example: "As a result, I believe I am the right candidate.", type: "Linking Words", task: "W1" },
+  { word: "However / Nevertheless", meaning: "Introduce a contrasting or opposing idea", example: "However, I do have some questions about the timeline.", type: "Linking Words", task: "W1" },
+  { word: "I would appreciate it if", meaning: "Very polite way to make a request", example: "I would appreciate it if you could send me the updated schedule.", type: "Polite Language", task: "W1" },
+  { word: "Could you please", meaning: "Polite request phrasing that shows respect", example: "Could you please provide feedback by Friday?", type: "Polite Language", task: "W1" },
+  { word: "With regard to / Regarding", meaning: "Professional way to reference a specific topic", example: "Regarding your earlier email, I have some concerns.", type: "Polite Language", task: "W1" },
+  { word: "Thank you for your", meaning: "Express gratitude politely and professionally", example: "Thank you for your time and consideration.", type: "Email Closing", task: "W1" },
+  { word: "I look forward to", meaning: "Show positive anticipation about future communication", example: "I look forward to hearing from you soon.", type: "Email Closing", task: "W1" },
 ];

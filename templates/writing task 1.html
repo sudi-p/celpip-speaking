@@ -328,85 +328,8 @@
          PANE: VOCAB BANK
     ══════════════════════════════════════════ -->
     <div id="pane-vocab" class="pane space-y-4">
-      <div class="flex flex-wrap gap-2">
-        <button class="filter-btn filter-active px-4 py-1.5 rounded-full border text-xs font-medium" data-category="all">All</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="opening">Opening</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="linking">Linking</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="polite">Polite Language</button>
-        <button class="filter-btn filter-inactive px-4 py-1.5 rounded-full border text-xs font-medium" data-category="closing">Closing</button>
-      </div>
-
-      <div class="space-y-3">
-        <div class="vocab-word" data-category="opening">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I am writing to...</p>
-            <p class="text-xs text-slate">Classic opening for stating your purpose. "I am writing to request an extension on the deadline."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="opening">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I would like to inquire about...</p>
-            <p class="text-xs text-slate">Professional way to ask questions. "I would like to inquire about the availability of the position."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="linking">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Furthermore / In addition</p>
-            <p class="text-xs text-slate">Add another supporting point. "In addition, I have five years of experience in this field."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="linking">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">As a result / Consequently</p>
-            <p class="text-xs text-slate">Show cause and effect. "As a result, I believe I am the right candidate."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="linking">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">However / Nevertheless</p>
-            <p class="text-xs text-slate">Introduce a contrasting idea. "However, I do have some questions about the timeline."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="polite">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I would appreciate it if...</p>
-            <p class="text-xs text-slate">Very polite request. "I would appreciate it if you could send me the updated schedule."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="polite">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Could you please...</p>
-            <p class="text-xs text-slate">Polite request phrasing. "Could you please provide feedback by Friday?"</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="polite">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">With regard to / Regarding</p>
-            <p class="text-xs text-slate">Professional way to reference a topic. "Regarding your earlier email, I have some concerns."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="closing">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">Thank you for your...</p>
-            <p class="text-xs text-slate">Express gratitude politely. "Thank you for your time and consideration."</p>
-          </div>
-        </div>
-
-        <div class="vocab-word" data-category="closing">
-          <div class="bg-white rounded-xl border border-mist p-4">
-            <p class="text-sm font-semibold text-ink mb-1">I look forward to...</p>
-            <p class="text-xs text-slate">Show positive anticipation. "I look forward to hearing from you soon."</p>
-          </div>
-        </div>
-      </div>
+      <div id="vocab-filters" class="flex flex-wrap gap-2"></div>
+      <div id="vocab-content" class="space-y-4"></div>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -590,7 +513,55 @@
     <p class="text-xs text-slate/60">Master professional email writing. Practice with realistic scenarios, follow the structure, and let your professional tone shine through.</p>
   </footer>
 
+  <script src="/vocab_data.js"></script>
   <script>
+    function initializeVocabBank() {
+      const filterContainer = document.getElementById('vocab-filters');
+      const contentContainer = document.getElementById('vocab-content');
+
+      if (!window.VOCAB) return;
+
+      const taskVocab = window.VOCAB.filter(v => v.task === 'W1');
+      const types = ['All', ...new Set(taskVocab.map(v => v.type))];
+
+      filterContainer.innerHTML = types.map(type =>
+        `<button class="vocab-filter-btn ${type === 'All' ? 'filter-active' : 'filter-inactive'} px-4 py-1.5 rounded-full border text-xs font-medium" data-type="${type}">${type}</button>`
+      ).join('');
+
+      renderVocabWords('All');
+
+      const vocabFilterBtns = filterContainer.querySelectorAll('.vocab-filter-btn');
+      vocabFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          vocabFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
+          const type = btn.getAttribute('data-type');
+          renderVocabWords(type);
+        });
+      });
+    }
+
+    function renderVocabWords(filterType) {
+      const contentContainer = document.getElementById('vocab-content');
+
+      if (!window.VOCAB) return;
+
+      const taskVocab = window.VOCAB.filter(v => v.task === 'W1');
+      const filtered = filterType === 'All' ? taskVocab : taskVocab.filter(v => v.type === filterType);
+
+      contentContainer.innerHTML = filtered.map(word => `
+        <div class="bg-white rounded-xl border border-mist p-4">
+          <p class="text-sm font-semibold text-ink mb-1">${word.word}</p>
+          <p class="text-xs text-slate mb-2">${word.meaning}</p>
+          <p class="text-xs text-sapphire italic">"${word.example}"</p>
+        </div>
+      `).join('');
+    }
+
     // Tab and pane management
     const tabBtns = document.querySelectorAll('.tab-btn');
     const panes = document.querySelectorAll('.pane');
@@ -621,38 +592,32 @@
       });
     });
 
-    // Vocabulary and Tips filtering
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const vocabWords = document.querySelectorAll('.vocab-word');
-    const tipCards = document.querySelectorAll('.tip-card');
+    // Tips filtering (scoped to tips pane only)
+    const tipsPane = document.getElementById('pane-tips');
+    if (tipsPane) {
+      const tipFilterBtns = tipsPane.querySelectorAll('.filter-btn');
+      const tipCards = tipsPane.querySelectorAll('.tip-card');
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const category = btn.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.remove('filter-active');
-          b.classList.add('filter-inactive');
-        });
-        btn.classList.add('filter-active');
-        btn.classList.remove('filter-inactive');
+      tipFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = btn.getAttribute('data-category');
+          tipFilterBtns.forEach(b => {
+            b.classList.remove('filter-active');
+            b.classList.add('filter-inactive');
+          });
+          btn.classList.add('filter-active');
+          btn.classList.remove('filter-inactive');
 
-        vocabWords.forEach(word => {
-          if (category === 'all' || word.getAttribute('data-category') === category) {
-            word.style.display = 'block';
-          } else {
-            word.style.display = 'none';
-          }
-        });
-
-        tipCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+          tipCards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
+    }
 
     // Mobile menu toggle
     const navbarBurger = document.getElementById('navbar-burger');
@@ -668,6 +633,8 @@
         alert('Sign in functionality would be integrated here');
       });
     });
+
+    initializeVocabBank();
   </script>
 
 </body>
