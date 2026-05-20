@@ -13,7 +13,7 @@
       <a href="/dashboard" class="auth-only text-sm text-slate hover:text-ink transition-colors" style="display:none">Dashboard</a>
       <a href="/" class="text-sm text-slate hover:text-ink transition-colors">Tasks</a>
       <a href="/notes" class="text-sm text-slate hover:text-ink transition-colors">Study Notes</a>
-      <a href="/vocab" class="btext-sm text-slate hover:text-ink transition-colors">Vocab</a>
+      <a href="/vocab" class="text-sm text-slate hover:text-ink transition-colors">Vocab</a>
           
       <!-- Desktop Dropdown -->
       <div class="relative group">
@@ -59,10 +59,10 @@
         </button>
         <div id="mobile-dropdown-menu" class="hidden pl-4 flex flex-col gap-1 mt-1">
           <a href="/history" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">History</a>
-          <a href="/questions.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Questions</a>
-          <a href="/vocab.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Vocab</a>
-          <a href="/logs.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Logs</a>
-          <a href="/settings.html" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Settings</a>
+          <a href="/questions" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Questions</a>
+          <a href="/vocab" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Vocab</a>
+          <a href="/logs" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Logs</a>
+          <a href="/settings" class="text-sm text-slate hover:text-ink transition-colors py-2 px-2 rounded hover:bg-mist">Settings</a>
           <button id="nav-auth-btn-mobile" class="text-sm px-3 py-1.5 rounded-full bg-ink text-fog hover:bg-steel transition-colors w-fit mt-2">Sign In</button>
         </div>
       </div>
@@ -92,7 +92,7 @@
               btn.onclick = async (e) => {
                 e.preventDefault();
                 await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-                window.location.href = '/login.html';
+                window.location.href = '/login';
               };
             }
           });
@@ -104,7 +104,7 @@
           // Handle sign in
           [desktopBtn, mobileBtn].forEach(btn => {
             if (btn) {
-              btn.onclick = () => window.location.href = '/login.html';
+              btn.onclick = () => window.location.href = '/login';
             }
           });
         }
@@ -116,7 +116,7 @@
         [desktopBtn, mobileBtn].forEach(btn => {
           if (btn) {
             btn.textContent = 'Sign In';
-            btn.onclick = () => window.location.href = '/login.html';
+            btn.onclick = () => window.location.href = '/login';
           }
         });
       }

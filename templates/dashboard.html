@@ -7,6 +7,7 @@
   <title>CELPIP Practice Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -64,6 +65,7 @@
     .metric-value { font-size: 2.5rem; font-weight: 700; color: #0f0f0f; }
     .metric-label { font-size: 0.875rem; color: #6b6a64; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
     .metric-avg { font-size: 1.25rem; font-weight: 600; margin-top: 0.5rem; }
+    .chart-container { background: white; border: 1px solid #eceae3; border-radius: 1.5rem; padding: 2rem; margin-bottom: 3rem; position: relative; height: 400px; }
   </style>
 </head>
 <body class="min-h-screen">
@@ -147,6 +149,12 @@
       </div>
     </div>
 
+    <!-- Daily Attempts Chart -->
+    <div class="chart-container">
+      <h2 class="text-xl font-semibold text-ink mb-4 absolute top-6 left-8">Daily Attempts</h2>
+      <canvas id="daily-chart"></canvas>
+    </div>
+
     <!-- Summary message -->
     <div id="summary-message" class="text-center text-slate mb-8">
       <p>Select a month to view your metrics for that period.</p>
@@ -162,6 +170,7 @@
   <script>
     const monthInput = document.getElementById("month-input");
     const errorArea = document.getElementById("error-area");
+    let chartInstance = null;
 
     // Set month input to current month
     const now = new Date();
@@ -212,9 +221,98 @@
         } else {
           summaryMsg.innerHTML = `<p>Great progress in <strong>${monthName}</strong>! Keep up the practice to continue improving.</p>`;
         }
+
+        // Update daily chart
+        updateDailyChart(data.daily_data, month);
       } catch (e) {
         errorArea.innerHTML = `<div class="bg-rose2-light border border-rose2 text-rose2-dark px-4 py-3 rounded-lg text-sm">Error loading metrics: ${escapeHtml(e.message)}</div>`;
       }
+    }
+
+    function updateDailyChart(dailyData, month) {
+      const daysInMonth = new Date(month + "-01").toLocaleDateString("en-US", { day: "2-digit" });
+      const dateObj = new Date(month + "-01");
+      const numDays = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
+
+      // Initialize arrays for each day
+      const labels = [];
+      const speakingCounts = [];
+      const writingCounts = [];
+
+      for (let day = 1; day <= numDays; day++) {
+        labels.push(day);
+        const dayData = dailyData[day] || { speaking: 0, writing: 0 };
+        speakingCounts.push(dayData.speaking);
+        writingCounts.push(dayData.writing);
+      }
+
+      const ctx = document.getElementById("daily-chart").getContext("2d");
+
+      // Destroy existing chart if it exists
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Speaking Tasks",
+              data: speakingCounts,
+              backgroundColor: "#2c5f8a",
+              borderColor: "#1a3d5c",
+              borderWidth: 1,
+              borderRadius: 4,
+            },
+            {
+              label: "Writing Tasks",
+              data: writingCounts,
+              backgroundColor: "#5a3d9e",
+              borderColor: "#3a2468",
+              borderWidth: 1,
+              borderRadius: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: "top",
+              labels: {
+                font: { family: "'DM Sans', sans-serif", size: 12 },
+                color: "#6b6a64",
+                padding: 16,
+                usePointStyle: true,
+              },
+            },
+          },
+          scales: {
+            x: {
+              stacked: false,
+              grid: { display: false },
+              ticks: {
+                font: { family: "'DM Sans', sans-serif", size: 11 },
+                color: "#6b6a64",
+              },
+            },
+            y: {
+              stacked: false,
+              beginAtZero: true,
+              ticks: {
+                font: { family: "'DM Sans', sans-serif", size: 11 },
+                color: "#6b6a64",
+                stepSize: 1,
+              },
+              grid: { color: "#eceae3", drawBorder: false },
+            },
+          },
+        },
+      });
     }
 
     // Load metrics when month changes

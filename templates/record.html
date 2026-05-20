@@ -1,407 +1,337 @@
-{% extends "base.html" %}
-{% block title %}CELPIP — Record{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Speaking Practice — Record</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .timer { font-variant-numeric: tabular-nums; font-family: 'DM Sans', monospace; }
+    .score-badge { font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; }
+    .score-badge.good { background-color: #d8efe3; color: #1a4530; }
+    .score-badge.mid { background-color: #faecd8; color: #7a4210; }
+    .score-badge.low { background-color: #f5dde0; color: #6e1e28; }
+    .attempt-card { background: white; border: 1px solid #eceae3; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .attempt-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap; }
+    .attempt-card-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .attempt-num { font-weight: 600; color: #0f0f0f; }
+    .attempt-user-name { font-size: 0.875rem; color: #6b6a64; }
+    .attempt-audio { width: 100%; margin-bottom: 1rem; }
+    details { margin-bottom: 1rem; }
+    details > summary { cursor: pointer; font-weight: 500; padding: 0.75rem; margin: -0.75rem; border-radius: 0.5rem; transition: background 0.2s; }
+    details > summary:hover { background: #eceae3; }
+    .attempt-transcript { white-space: pre-wrap; word-wrap: break-word; color: #6b6a64; font-size: 0.95rem; line-height: 1.6; padding: 1rem; background: #f5f4f0; border-radius: 0.5rem; }
+    .attempt-eval { padding: 1rem; background: #f5f4f0; border-radius: 0.5rem; }
+    .eval-section { margin-bottom: 1.25rem; }
+    .eval-section h3 { font-weight: 600; color: #0f0f0f; margin-bottom: 0.5rem; }
+    .eval-section ul { list-style: disc; margin-left: 1.25rem; color: #6b6a64; }
+    .eval-section li { margin-bottom: 0.25rem; }
+    button { cursor: pointer; transition: all 0.2s; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; border: none; }
+    .btn-primary { background: #0f0f0f; color: #f5f4f0; }
+    .btn-primary:hover:not(:disabled) { background: #3d3c38; }
+    .btn-secondary { background: #eceae3; color: #0f0f0f; border: 1px solid #d4d2ca; }
+    .btn-secondary:hover:not(:disabled) { background: #d4d2ca; }
+    .error-msg { color: #dc2626; padding: 0.75rem; background: #fee2e2; border-radius: 0.5rem; display: none; }
+    .error-msg:not(:empty) { display: block; }
+    .score-delta { font-weight: 600; font-size: 0.875rem; }
+    .score-delta.up { color: #059669; }
+    .score-delta.down { color: #dc2626; }
+  </style>
+</head>
+<body class="min-h-screen">
 
-{% block body %}
-  <div class="container">
-    <div class="task-header">
-      <div class="task-header-top">
-        <h1 id="task-title">Loading…</h1>
-      </div>
-      <!-- Question sits directly below the task title, same visual block -->
-      <div id="question-panel" style="display:none">
-        <div class="question-label" id="question-label">Question</div>
-        <div class="question-text" id="question-text"></div>
+  {% include 'partials/navbar.html' %}
+
+  <main class="max-w-6xl mx-auto px-6 pb-24">
+    <div class="pt-12 pb-8">
+      <h1 class="font-display text-4xl md:text-5xl text-ink mb-6"><span id="task-title">Loading…</span></h1>
+      <div id="question-panel" style="display:none" class="bg-white rounded-xl border border-mist p-6 mb-8">
+        <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-2" id="question-label">Question</p>
+        <p class="text-lg text-slate" id="question-text"></p>
       </div>
     </div>
 
-    <!-- Recording controls — always stay at top, reset between attempts -->
-    <div class="record-controls" id="record-controls">
-      <div class="phase-label" id="phase-label">Ready</div>
-      <div class="timer" id="timer">--:--</div>
-      <div style="text-align:center">
-        <button class="btn btn-primary" id="main-btn" disabled>Start Preparation</button>
-      </div>
-      <div id="error-area" class="error-msg" style="text-align:center;margin-top:.75rem"></div>
+    <div id="record-controls" class="bg-white rounded-2xl border border-mist p-8 mb-8 text-center">
+      <div class="phase-label text-sm tracking-widest text-gold font-semibold uppercase mb-6" id="phase-label">Ready</div>
+      <div class="timer text-6xl md:text-7xl font-display font-bold text-ink mb-8" id="timer">--:--</div>
+      <button class="btn btn-primary text-lg px-8 py-3 mb-4" id="main-btn" disabled>Start Preparation</button>
+      <div id="error-area" class="error-msg"></div>
     </div>
 
-    <!-- Attempts accumulate here, newest at top -->
     <div id="attempts-list"></div>
-  </div>
-{% endblock %}
+  </main>
 
-{% block scripts %}
-<script>
-  const params    = new URLSearchParams(location.search);
-  const sessionId = params.get("session") || "";
+  <footer class="border-t border-mist bg-fog py-8 px-6 text-center">
+    <p class="text-xs text-slate">CELPIP Speaking Practice · Keep practicing to improve your scores.</p>
+  </footer>
 
-  const SCENARIO_TASKS = new Set([3, 4, 5, 8]);
+  <script src="app.js"></script>
+  <script>
+const params = new URLSearchParams(location.search);
+const sessionId = params.get("session") || "";
+const SCENARIO_TASKS = new Set([3, 4, 5, 8]);
+let question = sessionStorage.getItem("celpip_question") || "";
+sessionStorage.removeItem("celpip_question");
+let taskId = null, task = null, attemptCount = 0;
 
-  // question and task are set once the session loads
-  let question = sessionStorage.getItem("celpip_question") || "";
-  sessionStorage.removeItem("celpip_question");
-  let taskId = null;
-  let task   = null;
-  let attemptCount = 0;
+function showQuestion(text, label) {
+  document.getElementById("question-text").textContent = text;
+  document.getElementById("question-label").textContent = label || "Question";
+  document.getElementById("question-panel").style.display = "block";
+}
 
-  function showQuestion(text, label) {
-    document.getElementById("question-text").textContent = text;
-    document.getElementById("question-label").textContent = label || "Question";
-    document.getElementById("question-panel").style.display = "block";
+async function loadSession() {
+  if (!sessionId) { document.getElementById("task-title").textContent = "No session specified"; return; }
+  let session;
+  try { session = await apiGet(`/sessions/${sessionId}`); } 
+  catch (e) { document.getElementById("task-title").textContent = "Failed to load session"; return; }
+  
+  taskId = session.task_id;
+  task = TASKS[taskId];
+  if (!task) { document.getElementById("task-title").textContent = "Unknown task"; return; }
+  document.getElementById("task-title").textContent = `Task ${taskId}: ${task.name}`;
+  document.getElementById("timer").textContent = fmtTime(task.prep);
+  
+  if (!question) {
+    const sessionQ = session.question || (session.attempts && session.attempts.length > 0 
+      ? [...session.attempts].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0].question : "");
+    if (sessionQ) question = sessionQ;
   }
-
-  // ── Load session: derives task, question, and pre-renders attempts ────────
-  async function loadSession() {
-    if (!sessionId) {
-      document.getElementById("task-title").textContent = "No session specified";
-      return;
-    }
-
-    let session;
-    try {
-      session = await apiGet(`/sessions/${sessionId}`);
-    } catch (e) {
-      document.getElementById("task-title").textContent = "Failed to load session";
-      return;
-    }
-
-    // Derive task from session
-    taskId = session.task_id;
-    task   = TASKS[taskId];
-    if (!task) {
-      document.getElementById("task-title").textContent = "Unknown task";
-      return;
-    }
-    document.getElementById("task-title").textContent = `Task ${taskId}: ${task.name}`;
-    document.getElementById("timer").textContent = fmtTime(task.prep);
-
-    // Apply question — sessionStorage first, then session, then oldest attempt
-    if (!question) {
-      const sessionQ = session.question
-        || (session.attempts && session.attempts.length > 0
-            ? [...session.attempts].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0].question
-            : "");
-      if (sessionQ) question = sessionQ;
-    }
-    if (question) showQuestion(question, SCENARIO_TASKS.has(taskId) ? "Inferred Topic" : "Question");
-
-    // Pre-render existing attempts oldest→newest so newest ends up on top
-    if (session.attempts && session.attempts.length > 0) {
-      const sorted = [...session.attempts].sort(
-        (a, b) => new Date(a.created_at) - new Date(b.created_at)
-      );
-      attemptCount = sorted.length;
-      sorted.forEach((a, i) => {
-        const card = document.createElement("div");
-        card.className = "attempt-card";
-        const result = {
-          id: a.id,
-          score: a.score,
-          transcript: a.transcript,
-          audio_url: a.audio_url,
-          ...(a.evaluation_json || {}),
-        };
-        const prevScore = i > 0 ? sorted[i - 1].score : null;
-        fillAttemptCard(card, i + 1, result, a.audio_url, a.duration_sec, a.created_at, prevScore);
-        document.getElementById("attempts-list").prepend(card);
-      });
-    }
-
-    document.getElementById("main-btn").disabled = false;
-    document.getElementById("phase-label").textContent =
-      attemptCount > 0 ? "Ready for next attempt" : "Ready";
-  }
-
-  loadSession();
-
-  // ── Recording state machine ───────────────────────────────────────────────
-  const phaseLabel = document.getElementById("phase-label");
-  const timerEl    = document.getElementById("timer");
-  const mainBtn    = document.getElementById("main-btn");
-  const errorArea  = document.getElementById("error-area");
-
-  let phase = "idle";
-  let mediaRecorder = null;
-  let audioChunks   = [];
-  let recordingStart = null;
-  let activeCountdown = null;
-
-  function setError(msg) { errorArea.textContent = msg; }
-  function clearError()  { errorArea.textContent = ""; }
-
-  mainBtn.addEventListener("click", () => {
-    if (phase === "idle")           startPrep();
-    else if (phase === "recording") stopRecordingEarly();
-  });
-
-  function startPrep() {
-    phase = "prep";
-    phaseLabel.textContent = "Preparation";
-    mainBtn.disabled = true;
-    clearError();
-    activeCountdown = countdown(
-      task.prep,
-      (s) => { timerEl.textContent = fmtTime(s); },
-      () => startRecording()
-    );
-  }
-
-  async function startRecording() {
-    phase = "recording";
-    phaseLabel.textContent = "Recording";
-    mainBtn.textContent = "Stop Early";
-    mainBtn.disabled = false;
-
-    let stream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
-      setError("Microphone access denied. Please allow microphone and reload.");
-      resetToIdle();
-      return;
-    }
-
-    audioChunks   = [];
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onstop = finishRecording;
-    mediaRecorder.start();
-    recordingStart = Date.now();
-
-    activeCountdown = countdown(
-      task.speak,
-      (s) => { timerEl.textContent = fmtTime(s); },
-      () => { if (phase === "recording") stopRecording(); }
-    );
-  }
-
-  function stopRecordingEarly() {
-    if (activeCountdown) { clearInterval(activeCountdown); activeCountdown = null; }
-    stopRecording();
-  }
-
-  function stopRecording() {
-    if (mediaRecorder && mediaRecorder.state !== "inactive") {
-      mediaRecorder.stop();
-      mediaRecorder.stream.getTracks().forEach((t) => t.stop());
-    }
-  }
-
-  async function finishRecording() {
-    const durationSec = Math.round((Date.now() - recordingStart) / 1000);
-    const mimeType    = audioChunks[0]?.type || "audio/webm";
-    const blob        = new Blob(audioChunks, { type: mimeType });
-    const blobUrl     = URL.createObjectURL(blob);
-
-    phase = "processing";
-    phaseLabel.textContent = "Analysing…";
-    mainBtn.disabled = true;
-    mainBtn.textContent = "Analysing…";
-    timerEl.textContent = "--:--";
-    clearError();
-
-    attemptCount += 1;
-    const placeholder = createPlaceholderCard(attemptCount, blobUrl);
-    document.getElementById("attempts-list").prepend(placeholder);
-    placeholder.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    const formData = new FormData();
-    formData.append("audio", blob, `recording.${mimeType.includes("mp4") ? "mp4" : "webm"}`);
-    formData.append("task_id", taskId);
-    formData.append("duration_sec", durationSec);
-    formData.append("question", question);
-    formData.append("session_id", sessionId);
-    formData.append("user_name", getUserName());
-
-    let result;
-    try {
-      result = await apiPost("/submit", formData);
-    } catch (e) {
-      placeholder.querySelector(".attempt-status").textContent = `Error: ${e.message}`;
-      placeholder.querySelector(".attempt-status").style.color = "#dc2626";
-      resetToIdle();
-      return;
-    }
-
-    fillAttemptCard(placeholder, attemptCount, result, blobUrl, durationSec, null, result.prev_score ?? null);
-
-    // Tasks 3/4/5/8: show inferred topic after first recording
-    if (result.session_question) {
-      question = result.session_question;
-      showQuestion(result.session_question, "Inferred Topic");
-    }
-
-    resetToIdle();
-  }
-
-  function resetToIdle() {
-    phase = "idle";
-    phaseLabel.textContent = attemptCount > 0 ? "Ready for next attempt" : "Ready";
-    mainBtn.textContent = "Start Preparation";
-    mainBtn.disabled = false;
-    timerEl.textContent = fmtTime(task.prep);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  // ── Card builders ─────────────────────────────────────────────────────────
-
-  function createPlaceholderCard(n, blobUrl) {
-    const card = document.createElement("div");
-    card.className = "attempt-card";
-    const name = getUserName();
-    const nameLabel = name
-      ? `<span class="attempt-user-name">by ${escapeHtml(name)}</span>`
-      : "";
-    card.innerHTML = `
-      <div class="attempt-card-header">
-        <div class="attempt-header-left">
-          <span class="attempt-num">Attempt #${n}</span>
-          ${nameLabel}
-        </div>
-        <audio class="attempt-audio" controls src="${blobUrl}"></audio>
-      </div>
-      <p class="attempt-status">Transcribing and evaluating… please wait.</p>
-    `;
-    return card;
-  }
-
-  function renderComparison(containerEl, cmp) {
-    const listHtml = (arr, cls) =>
-      Array.isArray(arr) && arr.length
-        ? `<ul class="comparison-list ${cls}">${arr.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`
-        : `<p class="comparison-empty">None noted</p>`;
-    containerEl.innerHTML = `
-      <div class="comparison-col">
-        <div class="comparison-heading improved">&#8593; What improved</div>
-        ${listHtml(cmp.improvements, "improved")}
-      </div>
-      <div class="comparison-col">
-        <div class="comparison-heading regressed">&#8595; What got worse</div>
-        ${listHtml(cmp.regressions, "regressed")}
-      </div>
-    `;
-  }
-
-  function scoreDeltaHtml(current, prev) {
-    if (prev == null || current == null || current === "?" || prev === "?") return "";
-    const diff = current - prev;
-    if (diff > 0) return `<span class="score-delta up">&#8593; +${diff}</span>`;
-    if (diff < 0) return `<span class="score-delta down">&#8595; ${diff}</span>`;
-    return "";
-  }
-
-  function fillAttemptCard(card, n, result, audioSrc, durationSec, createdAt, prevScore) {
-    const score      = result.score ?? "?";
-    const scoreClass = score >= 10 ? "good" : score >= 7 ? "mid" : "low";
-    const src        = result.audio_url || audioSrc || "";
-    const durLabel   = durationSec != null ? `${durationSec}s` : "";
-    const dateLabel  = createdAt
-      ? `<span class="meta" style="margin-left:.5rem">${new Date(createdAt).toLocaleString()}</span>`
-      : "";
-    const displayName = result.user_name || getUserName();
-    const nameLabel  = displayName
-      ? `<span class="attempt-user-name">by ${escapeHtml(displayName)}</span>`
-      : "";
-    const deltaHtml  = scoreDeltaHtml(score, prevScore);
-
-    card.innerHTML = `
-      <div class="attempt-card-header">
-        <div class="attempt-header-left">
-          <span class="attempt-num">Attempt #${n}</span>
-          ${nameLabel}
-        </div>
-        <div class="attempt-card-meta">
-          <span class="score-badge ${scoreClass} js-score-badge">${escapeHtml(String(score))}<span>/12</span></span>
-          ${result.id ? `<button class="btn btn-secondary js-reeval" data-id="${result.id}" style="font-size:.78rem;padding:.3rem .8rem">Re-evaluate</button>
-          <span class="js-reeval-msg" style="font-size:.78rem;color:#888"></span>` : ""}
-          ${durLabel ? `<span class="meta">${durLabel}</span>` : ""}
-          ${dateLabel}
-        </div>
-      </div>
-      ${deltaHtml ? `<div class="attempt-progress js-delta">${deltaHtml} from previous attempt</div>` : ""}
-      <audio class="attempt-audio" controls src="${escapeHtml(src)}"></audio>
-      <details class="attempt-details" open>
-        <summary>Transcript</summary>
-        <p class="attempt-transcript">${escapeHtml(result.transcript || "")}</p>
-      </details>
-      ${(n > 1 && result.comparison) ? `
-      <details class="attempt-details attempt-comparison" open>
-        <summary>Progress vs Previous Attempt</summary>
-        <div class="comparison-body"></div>
-      </details>` : ""}
-      <details class="attempt-details" open>
-        <summary>Evaluation</summary>
-        <div class="attempt-eval"></div>
-      </details>
-    `;
-
-    if (n > 1 && result.comparison) renderComparison(card.querySelector(".comparison-body"), result.comparison);
-    renderEvaluation(card.querySelector(".attempt-eval"), result);
-    wireReevaluate(card);
-  }
-
-  function wireReevaluate(card) {
-    const btn = card.querySelector(".js-reeval");
-    if (!btn) return;
-
-    btn.addEventListener("click", async () => {
-      const id  = btn.dataset.id;
-      const msg = card.querySelector(".js-reeval-msg");
-      btn.disabled = true;
-      btn.textContent = "Re-evaluating…";
-      msg.textContent = "";
-
-      let result;
-      try {
-        result = await apiPost(`/attempts/${id}/reevaluate`, {});
-      } catch (e) {
-        msg.textContent = `Error: ${e.message}`;
-        msg.style.color = "#dc2626";
-        btn.disabled = false;
-        btn.textContent = "Re-evaluate";
-        return;
-      }
-
-      // Update score badge
-      const badge = card.querySelector(".js-score-badge");
-      const oldScore = result.old_score ?? null;
-      const newScore = result.score ?? "?";
-      const newClass = newScore >= 10 ? "good" : newScore >= 7 ? "mid" : "low";
-      badge.className = `score-badge ${newClass} js-score-badge`;
-      badge.innerHTML = `${escapeHtml(String(newScore))}<span>/12</span>`;
-
-      // Update progress row below the header
-      const deltaRow = card.querySelector(".js-delta");
-      const newDelta = scoreDeltaHtml(newScore, oldScore);
-      if (deltaRow) {
-        if (newDelta) deltaRow.innerHTML = `${newDelta} from previous score`;
-        else deltaRow.remove();
-      } else if (newDelta) {
-        const row = document.createElement("div");
-        row.className = "attempt-progress js-delta";
-        row.innerHTML = `${newDelta} from previous score`;
-        card.querySelector(".attempt-card-header").insertAdjacentElement("afterend", row);
-      }
-
-      // Re-render comparison and evaluation sections
-      if (result.comparison) {
-        let cmpBody = card.querySelector(".comparison-body");
-        if (!cmpBody) {
-          const det = document.createElement("details");
-          det.className = "attempt-details attempt-comparison";
-          det.open = true;
-          det.innerHTML = `<summary>Progress vs Previous Attempt</summary><div class="comparison-body"></div>`;
-          card.querySelector(".attempt-eval").closest("details").insertAdjacentElement("beforebegin", det);
-          cmpBody = det.querySelector(".comparison-body");
-        }
-        renderComparison(cmpBody, result.comparison);
-      }
-      renderEvaluation(card.querySelector(".attempt-eval"), result);
-
-      msg.style.color = "#059669";
-      msg.textContent = "Updated.";
-      btn.disabled = false;
-      btn.textContent = "Re-evaluate";
+  if (question) showQuestion(question, SCENARIO_TASKS.has(taskId) ? "Inferred Topic" : "Question");
+  
+  if (session.attempts && session.attempts.length > 0) {
+    const sorted = [...session.attempts].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    attemptCount = sorted.length;
+    sorted.forEach((a, i) => {
+      const card = document.createElement("div");
+      card.className = "attempt-card";
+      const result = { id: a.id, score: a.score, transcript: a.transcript, audio_url: a.audio_url, ...(a.evaluation_json || {}) };
+      const prevScore = i > 0 ? sorted[i - 1].score : null;
+      fillAttemptCard(card, i + 1, result, a.audio_url, a.duration_sec, a.created_at, prevScore);
+      document.getElementById("attempts-list").prepend(card);
     });
   }
-</script>
-{% endblock %}
+  document.getElementById("main-btn").disabled = false;
+  document.getElementById("phase-label").textContent = attemptCount > 0 ? "Ready for next attempt" : "Ready";
+}
+
+loadSession();
+
+const phaseLabel = document.getElementById("phase-label");
+const timerEl = document.getElementById("timer");
+const mainBtn = document.getElementById("main-btn");
+const errorArea = document.getElementById("error-area");
+let phase = "idle", mediaRecorder = null, audioChunks = [], recordingStart = null, activeCountdown = null;
+
+function setError(msg) { errorArea.textContent = msg; }
+function clearError() { errorArea.textContent = ""; }
+
+mainBtn.addEventListener("click", () => {
+  if (phase === "idle") startPrep();
+  else if (phase === "recording") stopRecordingEarly();
+});
+
+function startPrep() {
+  phase = "prep";
+  phaseLabel.textContent = "Preparation";
+  mainBtn.disabled = true;
+  clearError();
+  activeCountdown = countdown(task.prep, (s) => { timerEl.textContent = fmtTime(s); }, () => startRecording());
+}
+
+async function startRecording() {
+  phase = "recording";
+  phaseLabel.textContent = "Recording";
+  mainBtn.textContent = "Stop Early";
+  mainBtn.disabled = false;
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { setError("Microphone access denied. Please allow microphone and reload."); resetToIdle(); return; }
+  audioChunks = [];
+  mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+  mediaRecorder.onstop = finishRecording;
+  mediaRecorder.start();
+  recordingStart = Date.now();
+  activeCountdown = countdown(task.speak, (s) => { timerEl.textContent = fmtTime(s); }, () => { if (phase === "recording") stopRecording(); });
+}
+
+function stopRecordingEarly() {
+  if (activeCountdown) { clearInterval(activeCountdown); activeCountdown = null; }
+  stopRecording();
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach((t) => t.stop());
+  }
+}
+
+async function finishRecording() {
+  const durationSec = Math.round((Date.now() - recordingStart) / 1000);
+  const mimeType = audioChunks[0]?.type || "audio/webm";
+  const blob = new Blob(audioChunks, { type: mimeType });
+  const blobUrl = URL.createObjectURL(blob);
+  phase = "processing";
+  phaseLabel.textContent = "Analysing…";
+  mainBtn.disabled = true;
+  mainBtn.textContent = "Analysing…";
+  timerEl.textContent = "--:--";
+  clearError();
+  attemptCount += 1;
+  const placeholder = createPlaceholderCard(attemptCount, blobUrl);
+  document.getElementById("attempts-list").prepend(placeholder);
+  placeholder.scrollIntoView({ behavior: "smooth", block: "start" });
+  const formData = new FormData();
+  formData.append("audio", blob, `recording.${mimeType.includes("mp4") ? "mp4" : "webm"}`);
+  formData.append("task_id", taskId);
+  formData.append("duration_sec", durationSec);
+  formData.append("question", question);
+  formData.append("session_id", sessionId);
+  formData.append("user_name", getUserName());
+  let result;
+  try { result = await apiPost("/submit", formData); }
+  catch (e) { placeholder.querySelector(".attempt-status").textContent = `Error: ${e.message}`; placeholder.querySelector(".attempt-status").style.color = "#dc2626"; resetToIdle(); return; }
+  fillAttemptCard(placeholder, attemptCount, result, blobUrl, durationSec, null, result.prev_score ?? null);
+  if (result.session_question) { question = result.session_question; showQuestion(result.session_question, "Inferred Topic"); }
+  resetToIdle();
+}
+
+function resetToIdle() {
+  phase = "idle";
+  phaseLabel.textContent = attemptCount > 0 ? "Ready for next attempt" : "Ready";
+  mainBtn.textContent = "Start Preparation";
+  mainBtn.disabled = false;
+  timerEl.textContent = fmtTime(task.prep);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function createPlaceholderCard(n, blobUrl) {
+  const card = document.createElement("div");
+  card.className = "attempt-card";
+  const name = getUserName();
+  const nameLabel = name ? `<span class="attempt-user-name">by ${escapeHtml(name)}</span>` : "";
+  card.innerHTML = `<div class="attempt-card-header"><span class="attempt-num">Attempt #${n}</span>${nameLabel}</div><audio class="attempt-audio" controls src="${blobUrl}"></audio><p class="attempt-status" style="color: #6b6a64;">Transcribing and evaluating… please wait.</p>`;
+  return card;
+}
+
+function renderComparison(containerEl, cmp) {
+  const listHtml = (arr) => Array.isArray(arr) && arr.length ? `<ul style="list-style: disc; margin-left: 1.25rem; color: #6b6a64;">${arr.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : `<p style="color: #9ca3af;">None noted</p>`;
+  containerEl.innerHTML = `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;"><div><h4 style="font-weight: 600; color: #059669; margin-bottom: 0.5rem;">↑ What improved</h4>${listHtml(cmp.improvements)}</div><div><h4 style="font-weight: 600; color: #dc2626; margin-bottom: 0.5rem;">↓ What got worse</h4>${listHtml(cmp.regressions)}</div></div>`;
+}
+
+function scoreDeltaHtml(current, prev) {
+  if (prev == null || current == null || current === "?" || prev === "?") return "";
+  const diff = current - prev;
+  if (diff > 0) return `<span class="score-delta up">↑ +${diff}</span>`;
+  if (diff < 0) return `<span class="score-delta down">↓ ${diff}</span>`;
+  return "";
+}
+
+function fillAttemptCard(card, n, result, audioSrc, durationSec, createdAt, prevScore) {
+  const score = result.score ?? "?";
+  const scoreClass = score >= 10 ? "good" : score >= 7 ? "mid" : "low";
+  const src = result.audio_url || audioSrc || "";
+  const durLabel = durationSec != null ? `${durationSec}s` : "";
+  const dateLabel = createdAt ? `<span style="color: #6b6a64; font-size: 0.875rem;">${new Date(createdAt).toLocaleString()}</span>` : "";
+  const displayName = result.user_name || getUserName();
+  const nameLabel = displayName ? `<span class="attempt-user-name">by ${escapeHtml(displayName)}</span>` : "";
+  const deltaHtml = scoreDeltaHtml(score, prevScore);
+  card.innerHTML = `<div class="attempt-card-header"><div><span class="attempt-num">Attempt #${n}</span>${nameLabel}</div><div class="attempt-card-meta"><span class="score-badge ${scoreClass} js-score-badge">${escapeHtml(String(score))}<span>/12</span></span>${result.id ? `<button class="btn btn-secondary js-reeval" data-id="${result.id}" style="font-size: 0.75rem; padding: 0.3rem 0.8rem;">Re-evaluate</button><span class="js-reeval-msg" style="font-size: 0.75rem; color: #888;"></span>` : ""}${durLabel ? `<span style="color: #6b6a64; font-size: 0.875rem;">${durLabel}</span>` : ""}${dateLabel}</div></div>${deltaHtml ? `<div style="margin-bottom: 1rem; font-weight: 600; color: #6b6a64;">${deltaHtml} from previous attempt</div>` : ""}<audio class="attempt-audio" controls src="${escapeHtml(src)}"></audio><details class="attempt-details" open><summary>Transcript</summary><p class="attempt-transcript">${escapeHtml(result.transcript || "")}</p></details>${(n > 1 && result.comparison) ? `<details class="attempt-details" open><summary>Progress vs Previous Attempt</summary><div class="comparison-body"></div></details>` : ""}<details class="attempt-details" open><summary>Evaluation</summary><div class="attempt-eval"></div></details>`;
+  if (n > 1 && result.comparison) renderComparison(card.querySelector(".comparison-body"), result.comparison);
+  renderEvaluation(card.querySelector(".attempt-eval"), result);
+  wireReevaluate(card);
+}
+
+function wireReevaluate(card) {
+  const btn = card.querySelector(".js-reeval");
+  if (!btn) return;
+  btn.addEventListener("click", async () => {
+    const id = btn.dataset.id;
+    const msg = card.querySelector(".js-reeval-msg");
+    btn.disabled = true;
+    btn.textContent = "Re-evaluating…";
+    msg.textContent = "";
+    let result;
+    try { result = await apiPost(`/attempts/${id}/reevaluate`, {}); }
+    catch (e) { msg.textContent = `Error: ${e.message}`; msg.style.color = "#dc2626"; btn.disabled = false; btn.textContent = "Re-evaluate"; return; }
+    const badge = card.querySelector(".js-score-badge");
+    const oldScore = result.old_score ?? null;
+    const newScore = result.score ?? "?";
+    const newClass = newScore >= 10 ? "good" : newScore >= 7 ? "mid" : "low";
+    badge.className = `score-badge ${newClass} js-score-badge`;
+    badge.innerHTML = `${escapeHtml(String(newScore))}<span>/12</span>`;
+    const deltaRow = card.querySelector(".js-delta");
+    const newDelta = scoreDeltaHtml(newScore, oldScore);
+    if (deltaRow) { if (newDelta) deltaRow.innerHTML = `${newDelta} from previous score`; else deltaRow.remove(); }
+    else if (newDelta) { const row = document.createElement("div"); row.className = "js-delta"; row.innerHTML = `${newDelta} from previous score`; card.querySelector(".attempt-card-header").insertAdjacentElement("afterend", row); }
+    if (result.comparison) {
+      let cmpBody = card.querySelector(".comparison-body");
+      if (!cmpBody) { const det = document.createElement("details"); det.className = "attempt-details"; det.open = true; det.innerHTML = `<summary>Progress vs Previous Attempt</summary><div class="comparison-body"></div>`; card.querySelector(".attempt-eval").closest("details").insertAdjacentElement("beforebegin", det); cmpBody = det.querySelector(".comparison-body"); }
+      renderComparison(cmpBody, result.comparison);
+    }
+    renderEvaluation(card.querySelector(".attempt-eval"), result);
+    msg.style.color = "#059669";
+    msg.textContent = "Updated.";
+    btn.disabled = false;
+    btn.textContent = "Re-evaluate";
+  });
+}
+  </script>
+</body>
+</html>

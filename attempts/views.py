@@ -1209,18 +1209,50 @@ def dashboard_metrics(request):
     speaking_avg = speaking_attempts.aggregate(Avg("score"))["score__avg"]
     writing_avg = writing_attempts.aggregate(Avg("score"))["score__avg"]
 
-    overall_avg = attempts.aggregate(Avg("score"))["score__avg"]
+    # Build daily breakdown
+    daily_data = {}
+    for attempt in attempts:
+        day = attempt.created_at.day
+        if day not in daily_data:
+            daily_data[day] = {"speaking": 0, "writing": 0}
+        if attempt.task_type == "speaking":
+            daily_data[day]["speaking"] += 1
+        else:
+            daily_data[day]["writing"] += 1
+
+    # Get per-task metrics for speaking tasks (1-8)
+    speaking_task_metrics = {}
+    for task_num in range(1, 9):
+        task_attempts = speaking_attempts.filter(task_id=task_num)
+        task_count = task_attempts.count()
+        task_avg = task_attempts.aggregate(Avg("score"))["score__avg"]
+        speaking_task_metrics[f"task_{task_num}"] = {
+            "count": task_count,
+            "avg_score": round(task_avg, 1) if task_avg else None,
+        }
+
+    # Get per-task metrics for writing tasks (1-2)
+    writing_task_metrics = {}
+    for task_num in [1, 2]:
+        task_attempts = writing_attempts.filter(task_id=task_num)
+        task_count = task_attempts.count()
+        task_avg = task_attempts.aggregate(Avg("score"))["score__avg"]
+        writing_task_metrics[f"task_{task_num}"] = {
+            "count": task_count,
+            "avg_score": round(task_avg, 1) if task_avg else None,
+        }
 
     return JsonResponse({
         "month": month_str,
         "speaking": {
             "count": speaking_count,
             "avg_score": round(speaking_avg, 1) if speaking_avg else None,
+            "task_metrics": speaking_task_metrics,
         },
         "writing": {
             "count": writing_count,
             "avg_score": round(writing_avg, 1) if writing_avg else None,
+            "task_metrics": writing_task_metrics,
         },
-        "total_attempts": attempts.count(),
-        "overall_avg_score": round(overall_avg, 1) if overall_avg else None,
+        "daily_data": daily_data,
     })

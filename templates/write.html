@@ -1,134 +1,193 @@
-{% extends "base.html" %}
-{% block title %}CELPIP Writing Practice{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELPIP Writing Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0f0f0f',
+            fog: '#f5f4f0',
+            mist: '#eceae3',
+            slate: '#6b6a64',
+            steel: '#3d3c38',
+            gold: '#c9a84c',
+            'gold-light': '#f5e9c8',
+            'gold-dark': '#8a6e2a',
+            sapphire: '#2c5f8a',
+            'sapphire-light': '#ddeaf6',
+            'sapphire-dark': '#1a3d5c',
+            emerald2: '#2a6b4a',
+            'emerald2-light': '#d8efe3',
+            'emerald2-dark': '#1a4530',
+            amber2: '#b86a1a',
+            'amber2-light': '#faecd8',
+            'amber2-dark': '#7a4210',
+            rose2: '#a83240',
+            'rose2-light': '#f5dde0',
+            'rose2-dark': '#6e1e28',
+            violet2: '#5a3d9e',
+            'violet2-light': '#ece8fa',
+            'violet2-dark': '#3a2468',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.4s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #f5f4f0; color: #0f0f0f; }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .timer { font-variant-numeric: tabular-nums; font-family: 'DM Sans', monospace; }
+    .score-badge { font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; }
+    .score-badge.good { background-color: #d8efe3; color: #1a4530; }
+    .score-badge.mid { background-color: #faecd8; color: #7a4210; }
+    .score-badge.low { background-color: #f5dde0; color: #6e1e28; }
+    .attempt-card { background: white; border: 1px solid #eceae3; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .attempt-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+    .attempt-card-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .attempt-num { font-weight: 600; color: #0f0f0f; }
+    .attempt-user-name { font-size: 0.875rem; color: #6b6a64; }
+    .attempt-progress { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.875rem; color: #6b6a64; padding: 0.75rem; background: #f5f4f0; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .attempt-transcript { white-space: pre-wrap; word-wrap: break-word; color: #6b6a64; font-size: 0.95rem; line-height: 1.6; padding: 1rem; background: #f5f4f0; border-radius: 0.5rem; }
+    .attempt-eval { padding: 1rem; background: #f5f4f0; border-radius: 0.5rem; }
+    .eval-section { margin-bottom: 1.25rem; }
+    .eval-section h3 { font-weight: 600; color: #0f0f0f; margin-bottom: 0.5rem; }
+    .eval-section ul { list-style: disc; margin-left: 1.25rem; color: #6b6a64; }
+    .eval-section li { margin-bottom: 0.25rem; }
+    details { margin-bottom: 1rem; }
+    details > summary { cursor: pointer; font-weight: 500; padding: 0.75rem; margin: -0.75rem; border-radius: 0.5rem; transition: background 0.2s; }
+    details > summary:hover { background: #eceae3; }
+    .editor-wrapper { position: relative; margin-bottom: 1rem; }
+    .editor-highlight { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 0.75rem; background: white; border: 1px solid #d4d2ca; border-radius: 0.5rem; overflow: hidden; pointer-events: none; white-space: pre-wrap; word-wrap: break-word; font-family: inherit; font-size: inherit; line-height: 1.6; color: transparent; }
+    .editor-textarea { position: relative; width: 100%; padding: 0.75rem; background: white; border: 1px solid #d4d2ca; border-radius: 0.5rem; font-family: inherit; font-size: 1rem; line-height: 1.6; color: #0f0f0f; resize: vertical; }
+    .editor-textarea:focus { outline: none; border-color: #0f0f0f; box-shadow: 0 0 0 2px rgba(15, 15, 15, 0.1); }
+    .grammar-error { background-color: #fee2e2; text-decoration: underline wavy #dc2626; }
+    .grammar-status { display: inline-block; font-size: 0.875rem; padding: 0.25rem 0.75rem; border-radius: 0.5rem; background: #f0f0f0; color: #6b6a64; }
+    .grammar-ok { background: #d8efe3; color: #1a4530; }
+    .grammar-issues { background: #faecd8; color: #7a4210; }
+    button { cursor: pointer; transition: all 0.2s; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; border: none; }
+    .btn-primary { background: #0f0f0f; color: #f5f4f0; }
+    .btn-primary:hover:not(:disabled) { background: #3d3c38; }
+    .btn-secondary { background: #eceae3; color: #0f0f0f; border: 1px solid #d4d2ca; }
+    .btn-secondary:hover:not(:disabled) { background: #d4d2ca; }
+    .error-msg { color: #dc2626; padding: 0.75rem; background: #fee2e2; border-radius: 0.5rem; display: none; }
+    .error-msg:not(:empty) { display: block; }
+    .score-delta { font-weight: 600; font-size: 0.875rem; }
+    .score-delta.up { color: #059669; }
+    .score-delta.down { color: #dc2626; }
+    .score-delta.same { color: #6b6a64; }
+  </style>
+</head>
+<body class="min-h-screen">
 
-{% block body %}
-<div class="container">
+  {% include 'partials/navbar.html' %}
 
-  <!-- Task header (matches record.html style) -->
-  <div class="task-header" id="task-header" style="display:none">
-    <div class="task-header-top">
-      <h1 id="task-title"></h1>
-      <a href="{% url 'history' %}">History &rarr;</a>
+  <main class="max-w-6xl mx-auto px-6 pb-24">
+    <div id="task-header" style="display:none" class="pt-12 pb-8">
+      <h1 class="font-display text-4xl md:text-5xl text-ink mb-6" id="task-title"></h1>
+      <div id="question-panel" style="display:none" class="bg-white rounded-xl border border-mist p-6 mb-8">
+        <p class="text-xs tracking-widest text-gold font-semibold uppercase mb-2">Question</p>
+        <p class="text-lg text-slate" id="question-text"></p>
+      </div>
     </div>
-    <div id="question-panel" style="display:none">
-      <div class="question-label">Question</div>
-      <div class="question-text" id="question-text"></div>
-    </div>
-  </div>
 
-  <div id="error-area" class="error-msg"></div>
+    <div id="error-area" class="error-msg mb-6"></div>
 
-  <!-- Writing interface -->
-  <div class="writing-controls" id="writing-controls" style="display:none">
-    <!-- Ready state: show start button -->
-    <div id="ready-state" style="text-align:center;padding:2rem">
-      <p style="margin-bottom:1.5rem;color:#666">Click below to begin your 28-minute writing task.</p>
-      <button class="btn btn-primary" id="btn-start" style="font-size:1.1rem;padding:.75rem 2rem">Start Writing</button>
-    </div>
+    <div id="writing-controls" style="display:none">
+      <div id="ready-state" class="bg-white rounded-2xl border border-mist p-12 text-center mb-8">
+        <p class="text-lg text-slate mb-6">Click below to begin your 28-minute writing task.</p>
+        <button class="btn btn-primary text-lg px-8 py-3" id="btn-start">Start Writing</button>
+      </div>
 
-    <!-- Timer -->
-    <div class="writing-timer-area" id="timer-area" style="display:none">
-      <div class="phase-label" id="phase-label">TIME REMAINING</div>
-      <div class="timer" id="timer">28:00</div>
-    </div>
+      <div id="timer-area" style="display:none" class="bg-white rounded-2xl border border-mist p-8 mb-8 text-center">
+        <div class="text-sm tracking-widest text-gold font-semibold uppercase mb-6" id="phase-label">TIME REMAINING</div>
+        <div class="timer text-6xl md:text-7xl font-display font-bold text-ink mb-8" id="timer">28:00</div>
+      </div>
 
-    <!-- Word count + grammar status bar -->
-    <div class="writing-meta-row">
-      <span class="word-count" id="word-count">0 words</span>
-      <span class="grammar-status" id="grammar-status"></span>
-    </div>
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <span class="word-count text-sm text-slate" id="word-count">0 words</span>
+        <span class="grammar-status" id="grammar-status"></span>
+      </div>
 
-    <!-- Editor: textarea overlaid on a highlight div for red-underline grammar errors -->
-    <div class="editor-wrapper">
-      <div class="editor-highlight" id="editor-highlight" aria-hidden="true"></div>
-      <textarea id="editor" class="editor-textarea"
-        placeholder="Start writing your response here&#8230;"
-        spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
+      <div class="editor-wrapper">
+        <div class="editor-highlight" id="editor-highlight" aria-hidden="true"></div>
+        <textarea id="editor" class="editor-textarea" placeholder="Start writing your response here…" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
+      </div>
+
+      <div class="flex gap-2 mb-4">
+        <button class="btn btn-primary" id="btn-submit">Submit Response</button>
+      </div>
+      <div id="submit-error" class="error-msg"></div>
     </div>
 
-    <div class="btn-row" style="margin-top:1rem">
-      <button class="btn btn-primary" id="btn-submit">Submit Response</button>
-    </div>
-    <div id="submit-error" class="error-msg"></div>
-  </div>
+    <div id="attempts-list"></div>
+  </main>
 
-  <!-- Attempt cards (newest on top) -->
-  <div id="attempts-list"></div>
+  <footer class="border-t border-mist bg-fog py-8 px-6 text-center">
+    <p class="text-xs text-slate">CELPIP Writing Practice · Keep practicing to improve your scores.</p>
+  </footer>
 
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
+  <script src="app.js"></script>
+  <script>
 const WRITING_DURATION_SEC = 28 * 60;
+let state = "loading", countdownId = null, remainingSec = WRITING_DURATION_SEC, currentMatches = [], grammarTimer = null, sessionData = null, nextAttemptNum = 1, startTime = null;
+const timerEl = document.getElementById("timer");
+const timerArea = document.getElementById("timer-area");
+const readyState = document.getElementById("ready-state");
+const phaseEl = document.getElementById("phase-label");
+const wordCountEl = document.getElementById("word-count");
+const grammarEl = document.getElementById("grammar-status");
+const editor = document.getElementById("editor");
+const highlight = document.getElementById("editor-highlight");
+const submitBtn = document.getElementById("btn-submit");
+const submitError = document.getElementById("submit-error");
+const startBtn = document.getElementById("btn-start");
 
-let state           = "loading";   // loading | ready | writing | processing | done
-let countdownId     = null;
-let remainingSec    = WRITING_DURATION_SEC;
-let currentMatches  = [];
-let grammarTimer    = null;
-let sessionData     = null;
-let nextAttemptNum  = 1;
-let startTime       = null;
-
-const timerEl      = document.getElementById("timer");
-const timerArea    = document.getElementById("timer-area");
-const readyState   = document.getElementById("ready-state");
-const phaseEl      = document.getElementById("phase-label");
-const wordCountEl  = document.getElementById("word-count");
-const grammarEl    = document.getElementById("grammar-status");
-const editor       = document.getElementById("editor");
-const highlight    = document.getElementById("editor-highlight");
-const submitBtn    = document.getElementById("btn-submit");
-const submitError  = document.getElementById("submit-error");
-const startBtn     = document.getElementById("btn-start");
-
-// ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
-  const params    = new URLSearchParams(location.search);
+  const params = new URLSearchParams(location.search);
   const sessionId = params.get("session");
-
-  if (!sessionId) {
-    document.getElementById("error-area").textContent = "No session specified.";
-    return;
-  }
-
-  try {
-    sessionData = await apiGet(`/sessions/${sessionId}`);
-  } catch (e) {
-    document.getElementById("error-area").textContent = `Failed to load session: ${e.message}`;
-    return;
-  }
-
-  // Show header
+  if (!sessionId) { document.getElementById("error-area").textContent = "No session specified."; return; }
+  try { sessionData = await apiGet(`/sessions/${sessionId}`); }
+  catch (e) { document.getElementById("error-area").textContent = `Failed to load session: ${e.message}`; return; }
   document.getElementById("task-title").textContent = sessionData.task_name;
   document.getElementById("task-header").style.display = "block";
-
   const question = sessionData.question || sessionStorage.getItem("celpip_question") || "";
   sessionStorage.removeItem("celpip_question");
-  if (question) {
-    document.getElementById("question-text").textContent = question;
-    document.getElementById("question-panel").style.display = "block";
-  }
-
-  // Render pre-existing attempts (oldest first so newest ends up on top after prepend)
+  if (question) { document.getElementById("question-text").textContent = question; document.getElementById("question-panel").style.display = "block"; }
   if (sessionData.attempts && sessionData.attempts.length > 0) {
-    const sorted = [...sessionData.attempts].reverse(); // oldest → newest
-    sorted.forEach((a, i) => {
-      const prevScore = i > 0 ? sorted[i - 1].score : null;
-      renderAttemptCard(a, i + 1, prevScore);
-    });
+    const sorted = [...sessionData.attempts].reverse();
+    sorted.forEach((a, i) => { const prevScore = i > 0 ? sorted[i - 1].score : null; renderAttemptCard(a, i + 1, prevScore); });
     nextAttemptNum = sorted.length + 1;
   }
-
   document.getElementById("writing-controls").style.display = "block";
   setState("ready");
 }
 
-// ── State machine ────────────────────────────────────────────────────────────
 function setState(next) {
   state = next;
-
   if (next === "ready") {
     readyState.style.display = "block";
     timerArea.style.display = "none";
@@ -141,103 +200,60 @@ function setState(next) {
     grammarEl.textContent = "";
     grammarEl.className = "grammar-status";
     if (countdownId) { clearInterval(countdownId); countdownId = null; }
-
   } else if (next === "writing") {
     readyState.style.display = "none";
     timerArea.style.display = "block";
-    phaseEl.textContent  = "TIME REMAINING";
-    timerEl.style.color  = "";
-    editor.disabled      = false;
-    submitBtn.disabled   = false;
+    phaseEl.textContent = "TIME REMAINING";
+    timerEl.style.color = "";
+    editor.disabled = false;
+    submitBtn.disabled = false;
     submitBtn.textContent = "Submit Response";
     submitError.textContent = "";
     editor.focus();
-
     startTime = Date.now();
     remainingSec = WRITING_DURATION_SEC;
     if (countdownId) clearInterval(countdownId);
     countdownId = countdown(WRITING_DURATION_SEC, (r) => {
       remainingSec = r;
       timerEl.textContent = fmtTime(r);
-      if (r <= 60)       timerEl.style.color = "#dc2626";
+      if (r <= 60) timerEl.style.color = "#dc2626";
       else if (r <= 300) timerEl.style.color = "#d97706";
-      else               timerEl.style.color = "";
-    }, () => {
-      // Auto-submit when timer reaches zero
-      if (editor.value.trim()) doSubmit();
-      else setState("done");
-    });
-
+      else timerEl.style.color = "";
+    }, () => { if (editor.value.trim()) doSubmit(); else setState("done"); });
   } else if (next === "processing") {
-    phaseEl.textContent   = "PROCESSING";
-    timerEl.style.color   = "";
-    editor.disabled       = true;
-    submitBtn.disabled    = true;
-    submitBtn.textContent = "Submitting\u2026";
+    phaseEl.textContent = "PROCESSING";
+    timerEl.style.color = "";
+    editor.disabled = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting…";
     if (countdownId) { clearInterval(countdownId); countdownId = null; }
-
   } else if (next === "done") {
-    phaseEl.textContent   = "SUBMITTED";
-    timerEl.textContent   = "28:00";
-    timerEl.style.color   = "";
-    editor.disabled       = true;
-    submitBtn.disabled    = false;
+    phaseEl.textContent = "SUBMITTED";
+    timerEl.textContent = "28:00";
+    timerEl.style.color = "";
+    editor.disabled = true;
+    submitBtn.disabled = false;
     submitBtn.textContent = "Try Again";
   }
 }
 
-// ── Editor events ────────────────────────────────────────────────────────────
-editor.addEventListener("input", () => {
-  updateWordCount();
-  updateHighlight();
+editor.addEventListener("input", () => { updateWordCount(); updateHighlight(); clearTimeout(grammarTimer); grammarEl.textContent = "Checking…"; grammarEl.className = "grammar-status"; grammarTimer = setTimeout(() => runGrammarCheck(editor.value), 900); });
+editor.addEventListener("scroll", () => { highlight.scrollTop = editor.scrollTop; });
+function updateWordCount() { const n = editor.value.trim() ? editor.value.trim().split(/\s+/).length : 0; wordCountEl.textContent = `${n} word${n !== 1 ? "s" : ""}`; }
 
-  clearTimeout(grammarTimer);
-  grammarEl.textContent = "Checking\u2026";
-  grammarEl.className   = "grammar-status";
-  grammarTimer = setTimeout(() => runGrammarCheck(editor.value), 900);
-});
-
-editor.addEventListener("scroll", () => {
-  highlight.scrollTop = editor.scrollTop;
-});
-
-function updateWordCount() {
-  const n = editor.value.trim() ? editor.value.trim().split(/\s+/).length : 0;
-  wordCountEl.textContent = `${n} word${n !== 1 ? "s" : ""}`;
-}
-
-// ── Grammar check (LanguageTool public API) ───────────────────────────────────
 async function runGrammarCheck(text) {
-  if (!text.trim()) {
-    currentMatches = [];
-    updateHighlight();
-    grammarEl.textContent = "";
-    return;
-  }
+  if (!text.trim()) { currentMatches = []; updateHighlight(); grammarEl.textContent = ""; return; }
   try {
-    const resp = await fetch("https://api.languagetool.org/v2/check", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ text, language: "en-US" }).toString(),
-    });
+    const resp = await fetch("https://api.languagetool.org/v2/check", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ text, language: "en-US" }).toString() });
     const data = await resp.json();
     currentMatches = data.matches || [];
     updateHighlight();
     const n = currentMatches.length;
-    if (n === 0) {
-      grammarEl.textContent = "No issues";
-      grammarEl.className   = "grammar-status grammar-ok";
-    } else {
-      grammarEl.textContent = `${n} issue${n !== 1 ? "s" : ""}`;
-      grammarEl.className   = "grammar-status grammar-issues";
-    }
-  } catch {
-    grammarEl.textContent = "";
-    grammarEl.className   = "grammar-status";
-  }
+    if (n === 0) { grammarEl.textContent = "No issues"; grammarEl.className = "grammar-status grammar-ok"; }
+    else { grammarEl.textContent = `${n} issue${n !== 1 ? "s" : ""}`; grammarEl.className = "grammar-status grammar-issues"; }
+  } catch { grammarEl.textContent = ""; grammarEl.className = "grammar-status"; }
 }
 
-// ── Highlight overlay ─────────────────────────────────────────────────────────
 function buildHighlightHTML(text, matches) {
   const sorted = [...matches].sort((a, b) => a.offset - b.offset);
   let html = "", pos = 0;
@@ -249,191 +265,96 @@ function buildHighlightHTML(text, matches) {
     pos = end;
   }
   if (pos < text.length) html += escapeHtml(text.slice(pos));
-  return html + "\n"; // trailing newline matches textarea bottom line height
+  return html + "\n";
 }
 
-function updateHighlight() {
-  highlight.innerHTML    = buildHighlightHTML(editor.value, currentMatches);
-  highlight.scrollTop    = editor.scrollTop;
-}
-
-// ── Start button ────────────────────────────────────────────────────────────
-startBtn.addEventListener("click", () => {
-  setState("writing");
-});
-
-// ── Submit ───────────────────────────────────────────────────────────────────
+function updateHighlight() { highlight.innerHTML = buildHighlightHTML(editor.value, currentMatches); highlight.scrollTop = editor.scrollTop; }
+startBtn.addEventListener("click", () => { setState("writing"); });
 submitBtn.addEventListener("click", () => {
-  if (state === "done") {
-    // Try again: reset to ready state
-    setState("ready");
-    return;
-  }
+  if (state === "done") { setState("ready"); return; }
   const text = editor.value.trim();
-  if (!text) {
-    submitError.textContent = "Please write a response before submitting.";
-    return;
-  }
+  if (!text) { submitError.textContent = "Please write a response before submitting."; return; }
   submitError.textContent = "";
   doSubmit();
 });
 
 async function doSubmit() {
   setState("processing");
-
-  const text      = editor.value.trim();
-  const elapsed   = startTime ? Math.round((Date.now() - startTime) / 1000) : null;
-  const question  = document.getElementById("question-text").textContent || "";
+  const text = editor.value.trim();
+  const elapsed = startTime ? Math.round((Date.now() - startTime) / 1000) : null;
+  const question = document.getElementById("question-text").textContent || "";
   const sessionId = new URLSearchParams(location.search).get("session");
-
   try {
-    const result = await apiPost("/submit-writing", {
-      task_id:       sessionData.task_id,
-      question,
-      response_text: text,
-      duration_sec:  elapsed > 0 ? elapsed : null,
-      session_id:    sessionId,
-      user_name:     getUserName(),
-    });
-
-    renderAttemptCard(
-      {
-        id:              result.id,
-        score:           result.score,
-        created_at:      new Date().toISOString(),
-        response_text:   text,
-        evaluation_json: result,
-        duration_sec:    elapsed > 0 ? elapsed : null,
-        user_name:       getUserName(),
-      },
-      nextAttemptNum,
-      result.prev_score,
-    );
+    const result = await apiPost("/submit-writing", { task_id: sessionData.task_id, question, response_text: text, duration_sec: elapsed > 0 ? elapsed : null, session_id: sessionId, user_name: getUserName() });
+    renderAttemptCard({ id: result.id, score: result.score, created_at: new Date().toISOString(), response_text: text, evaluation_json: result, duration_sec: elapsed > 0 ? elapsed : null, user_name: getUserName() }, nextAttemptNum, result.prev_score);
     nextAttemptNum++;
     setState("done");
   } catch (e) {
     submitError.textContent = `Submission failed: ${e.message}`;
-    // Restore writing state; restart timer from remaining seconds, not full 28 min
-    state = "writing"; // set directly to avoid re-triggering full restart
-    phaseEl.textContent  = "TIME REMAINING";
-    editor.disabled      = false;
-    submitBtn.disabled   = false;
+    state = "writing";
+    phaseEl.textContent = "TIME REMAINING";
+    editor.disabled = false;
+    submitBtn.disabled = false;
     submitBtn.textContent = "Submit Response";
     if (countdownId) clearInterval(countdownId);
     countdownId = countdown(remainingSec, (r) => {
       remainingSec = r;
       timerEl.textContent = fmtTime(r);
-      if (r <= 60)       timerEl.style.color = "#dc2626";
+      if (r <= 60) timerEl.style.color = "#dc2626";
       else if (r <= 300) timerEl.style.color = "#d97706";
-      else               timerEl.style.color = "";
-    }, () => {
-      if (editor.value.trim()) doSubmit();
-      else setState("done");
-    });
+      else timerEl.style.color = "";
+    }, () => { if (editor.value.trim()) doSubmit(); else setState("done"); });
   }
 }
 
-// ── Render attempt card ───────────────────────────────────────────────────────
-function scoreClass(s) {
-  return s >= 10 ? "good" : s >= 7 ? "mid" : "low";
-}
+function scoreClass(s) { return s >= 10 ? "good" : s >= 7 ? "mid" : "low"; }
 
 function renderAttemptCard(attempt, num, prevScore) {
-  const list  = document.getElementById("attempts-list");
-  const card  = document.createElement("div");
+  const list = document.getElementById("attempts-list");
+  const card = document.createElement("div");
   card.className = "attempt-card";
   card.id = `attempt-card-${attempt.id}`;
-
-  const score     = attempt.score;
-  const cls       = score != null ? scoreClass(score) : "low";
-  const badgeHtml = score != null
-    ? `<span class="score-badge ${cls}">${score}<span>/12</span></span>`
-    : `<span class="score-badge low">?<span>/12</span></span>`;
-
-  const words = attempt.response_text
-    ? attempt.response_text.trim().split(/\s+/).filter(Boolean).length : 0;
-  const date  = new Date(attempt.created_at).toLocaleString();
+  const score = attempt.score;
+  const cls = score != null ? scoreClass(score) : "low";
+  const badgeHtml = score != null ? `<span class="score-badge ${cls}">${score}<span>/12</span></span>` : `<span class="score-badge low">?<span>/12</span></span>`;
+  const words = attempt.response_text ? attempt.response_text.trim().split(/\s+/).filter(Boolean).length : 0;
+  const date = new Date(attempt.created_at).toLocaleString();
   const sessionId = new URLSearchParams(location.search).get("session");
-
   let deltaHtml = "";
   if (prevScore != null && score != null) {
     const diff = score - prevScore;
-    if      (diff > 0) deltaHtml = `<span class="score-delta up">&uarr; +${diff}</span>`;
-    else if (diff < 0) deltaHtml = `<span class="score-delta down">&darr; ${diff}</span>`;
-    else               deltaHtml = `<span class="score-delta same">= same</span>`;
+    if (diff > 0) deltaHtml = `<span class="score-delta up">↑ +${diff}</span>`;
+    else if (diff < 0) deltaHtml = `<span class="score-delta down">↓ ${diff}</span>`;
+    else deltaHtml = `<span class="score-delta same">= same</span>`;
   }
-
   const evalId = `eval-${attempt.id}`;
-
-  card.innerHTML = `
-    <div class="attempt-card-header">
-      <span class="attempt-num">Attempt ${num}</span>
-      <div class="attempt-card-meta">
-        ${badgeHtml}
-        ${deltaHtml}
-        ${attempt.user_name ? `<span class="attempt-user-name">${escapeHtml(attempt.user_name)}</span>` : ""}
-      </div>
-    </div>
-    <div class="attempt-progress">
-      <span>${words} words</span>
-      ${attempt.duration_sec ? `<span>&middot; ${fmtTime(attempt.duration_sec)} used</span>` : ""}
-      <span>&middot; ${escapeHtml(date)}</span>
-    </div>
-
-    <details class="attempt-details">
-      <summary>Written Response</summary>
-      <div class="attempt-transcript">${escapeHtml(attempt.response_text || "")}</div>
-    </details>
-
-    <details class="attempt-details" open>
-      <summary>Evaluation</summary>
-      <div class="attempt-eval" id="${evalId}"></div>
-    </details>
-
-    <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
-      <button class="btn btn-secondary"
-        style="font-size:.82rem;padding:.35rem .85rem"
-        onclick="doReevaluate(${attempt.id}, this)">Re-evaluate</button>
-      <a href="detail?id=${attempt.id}&session=${sessionId}"
-         class="btn btn-secondary"
-         style="font-size:.82rem;padding:.35rem .85rem">View Detail</a>
-    </div>
-  `;
-
-  // Insert newest at top
+  card.innerHTML = `<div class="attempt-card-header"><span class="attempt-num">Attempt ${num}</span><div class="attempt-card-meta">${badgeHtml}${deltaHtml}${attempt.user_name ? `<span class="attempt-user-name">${escapeHtml(attempt.user_name)}</span>` : ""}</div></div><div class="attempt-progress"><span>${words} words</span>${attempt.duration_sec ? `<span>· ${fmtTime(attempt.duration_sec)} used</span>` : ""}<span>· ${escapeHtml(date)}</span></div><details class="attempt-details"><summary>Written Response</summary><div class="attempt-transcript">${escapeHtml(attempt.response_text || "")}</div></details><details class="attempt-details" open><summary>Evaluation</summary><div class="attempt-eval" id="${evalId}"></div></details><div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;"><button class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.35rem 0.85rem;" onclick="doReevaluate(${attempt.id}, this)">Re-evaluate</button><a href="/detail?id=${attempt.id}&session=${sessionId}" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.35rem 0.85rem;">View Detail</a></div>`;
   list.insertBefore(card, list.firstChild);
-
-  if (attempt.evaluation_json) {
-    renderWritingEvaluation(document.getElementById(evalId), attempt.evaluation_json);
-  } else {
-    document.getElementById(evalId).textContent = "No evaluation available.";
-  }
+  if (attempt.evaluation_json) { renderWritingEvaluation(document.getElementById(evalId), attempt.evaluation_json); }
+  else { document.getElementById(evalId).textContent = "No evaluation available."; }
 }
 
-// ── Re-evaluate ───────────────────────────────────────────────────────────────
 async function doReevaluate(id, btn) {
-  btn.disabled      = true;
-  btn.textContent   = "Re-evaluating\u2026";
+  btn.disabled = true;
+  btn.textContent = "Re-evaluating…";
   try {
     const result = await apiPost(`/attempts/${id}/reevaluate`, {});
-    const card   = document.getElementById(`attempt-card-${id}`);
+    const card = document.getElementById(`attempt-card-${id}`);
     if (card) {
       const badgeEl = card.querySelector(".score-badge");
-      if (badgeEl && result.score != null) {
-        badgeEl.className = `score-badge ${scoreClass(result.score)}`;
-        badgeEl.innerHTML = `${result.score}<span>/12</span>`;
-      }
+      if (badgeEl && result.score != null) { badgeEl.className = `score-badge ${scoreClass(result.score)}`; badgeEl.innerHTML = `${result.score}<span>/12</span>`; }
       const evalEl = card.querySelector(".attempt-eval");
       if (evalEl) renderWritingEvaluation(evalEl, result);
     }
     btn.textContent = "Re-evaluate";
-    btn.disabled    = false;
+    btn.disabled = false;
   } catch (e) {
     btn.textContent = "Failed — retry";
-    btn.disabled    = false;
+    btn.disabled = false;
   }
 }
 
 init();
-</script>
-{% endblock %}
+  </script>
+</body>
+</html>
