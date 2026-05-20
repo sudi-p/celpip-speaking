@@ -1,0 +1,9 @@
+{
+  "audioCues.enabled": "off",
+  "accessibility.signals.chatRequestSent": "off",
+  "accessibility.signals.progress": "off",
+  "accessibility.signals.terminalBell": {
+    "sound": "off"
+  },
+  "terminal.integrated.enableVisualBell": false
+}
