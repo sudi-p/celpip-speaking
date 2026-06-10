@@ -123,6 +123,7 @@
     <div class="flex flex-wrap gap-2 mb-8 animate-fade-up" style="animation-delay:.15s" id="tab-bar">
       <button data-tab="overview"  class="tab-btn tab-active  px-5 py-2 rounded-full border text-sm font-medium transition-all">Overview</button>
       <button data-tab="structure" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">My Template</button>
+      <button data-tab="formality" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Email Types</button>
       <button data-tab="vocab"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Vocab Bank</button>
       <button data-tab="practice" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Practice</button>
       <button data-tab="scoring"  class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Scoring</button>
@@ -463,6 +464,152 @@
     </div>
 
     <!-- ══════════════════════════════════════════
+         PANE: EMAIL TYPES (Formal / Semi-formal / Informal)
+    ══════════════════════════════════════════ -->
+    <div id="pane-formality" class="pane space-y-5">
+      <div class="bg-white rounded-2xl border border-mist p-6">
+        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">Read the prompt — who is the reader?</p>
+        <p class="text-sm leading-relaxed text-ink">CELPIP Task 1 always names a recipient. <strong>Match your tone to that reader.</strong> Writing too formally to a friend, or too casually to a manager, costs you points on tone and register. Use the toggle below to see the right template for each situation.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+          <div class="bg-sapphire-light rounded-xl p-3">
+            <p class="text-xs font-semibold text-sapphire-dark mb-1">Formal</p>
+            <p class="text-xs text-sapphire-dark/80">Strangers, officials, companies, complaints. No contractions.</p>
+          </div>
+          <div class="bg-emerald2-light rounded-xl p-3">
+            <p class="text-xs font-semibold text-emerald2-dark mb-1">Semi-formal</p>
+            <p class="text-xs text-emerald2-dark/80">Managers, coworkers, landlords you know. Polite but warmer.</p>
+          </div>
+          <div class="bg-amber2-light rounded-xl p-3">
+            <p class="text-xs font-semibold text-amber2-dark mb-1">Informal</p>
+            <p class="text-xs text-amber2-dark/80">Friends, family, close colleagues. Relaxed, contractions OK.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toggle -->
+      <div class="flex flex-wrap gap-2" id="formality-toggle">
+        <button class="formality-btn filter-active px-5 py-2 rounded-full border text-sm font-medium transition-all" data-formality="formal">Formal</button>
+        <button class="formality-btn filter-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all" data-formality="semiformal">Semi-formal</button>
+        <button class="formality-btn filter-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all" data-formality="informal">Informal</button>
+      </div>
+
+      <!-- FORMAL -->
+      <div class="formality-card" data-formality="formal">
+        <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+          <div class="bg-sapphire px-6 py-4">
+            <p class="text-xs font-semibold text-white/70 uppercase tracking-widest mb-1">Formal Email</p>
+            <p class="text-sm text-white">For people you don't know, officials, businesses, or complaints. No contractions, full polite forms.</p>
+          </div>
+          <div class="px-6 py-5 space-y-4">
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Fill-in template</p>
+              <div class="bg-fog rounded-xl p-4 text-sm text-ink leading-relaxed space-y-2 font-mono text-[13px]">
+                <p>Dear <span class="text-sapphire">[Mr./Ms. Last Name OR Sir or Madam]</span>,</p>
+                <p>I am writing to <span class="text-sapphire">[state purpose — request / inquire about / complain about]</span>. <span class="text-sapphire">[One sentence of context.]</span></p>
+                <p>The main reason is that <span class="text-sapphire">[explain detail 1 with specifics — dates, numbers]</span>. Furthermore, <span class="text-sapphire">[detail 2]</span>. <span class="text-sapphire">[Detail 3 / consequence.]</span></p>
+                <p>I would appreciate it if you could <span class="text-sapphire">[your specific request / next step]</span>. Thank you for your prompt attention to this matter. I look forward to your response.</p>
+                <p>Sincerely,<br /><span class="text-sapphire">[Your Full Name]</span></p>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Worked example (complaint)</p>
+              <div class="bg-sapphire-light rounded-xl p-4 text-sm text-ink leading-relaxed italic">
+                <p>Dear Mr. Holloway,</p>
+                <p class="mt-2">I am writing to formally complain about the faulty dishwasher delivered to my home on June 2nd (Order #DW40219). I purchased the appliance from your store expecting reliable performance.</p>
+                <p class="mt-2">The main reason for my complaint is that the unit failed to operate on its first use, displaying an error code and leaking water onto the floor. Furthermore, the installation technician left without confirming it was working. As a result, my kitchen sustained minor water damage.</p>
+                <p class="mt-2">I would appreciate it if you could arrange a full replacement and inspection at your earliest convenience. Thank you for your prompt attention to this matter. I look forward to your response.</p>
+                <p class="mt-2">Sincerely,<br />Daniel Pierce</p>
+              </div>
+            </div>
+            <div class="bg-fog rounded-xl p-4">
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Phrases that fit</p>
+              <p class="text-xs text-slate"><strong>Greeting:</strong> Dear Mr./Ms. [Name], · Dear Sir or Madam, · To Whom It May Concern,</p>
+              <p class="text-xs text-slate mt-1"><strong>Open:</strong> I am writing to… · I am writing in response to… · I wish to bring to your attention…</p>
+              <p class="text-xs text-slate mt-1"><strong>Close:</strong> I would appreciate it if… · I look forward to your response. · Yours faithfully, · Sincerely,</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMI-FORMAL -->
+      <div class="formality-card hidden" data-formality="semiformal">
+        <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+          <div class="bg-emerald2 px-6 py-4">
+            <p class="text-xs font-semibold text-white/70 uppercase tracking-widest mb-1">Semi-formal Email</p>
+            <p class="text-sm text-white">For a manager, coworker, or landlord you already know. Polite and professional, but warmer and more personal.</p>
+          </div>
+          <div class="px-6 py-5 space-y-4">
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Fill-in template</p>
+              <div class="bg-fog rounded-xl p-4 text-sm text-ink leading-relaxed space-y-2 font-mono text-[13px]">
+                <p>Dear <span class="text-emerald2">[First Name OR Mr./Ms. Last Name]</span>,</p>
+                <p>I hope you are doing well. I am writing to <span class="text-emerald2">[state purpose — ask about / let you know / request]</span>. <span class="text-emerald2">[One sentence of friendly context.]</span></p>
+                <p><span class="text-emerald2">[Explain the situation with details.]</span> In addition, <span class="text-emerald2">[second point]</span>. <span class="text-emerald2">[Reassurance or extra info.]</span></p>
+                <p>Could you please <span class="text-emerald2">[your request]</span>? Thank you so much for your help — I really appreciate it. Please let me know if you need anything from me.</p>
+                <p>Best regards,<br /><span class="text-emerald2">[Your Name]</span></p>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Worked example (time off request)</p>
+              <div class="bg-emerald2-light rounded-xl p-4 text-sm text-ink leading-relaxed italic">
+                <p>Dear Ms. Carter,</p>
+                <p class="mt-2">I hope you are doing well. I am writing to request a week of leave from Monday, June 15th to Friday, June 19th due to a family matter that requires my attention.</p>
+                <p class="mt-2">I have already reviewed my current projects, and everything is on track to be completed before I leave. In addition, I have spoken with Raj, who has kindly agreed to cover any urgent client requests while I am away. I will also be reachable by email for anything truly time-sensitive.</p>
+                <p class="mt-2">Could you please let me know if these dates work for the team? Thank you so much for considering my request — I really appreciate your understanding. Please let me know if you need anything further from me.</p>
+                <p class="mt-2">Best regards,<br />Priya Sharma</p>
+              </div>
+            </div>
+            <div class="bg-fog rounded-xl p-4">
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Phrases that fit</p>
+              <p class="text-xs text-slate"><strong>Greeting:</strong> Dear [First Name], · Hello [Name], · Dear Mr./Ms. [Name],</p>
+              <p class="text-xs text-slate mt-1"><strong>Open:</strong> I hope you are doing well. · I wanted to reach out about… · I am writing to…</p>
+              <p class="text-xs text-slate mt-1"><strong>Close:</strong> Could you please… · Thank you so much for your help. · Best regards, · Kind regards,</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFORMAL -->
+      <div class="formality-card hidden" data-formality="informal">
+        <div class="bg-white rounded-2xl border border-mist overflow-hidden">
+          <div class="bg-amber2 px-6 py-4">
+            <p class="text-xs font-semibold text-white/70 uppercase tracking-widest mb-1">Informal Email</p>
+            <p class="text-sm text-white">For a friend, family member, or close colleague. Relaxed and friendly — contractions and casual phrases are fine. Still organized.</p>
+          </div>
+          <div class="px-6 py-5 space-y-4">
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Fill-in template</p>
+              <div class="bg-fog rounded-xl p-4 text-sm text-ink leading-relaxed space-y-2 font-mono text-[13px]">
+                <p>Hi <span class="text-amber2">[First Name]</span>,</p>
+                <p>How are you? <span class="text-amber2">[Friendly opener — Hope you're doing great! / It's been a while!]</span> I'm writing to <span class="text-amber2">[reason — tell you about / ask you / invite you]</span>.</p>
+                <p><span class="text-amber2">[Give the details casually.]</span> Also, <span class="text-amber2">[second point]</span>. <span class="text-amber2">[Add a personal touch or feeling.]</span></p>
+                <p>Let me know <span class="text-amber2">[what you need / if you can make it]</span>! Can't wait to hear back from you. <span class="text-amber2">[Take care! / Talk soon!]</span></p>
+                <p>Cheers,<br /><span class="text-amber2">[Your Name]</span></p>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Worked example (invitation)</p>
+              <div class="bg-amber2-light rounded-xl p-4 text-sm text-ink leading-relaxed italic">
+                <p>Hi Marcus,</p>
+                <p class="mt-2">How have you been? It feels like ages since we last caught up! I'm writing because I'm throwing a small barbecue at my place on Saturday, June 20th, and I'd love for you to come.</p>
+                <p class="mt-2">It's nothing fancy — just a few friends, some good food, and hopefully decent weather for once. I'm planning to fire up the grill around 4 p.m., so feel free to drop by whenever works for you. Also, my neighbour is bringing his guitar, so it should be a fun, relaxed evening.</p>
+                <p class="mt-2">Let me know if you can make it, and bring someone along if you'd like! Can't wait to catch up properly. Take care and talk soon.</p>
+                <p class="mt-2">Cheers,<br />Leo</p>
+              </div>
+            </div>
+            <div class="bg-fog rounded-xl p-4">
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-2">Phrases that fit</p>
+              <p class="text-xs text-slate"><strong>Greeting:</strong> Hi [Name], · Hey [Name], · Hello [Name],</p>
+              <p class="text-xs text-slate mt-1"><strong>Open:</strong> How are you? · Hope you're doing well! · It's been a while! · I'm writing because…</p>
+              <p class="text-xs text-slate mt-1"><strong>Close:</strong> Let me know! · Can't wait to hear back. · Take care, · Talk soon, · Cheers,</p>
+              <p class="text-xs text-amber2-dark mt-2"><strong>Note:</strong> Even informal emails should still be organized and address the prompt — don't use slang or text-speak ("u", "thx", "lol").</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
          PANE: VOCAB BANK
     ══════════════════════════════════════════ -->
     <div id="pane-vocab" class="pane space-y-4">
@@ -756,6 +903,24 @@
         });
       });
     }
+
+    // Email-type (formality) toggle
+    const formalityBtns = document.querySelectorAll('.formality-btn');
+    const formalityCards = document.querySelectorAll('.formality-card');
+    formalityBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.getAttribute('data-formality');
+        formalityBtns.forEach(b => {
+          b.classList.remove('filter-active');
+          b.classList.add('filter-inactive');
+        });
+        btn.classList.add('filter-active');
+        btn.classList.remove('filter-inactive');
+        formalityCards.forEach(card => {
+          card.classList.toggle('hidden', card.getAttribute('data-formality') !== type);
+        });
+      });
+    });
 
     // Mobile menu toggle
     const navbarBurger = document.getElementById('navbar-burger');
