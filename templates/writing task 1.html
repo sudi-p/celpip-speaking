@@ -125,8 +125,6 @@
       <button data-tab="structure" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">My Template</button>
       <button data-tab="formality" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Email Types</button>
       <button data-tab="vocab"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Vocab Bank</button>
-      <button data-tab="practice" class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Practice</button>
-      <button data-tab="scoring"  class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Scoring</button>
       <button data-tab="tips"     class="tab-btn tab-inactive px-5 py-2 rounded-full border text-sm font-medium transition-all">Pro Tips</button>
     </div>
 
@@ -201,6 +199,70 @@
               <p class="text-xs text-fog/80">Polite sign-off with your name</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- ─── Scoring bands ─── -->
+      <div>
+        <p class="text-sm text-slate mb-3">How examiners score Task 1 on a 12-point scale. The bands below show typical email characteristics at each level.</p>
+
+        <div class="space-y-3">
+          <div class="bg-white rounded-2xl border border-mist p-6">
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-sm font-semibold text-ink">Score 10–12 (Advanced)</p>
+              <span class="font-display text-xl text-emerald2">●</span>
+            </div>
+            <div class="space-y-2 text-sm text-slate">
+              <p><strong>Task Fulfillment:</strong> Meets all requirements. Word count is 180–199 words. Email is complete with all requested elements. Completed within time constraints.</p>
+              <p><strong>Coherence:</strong> Email flows naturally from greeting to closing. Ideas are organized logically.</p>
+              <p><strong>Vocabulary:</strong> Professional register throughout. Varied word choice. Uses appropriate phrases (e.g., "I would appreciate it if...").</p>
+              <p><strong>Grammar:</strong> Grammar and spelling are near-perfect. Sentences are well-constructed with good variety.</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-mist p-6">
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-sm font-semibold text-ink">Score 7–9 (Upper-Intermediate)</p>
+              <span class="font-display text-xl text-amber2">●</span>
+            </div>
+            <div class="space-y-2 text-sm text-slate">
+              <p><strong>Task Fulfillment:</strong> Addresses main requirements. Word count is close to 180–199. Most elements are included.</p>
+              <p><strong>Coherence:</strong> Email is organized and easy to follow. Transitions are present.</p>
+              <p><strong>Vocabulary:</strong> Generally professional tone. Some variety in word choice. Occasional repetition of simple words.</p>
+              <p><strong>Grammar:</strong> Grammar is mostly accurate. Minor errors present but don't disrupt meaning. Spelling is correct.</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-mist p-6">
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-sm font-semibold text-ink">Score 4–6 (Intermediate)</p>
+              <span class="font-display text-xl text-rose2">●</span>
+            </div>
+            <div class="space-y-2 text-sm text-slate">
+              <p><strong>Task Fulfillment:</strong> Partially addresses requirements. Word count may be below or above the range. Some elements missing.</p>
+              <p><strong>Coherence:</strong> Email is present but may lack clear organization. Some ideas don't connect smoothly.</p>
+              <p><strong>Vocabulary:</strong> Basic tone, sometimes too casual. Limited word range. Frequent repetition.</p>
+              <p><strong>Grammar:</strong> Several grammatical errors. Some spelling mistakes. Meaning is usually clear but sometimes unclear.</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-mist p-6">
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-sm font-semibold text-ink">Score 1–3 (Below Intermediate)</p>
+              <span class="font-display text-xl text-slate">●</span>
+            </div>
+            <div class="space-y-2 text-sm text-slate">
+              <p><strong>Task Fulfillment:</strong> Does not fully address requirements. Significantly below or above word count. Missing key elements.</p>
+              <p><strong>Coherence:</strong> Email is disorganized or incomplete. Difficult to follow.</p>
+              <p><strong>Vocabulary:</strong> Not professional. Very limited vocabulary range.</p>
+              <p><strong>Grammar:</strong> Frequent and serious errors. Spelling mistakes. Meaning is sometimes unclear.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-fog rounded-2xl p-6 mt-6">
+          <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">Key insight</p>
+          <p class="text-sm text-ink">A 10–12 email is well-organized, professional in tone, and nearly error-free. It hits the word count and addresses all requirements within 27 minutes. It is <strong>not</strong> perfect, and that's fine — what matters is that it demonstrates professional communication with clear purpose and good control of language.</p>
         </div>
       </div>
     </div>
@@ -615,111 +677,6 @@
     <div id="pane-vocab" class="pane space-y-4">
       <div id="vocab-filters" class="flex flex-wrap gap-2"></div>
       <div id="vocab-content" class="space-y-4"></div>
-    </div>
-
-    <!-- ══════════════════════════════════════════
-         PANE: PRACTICE
-    ══════════════════════════════════════════ -->
-    <div id="pane-practice" class="pane space-y-4">
-      <p class="text-sm text-slate">Five realistic email scenarios. Write 180–199 words for each, within 27 minutes.</p>
-
-      <div class="space-y-3">
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-gold uppercase tracking-widest mb-2">Practice scenario 1</p>
-          <p class="text-sm font-semibold text-ink mb-3">Request time off from your manager</p>
-          <p class="text-sm text-slate leading-relaxed">Write an email requesting a week off for a family emergency. Include dates, a brief explanation, and reassurance about work coverage.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-sapphire uppercase tracking-widest mb-2">Practice scenario 2</p>
-          <p class="text-sm font-semibold text-ink mb-3">Request a correction to an invoice</p>
-          <p class="text-sm text-slate leading-relaxed">Write to a supplier pointing out an error in the billing amount. Ask for clarification and a corrected invoice.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-emerald2 uppercase tracking-widest mb-2">Practice scenario 3</p>
-          <p class="text-sm font-semibold text-ink mb-3">Reply to a thank-you message</p>
-          <p class="text-sm text-slate leading-relaxed">Write a brief response thanking someone for a gift or kind gesture during your employment or at the end of a project.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-amber2 uppercase tracking-widest mb-2">Practice scenario 4</p>
-          <p class="text-sm font-semibold text-ink mb-3">Inquire about a job opening</p>
-          <p class="text-sm text-slate leading-relaxed">Write to HR or the hiring manager asking for more details about a position you saw advertised. Express genuine interest.</p>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <p class="text-xs font-semibold text-rose2 uppercase tracking-widest mb-2">Practice scenario 5</p>
-          <p class="text-sm font-semibold text-ink mb-3">Provide feedback on a draft document</p>
-          <p class="text-sm text-slate leading-relaxed">Write to a colleague offering constructive feedback on their project draft. Be polite and specific about improvements.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════
-         PANE: SCORING
-    ══════════════════════════════════════════ -->
-    <div id="pane-scoring" class="pane space-y-4">
-      <p class="text-sm text-slate">How examiners score Task 1 on a 12-point scale. The bands below show typical email characteristics at each level.</p>
-
-      <div class="space-y-3">
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 10–12 (Advanced)</p>
-            <span class="font-display text-xl text-emerald2">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task Fulfillment:</strong> Meets all requirements. Word count is 180–199 words. Email is complete with all requested elements. Completed within time constraints.</p>
-            <p><strong>Coherence:</strong> Email flows naturally from greeting to closing. Ideas are organized logically.</p>
-            <p><strong>Vocabulary:</strong> Professional register throughout. Varied word choice. Uses appropriate phrases (e.g., "I would appreciate it if...").</p>
-            <p><strong>Grammar:</strong> Grammar and spelling are near-perfect. Sentences are well-constructed with good variety.</p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 7–9 (Upper-Intermediate)</p>
-            <span class="font-display text-xl text-amber2">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task Fulfillment:</strong> Addresses main requirements. Word count is close to 180–199. Most elements are included.</p>
-            <p><strong>Coherence:</strong> Email is organized and easy to follow. Transitions are present.</p>
-            <p><strong>Vocabulary:</strong> Generally professional tone. Some variety in word choice. Occasional repetition of simple words.</p>
-            <p><strong>Grammar:</strong> Grammar is mostly accurate. Minor errors present but don't disrupt meaning. Spelling is correct.</p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 4–6 (Intermediate)</p>
-            <span class="font-display text-xl text-rose2">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task Fulfillment:</strong> Partially addresses requirements. Word count may be below or above the range. Some elements missing.</p>
-            <p><strong>Coherence:</strong> Email is present but may lack clear organization. Some ideas don't connect smoothly.</p>
-            <p><strong>Vocabulary:</strong> Basic tone, sometimes too casual. Limited word range. Frequent repetition.</p>
-            <p><strong>Grammar:</strong> Several grammatical errors. Some spelling mistakes. Meaning is usually clear but sometimes unclear.</p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-mist p-6">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm font-semibold text-ink">Score 1–3 (Below Intermediate)</p>
-            <span class="font-display text-xl text-slate">●</span>
-          </div>
-          <div class="space-y-2 text-sm text-slate">
-            <p><strong>Task Fulfillment:</strong> Does not fully address requirements. Significantly below or above word count. Missing key elements.</p>
-            <p><strong>Coherence:</strong> Email is disorganized or incomplete. Difficult to follow.</p>
-            <p><strong>Vocabulary:</strong> Not professional. Very limited vocabulary range.</p>
-            <p><strong>Grammar:</strong> Frequent and serious errors. Spelling mistakes. Meaning is sometimes unclear.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-fog rounded-2xl p-6 mt-6">
-        <p class="text-xs font-semibold text-slate uppercase tracking-widest mb-3">Key insight</p>
-        <p class="text-sm text-ink">A 10–12 email is well-organized, professional in tone, and nearly error-free. It hits the word count and addresses all requirements within 27 minutes. It is <strong>not</strong> perfect, and that's fine — what matters is that it demonstrates professional communication with clear purpose and good control of language.</p>
-      </div>
     </div>
 
     <!-- ══════════════════════════════════════════
