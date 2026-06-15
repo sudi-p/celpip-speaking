@@ -745,30 +745,271 @@
       <div class="bg-violet2-light rounded-2xl border border-violet2 overflow-hidden">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-4 text-left hover:bg-violet2/5 transition-colors" data-target="struct-scenarios">
           <div class="flex items-center gap-3">
-            <span class="text-sm font-semibold text-ink">5 Complete Email Scenarios (180–199 words)</span>
+            <span class="text-sm font-semibold text-ink">5 Worked Examples — Question → Thinking → Template → Answer</span>
           </div>
           <svg class="chevron w-4 h-4 text-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
-        <div id="struct-scenarios" class="accordion-body border-t border-violet2/30 px-6 py-5 space-y-4">
-          <div>
-            <p class="text-xs font-semibold text-violet2-dark uppercase tracking-wider mb-2">Scenario 1: Online Order Problem (Complaint + Request)</p>
-            <p class="text-sm text-ink italic leading-relaxed">"Dear Customer Service Manager, I am writing to request a refund for my recent online purchase (Order #WX789456) ordered on March 10th. The package arrived yesterday with significant damage; the laptop screen was cracked, and the protective cushioning was insufficient. Specifically, the screen has multiple fractures making it completely unusable. This is particularly frustrating given the expensive purchase price of $1,200. I have attached photos of the damaged item for your review. As a result, I would appreciate a full refund to my original payment method or a replacement device sent with proper packaging. Thank you in advance for resolving this matter promptly. Sincerely, Mark Thompson"</p>
+        <div id="struct-scenarios" class="accordion-body border-t border-violet2/30 px-6 py-5 space-y-5">
+          <p class="text-sm text-violet2-dark">Each example shows the full journey: the <strong>Question</strong>, the <strong>Thought process</strong> (how the reader, purpose, and three points drive the plan), the <strong>Template</strong> skeleton built from the sections above, and the finished <strong>Answer</strong> — written in real paragraphs, not one block.</p>
+
+          <!-- ===== Scenario 1 ===== -->
+          <div class="bg-white rounded-xl border border-violet2/30 p-4 space-y-4">
+            <p class="text-sm font-semibold text-violet2-dark">Scenario 1 — Online Order Problem <span class="text-xs font-normal text-slate">· Complaint · Formal</span></p>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-violet2 text-white mb-2">Question</span>
+              <p class="text-sm text-ink">You recently bought a laptop online that arrived damaged. Write an email to the company's customer service. In your email:</p>
+              <ul class="mt-1 text-sm text-ink list-disc pl-5 space-y-0.5">
+                <li>explain what you ordered and what was wrong with it</li>
+                <li>describe how the problem has affected you</li>
+                <li>say what you would like the company to do</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-sapphire text-white mb-2">Thought process</span>
+              <ul class="space-y-1 text-sm text-ink">
+                <li><strong>Reader → tone:</strong> a company I don't know → <em>Formal</em> (Email Types): no contractions, polite forms.</li>
+                <li><strong>Purpose → opening sentence:</strong> it's a complaint → Opening table row "Complaint".</li>
+                <li><strong>Point 1 → Paragraph 1 (facts):</strong> order number, date, exactly what was damaged — no feelings yet.</li>
+                <li><strong>Point 2 → Paragraph 2 (feelings):</strong> "disappointed" (Emotion table) + how it affected me; a light softener ("I must admit…"), but kept firm because it's a complaint.</li>
+                <li><strong>Point 3 → Paragraph 3 (request):</strong> use-case "Refund / replacement".</li>
+                <li><strong>Closing:</strong> formal closing sentence + "Sincerely," (Closing &amp; Sign-off → Formal).</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-amber2 text-white mb-2">Template</span>
+              <div class="bg-fog rounded-lg p-3 text-[13px] font-mono text-ink leading-relaxed space-y-1">
+                <p>Dear <span class="text-violet2">[Customer Service Manager]</span>,</p>
+                <p>I am writing to express my dissatisfaction regarding <span class="text-violet2">[the damaged laptop]</span>.</p>
+                <p><span class="text-violet2">[Order #, date, what was wrong — facts only]</span></p>
+                <p>I must admit I was <span class="text-violet2">[disappointed]</span> because <span class="text-violet2">[effect on me]</span>.</p>
+                <p>I would appreciate <span class="text-violet2">[refund / replacement]</span>.</p>
+                <p>Thank you for your prompt attention to this matter; I look forward to your response.</p>
+                <p>Sincerely,<br /><span class="text-violet2">[Your Name]</span></p>
+              </div>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-emerald2 text-white mb-2">Answer</span>
+              <div class="bg-violet2-light rounded-lg p-3 text-sm text-ink italic leading-relaxed space-y-2">
+                <p>Dear Customer Service Manager,</p>
+                <p>I am writing to express my dissatisfaction regarding a laptop I purchased from your online store on March 10th (Order #WX789456). The package arrived yesterday with the screen badly cracked, and the box contained no protective cushioning.</p>
+                <p>I must admit I was quite disappointed by this, particularly given the purchase price of $1,200. As the device is completely unusable, I have been unable to begin the work for which I bought it.</p>
+                <p>I would therefore appreciate a full refund to my original payment method, or a replacement unit sent with proper packaging. I have attached photographs of the damage for your review.</p>
+                <p>Thank you for your prompt attention to this matter; I look forward to your response.</p>
+                <p>Sincerely,<br />Mark Thompson</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p class="text-xs font-semibold text-violet2-dark uppercase tracking-wider mb-2">Scenario 2: Course Inquiry (Professional Inquiry)</p>
-            <p class="text-sm text-ink italic leading-relaxed">"Dear Admissions Officer, I am writing to inquire about enrollment in your English Conversation Course for Spring 2026. I am currently studying at ABC Institute and am interested in improving my speaking skills. Specifically, I would like to know the enrollment deadline, course schedule, and tuition fees. Additionally, could you provide information about placement testing? I understand that students must demonstrate intermediate-level English, and I believe I meet this requirement. Furthermore, I am curious whether the course offers flexible payment options. Thank you for your assistance with this inquiry. I look forward to hearing from you soon. Best regards, Sophia Chen"</p>
+
+          <!-- ===== Scenario 2 ===== -->
+          <div class="bg-white rounded-xl border border-violet2/30 p-4 space-y-4">
+            <p class="text-sm font-semibold text-violet2-dark">Scenario 2 — Course Inquiry <span class="text-xs font-normal text-slate">· Inquiry · Formal</span></p>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-violet2 text-white mb-2">Question</span>
+              <p class="text-sm text-ink">You want to take an English course at a local institute. Write an email to the admissions office. In your email:</p>
+              <ul class="mt-1 text-sm text-ink list-disc pl-5 space-y-0.5">
+                <li>say which course you are interested in and why</li>
+                <li>ask about the details you need (deadline, schedule, fees)</li>
+                <li>ask about the enrollment requirements</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-sapphire text-white mb-2">Thought process</span>
+              <ul class="space-y-1 text-sm text-ink">
+                <li><strong>Reader → tone:</strong> an admissions office I don't know → <em>Formal</em>, but warm — no complaint here.</li>
+                <li><strong>Purpose → opening sentence:</strong> Opening table row "Request (Information)" — "I am writing to inquire about…".</li>
+                <li><strong>Point 1 → Paragraph 1:</strong> which course and why I want it (facts about me).</li>
+                <li><strong>Point 2 → Paragraph 2 (feelings flex):</strong> the emotion here is positive — "keen / eager" (Emotion table) — expressed politely.</li>
+                <li><strong>Point 3 → Paragraph 3 (request):</strong> the specific questions, softened with "Could you please…" and "I would also like to know…".</li>
+                <li><strong>Closing:</strong> "I look forward to hearing from you." + "Best regards," (a warm-formal sign-off).</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-amber2 text-white mb-2">Template</span>
+              <div class="bg-fog rounded-lg p-3 text-[13px] font-mono text-ink leading-relaxed space-y-1">
+                <p>Dear <span class="text-violet2">[Admissions Officer]</span>,</p>
+                <p>I am writing to inquire about <span class="text-violet2">[the course]</span>.</p>
+                <p><span class="text-violet2">[Which course + why I want it]</span></p>
+                <p>I am particularly keen to <span class="text-violet2">[goal / motivation]</span>.</p>
+                <p>Could you please <span class="text-violet2">[questions: deadline, schedule, fees, requirements]</span>?</p>
+                <p>Thank you for your assistance; I look forward to hearing from you.</p>
+                <p>Best regards,<br /><span class="text-violet2">[Your Name]</span></p>
+              </div>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-emerald2 text-white mb-2">Answer</span>
+              <div class="bg-violet2-light rounded-lg p-3 text-sm text-ink italic leading-relaxed space-y-2">
+                <p>Dear Admissions Officer,</p>
+                <p>I am writing to inquire about enrolment in your English Conversation Course for Spring 2026. I am currently studying at ABC Institute and would like to strengthen my speaking and listening skills before I begin university.</p>
+                <p>I am particularly keen to join this programme, as I have heard that its small classes give students a great deal of speaking practice. I believe it would suit my goals very well.</p>
+                <p>Could you please let me know the enrolment deadline, the weekly schedule, and the tuition fees? I would also like to confirm the entry requirements, as I understand that an intermediate level is expected.</p>
+                <p>Thank you for your assistance; I look forward to hearing from you soon.</p>
+                <p>Best regards,<br />Sophia Chen</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p class="text-xs font-semibold text-violet2-dark uppercase tracking-wider mb-2">Scenario 3: Housing Issue (Problem + Request)</p>
-            <p class="text-sm text-ink italic leading-relaxed">"Dear Mr. Jackson, I am writing to request urgent repair of the heating system in my apartment (Unit 304, 250 Main Street). The main reason is that the system has stopped working completely, and temperatures have dropped significantly below freezing. I reported this issue four days ago, but no action has been taken. The situation is becoming critical, as the cold is damaging my belongings and making the space unsafe. In addition, the lease agreement specifies that landlords must maintain functional heating systems. Consequently, I would greatly appreciate immediate attention to this matter. Please let me know when a technician can visit for repairs. Thank you for your urgent response. Sincerely, Robert Kim"</p>
+
+          <!-- ===== Scenario 3 ===== -->
+          <div class="bg-white rounded-xl border border-violet2/30 p-4 space-y-4">
+            <p class="text-sm font-semibold text-violet2-dark">Scenario 3 — Heating Repair <span class="text-xs font-normal text-slate">· Request / Complaint · Semi-formal</span></p>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-violet2 text-white mb-2">Question</span>
+              <p class="text-sm text-ink">The heating in your apartment has stopped working. Write an email to your landlord. In your email:</p>
+              <ul class="mt-1 text-sm text-ink list-disc pl-5 space-y-0.5">
+                <li>explain the problem and when it started</li>
+                <li>describe how it is affecting you</li>
+                <li>ask the landlord to take action</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-sapphire text-white mb-2">Thought process</span>
+              <ul class="space-y-1 text-sm text-ink">
+                <li><strong>Reader → tone:</strong> a landlord I already know → <em>Semi-formal</em> — polite and warm, but firm because it's urgent.</li>
+                <li><strong>Purpose → opening sentence:</strong> Opening table row "Request (Action / Help)".</li>
+                <li><strong>Point 1 → Paragraph 1 (facts):</strong> unit number, what failed, when it started.</li>
+                <li><strong>Point 2 → Paragraph 2 (feelings):</strong> "concerned" (Emotion table) about the cold and my belongings — softened but firm.</li>
+                <li><strong>Point 3 → Paragraph 3 (request):</strong> use-case "Repair / action" + "Setting a deadline (polite)".</li>
+                <li><strong>Closing:</strong> semi-formal closing sentence + "Best regards,".</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-amber2 text-white mb-2">Template</span>
+              <div class="bg-fog rounded-lg p-3 text-[13px] font-mono text-ink leading-relaxed space-y-1">
+                <p>Dear <span class="text-violet2">[Mr. Jackson]</span>,</p>
+                <p>I am writing to request your assistance with <span class="text-violet2">[the broken heating]</span>.</p>
+                <p><span class="text-violet2">[Unit #, what failed, when it started]</span></p>
+                <p>I am rather concerned because <span class="text-violet2">[effect — cold, belongings, safety]</span>.</p>
+                <p>I would be grateful if you could <span class="text-violet2">[arrange a repair by a date]</span>.</p>
+                <p>Thank you for your understanding; I look forward to hearing from you.</p>
+                <p>Best regards,<br /><span class="text-violet2">[Your Name]</span></p>
+              </div>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-emerald2 text-white mb-2">Answer</span>
+              <div class="bg-violet2-light rounded-lg p-3 text-sm text-ink italic leading-relaxed space-y-2">
+                <p>Dear Mr. Jackson,</p>
+                <p>I am writing to request your assistance with the heating system in my apartment (Unit 304, 250 Main Street). The system stopped working completely four days ago, and indoor temperatures have since dropped close to freezing.</p>
+                <p>I am rather concerned about the situation, as the cold is beginning to damage some of my belongings and is making the apartment difficult to live in. I did report the problem earlier in the week, but it has not yet been addressed.</p>
+                <p>I would be grateful if you could arrange for a technician to carry out repairs as soon as possible — ideally within the next two days. Please let me know a time that is convenient.</p>
+                <p>Thank you for your understanding; I look forward to hearing from you.</p>
+                <p>Best regards,<br />Robert Kim</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p class="text-xs font-semibold text-violet2-dark uppercase tracking-wider mb-2">Scenario 4: Thank You / Appreciation</p>
-            <p class="text-sm text-ink italic leading-relaxed">"Dear Ms. Rodriguez, I am writing to express my gratitude for your exceptional support during my recent project completion. Your guidance regarding the final presentation was invaluable and significantly contributed to our successful outcome. Furthermore, your willingness to provide constructive feedback on my draft materials helped me improve the quality considerably. The team also appreciated your collaborative approach and positive attitude throughout the process. In my experience, it is rare to work with someone so dedicated and professional. Your contributions made a meaningful difference to the project's success. I hope we have the opportunity to work together again in the future. Thank you once again for everything. Best regards, David Wong"</p>
+
+          <!-- ===== Scenario 4 ===== -->
+          <div class="bg-white rounded-xl border border-violet2/30 p-4 space-y-4">
+            <p class="text-sm font-semibold text-violet2-dark">Scenario 4 — Thank a Colleague <span class="text-xs font-normal text-slate">· Appreciation · Semi-formal</span></p>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-violet2 text-white mb-2">Question</span>
+              <p class="text-sm text-ink">A colleague helped you a great deal on a recent project. Write an email to thank them. In your email:</p>
+              <ul class="mt-1 text-sm text-ink list-disc pl-5 space-y-0.5">
+                <li>explain what they helped you with</li>
+                <li>describe the difference it made</li>
+                <li>say what you hope for in the future</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-sapphire text-white mb-2">Thought process</span>
+              <ul class="space-y-1 text-sm text-ink">
+                <li><strong>Reader → tone:</strong> a colleague I know → <em>Semi-formal</em> — warm and personal.</li>
+                <li><strong>Purpose → opening sentence:</strong> Opening table row "Appreciation".</li>
+                <li><strong>Point 1 → Paragraph 1 (facts):</strong> exactly what they helped with.</li>
+                <li><strong>Point 2 → Paragraph 2 (feelings):</strong> "grateful / impressed" (Emotion table) — here the emotion is the point, so lead with it.</li>
+                <li><strong>Point 3 → Paragraph 3:</strong> the "request" is softer — a hope to work together again.</li>
+                <li><strong>Closing:</strong> warm closing sentence + "Best regards,".</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-amber2 text-white mb-2">Template</span>
+              <div class="bg-fog rounded-lg p-3 text-[13px] font-mono text-ink leading-relaxed space-y-1">
+                <p>Dear <span class="text-violet2">[Ms. Rodriguez]</span>,</p>
+                <p>I am writing to express my appreciation for <span class="text-violet2">[their help]</span>.</p>
+                <p><span class="text-violet2">[What exactly they did]</span></p>
+                <p>I am sincerely grateful, as <span class="text-violet2">[the difference it made]</span>.</p>
+                <p>I hope <span class="text-violet2">[to work together again / future wish]</span>.</p>
+                <p>Thank you once again for everything.</p>
+                <p>Best regards,<br /><span class="text-violet2">[Your Name]</span></p>
+              </div>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-emerald2 text-white mb-2">Answer</span>
+              <div class="bg-violet2-light rounded-lg p-3 text-sm text-ink italic leading-relaxed space-y-2">
+                <p>Dear Ms. Rodriguez,</p>
+                <p>I am writing to express my appreciation for your support during our recent product launch. In particular, your guidance on the final presentation and your feedback on my early drafts made a real difference to the work.</p>
+                <p>I am sincerely grateful for the time you gave me. Thanks to your advice, the presentation was far clearer than my first attempt, and the whole team noticed how smoothly the launch went.</p>
+                <p>I hope we have the chance to work together again on a future project, as I learned a great deal from the way you approach problems.</p>
+                <p>Thank you once again for everything.</p>
+                <p>Best regards,<br />David Wong</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p class="text-xs font-semibold text-violet2-dark uppercase tracking-wider mb-2">Scenario 5: Feedback / Suggestion</p>
-            <p class="text-sm text-ink italic leading-relaxed">"Dear Restaurant Manager, I am writing to provide constructive feedback regarding my dining experience at your establishment yesterday evening. To be specific, the food quality and presentation were excellent, which we truly appreciated. However, the service was disappointingly slow despite the moderate number of customers present. The main reason for my concern is that we waited over forty minutes for our appetizers. Additionally, our server seemed unfamiliar with the menu and could not answer our questions adequately. These issues detracted from what could have been an outstanding dining experience. Nevertheless, I believe your establishment has great potential with improved staff training and efficiency. I would recommend implementing a more rigorous staff orientation program. Thank you for considering this feedback. Sincerely, Patricia Adams"</p>
+
+          <!-- ===== Scenario 5 ===== -->
+          <div class="bg-white rounded-xl border border-violet2/30 p-4 space-y-4">
+            <p class="text-sm font-semibold text-violet2-dark">Scenario 5 — Restaurant Feedback <span class="text-xs font-normal text-slate">· Feedback / Suggestion · Formal</span></p>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-violet2 text-white mb-2">Question</span>
+              <p class="text-sm text-ink">You recently had dinner at a restaurant and want to share feedback. Write an email to the manager. In your email:</p>
+              <ul class="mt-1 text-sm text-ink list-disc pl-5 space-y-0.5">
+                <li>describe what you enjoyed about your visit</li>
+                <li>explain what was disappointing</li>
+                <li>suggest how they could improve</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-sapphire text-white mb-2">Thought process</span>
+              <ul class="space-y-1 text-sm text-ink">
+                <li><strong>Reader → tone:</strong> a manager I don't know → <em>Formal</em> and balanced — not an angry complaint.</li>
+                <li><strong>Purpose → opening sentence:</strong> Opening table row "Suggestion / Recommendation".</li>
+                <li><strong>Point 1 → Paragraph 1 (facts):</strong> what was good — start positive.</li>
+                <li><strong>Point 2 → Paragraph 2 (feelings):</strong> "disappointed" (Emotion table) about the slow service, softened with "However…" and "I must admit…".</li>
+                <li><strong>Point 3 → Paragraph 3 (request):</strong> use-case "Suggestion / resolution" — a constructive recommendation.</li>
+                <li><strong>Closing:</strong> formal closing sentence + "Sincerely,".</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-amber2 text-white mb-2">Template</span>
+              <div class="bg-fog rounded-lg p-3 text-[13px] font-mono text-ink leading-relaxed space-y-1">
+                <p>Dear <span class="text-violet2">[Restaurant Manager]</span>,</p>
+                <p>I am writing to suggest an improvement regarding <span class="text-violet2">[my recent visit]</span>.</p>
+                <p><span class="text-violet2">[What was good — facts]</span></p>
+                <p>However, I must admit I was <span class="text-violet2">[disappointed by ...]</span>.</p>
+                <p>It would be helpful if you could <span class="text-violet2">[suggestion]</span>.</p>
+                <p>Thank you for considering this feedback.</p>
+                <p>Sincerely,<br /><span class="text-violet2">[Your Name]</span></p>
+              </div>
+            </div>
+
+            <div>
+              <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-emerald2 text-white mb-2">Answer</span>
+              <div class="bg-violet2-light rounded-lg p-3 text-sm text-ink italic leading-relaxed space-y-2">
+                <p>Dear Restaurant Manager,</p>
+                <p>I am writing to suggest an improvement regarding my dinner at your restaurant last Friday evening. The food itself was excellent — both the flavours and the presentation were outstanding, and we genuinely enjoyed the meal.</p>
+                <p>However, I must admit I was disappointed by the service. We waited over forty minutes for our appetizers, even though the restaurant was not busy, and our server seemed unfamiliar with several items on the menu.</p>
+                <p>It would be helpful if you could introduce a short staff-training session on the menu and on managing wait times. I believe a small change of this kind would let the service match the high quality of the food.</p>
+                <p>Thank you for considering this feedback.</p>
+                <p>Sincerely,<br />Patricia Adams</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
