@@ -94,6 +94,9 @@
       <button class="tab-btn px-6 py-3 text-sm font-medium text-slate hover:text-ink border-b-2 border-transparent transition-all" data-tab="quiz">
         Quiz
       </button>
+      <button class="tab-btn px-6 py-3 text-sm font-medium text-slate hover:text-ink border-b-2 border-transparent transition-all" data-tab="emotions">
+        Emotions
+      </button>
     </div>
 
     <!-- Word List Tab -->
@@ -168,6 +171,20 @@
           </button>
         </div>
       </div>
+    </div>
+
+    <!-- Emotions Tab -->
+    <div id="emotions" class="tab-content hidden">
+      <div class="mb-8">
+        <p class="text-slate max-w-2xl leading-relaxed">
+          Build a precise emotional vocabulary. Each emotion is shown from
+          <span class="font-semibold text-emerald2-dark">mild</span> to
+          <span class="font-semibold text-rose2-dark">strong</span> intensity, so you can
+          choose the exact word for how you feel.
+        </p>
+      </div>
+
+      <div id="emotions-content" class="space-y-12"></div>
     </div>
   </main>
 
@@ -435,6 +452,122 @@
       renderQuestion();
     }
 
+    // ─── Emotions Vocabulary ───────────────────────────────────────────
+    const EMOTIONS = [
+      {
+        emotion: 'Happy', emoji: '😊',
+        words: [
+          { word: 'Content', intensity: 'Mild', meaning: 'Quietly satisfied and at ease.', examples: ['I felt content sitting by the window with a warm cup of tea.', "She's content with a simple life and doesn't need much to be happy."] },
+          { word: 'Cheerful', intensity: 'Mild', meaning: 'Visibly happy and in good spirits.', examples: ['He gave a cheerful wave as he walked into the office.', 'Despite the rain, she stayed cheerful all morning.'] },
+          { word: 'Delighted', intensity: 'Moderate', meaning: 'Very pleased about something.', examples: ['I was delighted to hear that you got the job.', 'They were delighted with the surprise party we arranged.'] },
+          { word: 'Thrilled', intensity: 'Strong', meaning: 'Filled with excitement and joy.', examples: ['She was thrilled when she opened the acceptance letter.', "We're absolutely thrilled to be moving into our new home."] },
+          { word: 'Ecstatic', intensity: 'Strong', meaning: 'Overwhelmingly happy; full of joy.', examples: ['The fans were ecstatic when the team scored in the final minute.', 'I was ecstatic the moment I crossed the finish line.'] },
+        ],
+      },
+      {
+        emotion: 'Sad', emoji: '😔',
+        words: [
+          { word: 'Down', intensity: 'Mild', meaning: 'Slightly low or unhappy.', examples: ["I've been feeling a bit down since the holidays ended.", 'He seemed down after hearing the news.'] },
+          { word: 'Disheartened', intensity: 'Moderate', meaning: 'Having lost confidence or hope.', examples: ['She felt disheartened after failing the test twice.', 'The team was disheartened by the slow progress.'] },
+          { word: 'Miserable', intensity: 'Strong', meaning: 'Deeply unhappy and uncomfortable.', examples: ['I was miserable being stuck indoors with the flu.', 'He looked miserable standing alone in the cold rain.'] },
+          { word: 'Heartbroken', intensity: 'Strong', meaning: 'Crushed by grief or deep disappointment.', examples: ['She was heartbroken when her childhood pet passed away.', 'They were heartbroken to leave the city they loved.'] },
+          { word: 'Devastated', intensity: 'Strong', meaning: 'Completely overwhelmed by sorrow.', examples: ['He was devastated when he heard about the accident.', 'We were devastated to lose the championship by one point.'] },
+        ],
+      },
+      {
+        emotion: 'Angry', emoji: '😠',
+        words: [
+          { word: 'Annoyed', intensity: 'Mild', meaning: 'Mildly bothered or irritated.', examples: ['I was annoyed that the bus was late again.', 'She got annoyed by the constant interruptions.'] },
+          { word: 'Frustrated', intensity: 'Moderate', meaning: 'Upset at being unable to achieve something.', examples: ['He felt frustrated when the project kept getting delayed.', "I'm frustrated that I can't fix this on my own."] },
+          { word: 'Furious', intensity: 'Strong', meaning: 'Extremely angry.', examples: ['She was furious when she found out the truth.', 'He was furious about being blamed for someone else’s mistake.'] },
+          { word: 'Enraged', intensity: 'Strong', meaning: 'Filled with violent, intense anger.', examples: ['The crowd was enraged by the unfair decision.', 'He was enraged when he saw the damage to his car.'] },
+          { word: 'Livid', intensity: 'Strong', meaning: 'So angry one can barely speak.', examples: ['My manager was livid about the missed deadline.', 'She was livid when she discovered the lie.'] },
+        ],
+      },
+      {
+        emotion: 'Afraid', emoji: '😨',
+        words: [
+          { word: 'Uneasy', intensity: 'Mild', meaning: 'Slightly worried or uncomfortable.', examples: ['I felt uneasy walking home in the dark.', 'Something about the silence made her uneasy.'] },
+          { word: 'Anxious', intensity: 'Moderate', meaning: 'Nervous and worried about what might happen.', examples: ['He was anxious before his first job interview.', "I'm anxious about the results of the medical test."] },
+          { word: 'Frightened', intensity: 'Moderate', meaning: 'Scared by something sudden or threatening.', examples: ['The loud thunder frightened the children.', 'She was frightened when the lights suddenly went out.'] },
+          { word: 'Terrified', intensity: 'Strong', meaning: 'Extremely afraid.', examples: ['I was terrified during the turbulent flight.', 'He was terrified of speaking in front of large crowds.'] },
+          { word: 'Petrified', intensity: 'Strong', meaning: 'So scared one is frozen with fear.', examples: ['She was petrified when she saw the snake on the trail.', 'He stood petrified as the storm grew closer.'] },
+        ],
+      },
+      {
+        emotion: 'Surprised', emoji: '😲',
+        words: [
+          { word: 'Startled', intensity: 'Mild', meaning: 'Briefly shocked by something sudden.', examples: ['I was startled by the knock at the door.', 'The cat was startled by the loud noise.'] },
+          { word: 'Amazed', intensity: 'Moderate', meaning: 'Filled with wonder or admiration.', examples: ['We were amazed by the view from the mountain top.', 'She was amazed at how quickly he learned the language.'] },
+          { word: 'Astonished', intensity: 'Strong', meaning: 'Greatly surprised; hard to believe.', examples: ['I was astonished to see how much the city had changed.', 'They were astonished by the size of the crowd.'] },
+          { word: 'Flabbergasted', intensity: 'Strong', meaning: 'Utterly shocked and lost for words.', examples: ['He was flabbergasted when he won the lottery.', 'I was flabbergasted by the unexpected apology.'] },
+        ],
+      },
+      {
+        emotion: 'Excited', emoji: '🤩',
+        words: [
+          { word: 'Eager', intensity: 'Mild', meaning: 'Keen and looking forward to something.', examples: ['The students were eager to start the new project.', "I'm eager to see how the story ends."] },
+          { word: 'Enthusiastic', intensity: 'Moderate', meaning: 'Full of energy and interest.', examples: ['She was enthusiastic about joining the volunteer program.', 'He gave an enthusiastic response to the new idea.'] },
+          { word: 'Thrilled', intensity: 'Strong', meaning: 'Extremely excited and pleased.', examples: ['We were thrilled to be invited to the wedding.', 'I was thrilled to finally meet my favourite author.'] },
+          { word: 'Exhilarated', intensity: 'Strong', meaning: 'Energized and thrilled with excitement.', examples: ['I felt exhilarated after finishing the marathon.', 'The roller coaster left us feeling exhilarated.'] },
+        ],
+      },
+      {
+        emotion: 'Calm', emoji: '😌',
+        words: [
+          { word: 'Relaxed', intensity: 'Mild', meaning: 'Free from tension and stress.', examples: ['I felt relaxed after a long walk on the beach.', 'She looked relaxed once the exams were over.'] },
+          { word: 'At ease', intensity: 'Mild', meaning: 'Comfortable and untroubled.', examples: ['He immediately put me at ease with his friendly smile.', 'I felt at ease in the quiet, familiar room.'] },
+          { word: 'Serene', intensity: 'Moderate', meaning: 'Peaceful and untroubled.', examples: ['The lake was serene in the early morning light.', 'She had a serene expression even under pressure.'] },
+          { word: 'Tranquil', intensity: 'Strong', meaning: 'Deeply calm and peaceful.', examples: ['We spent a tranquil weekend in the countryside.', 'The garden offered a tranquil escape from the busy city.'] },
+        ],
+      },
+      {
+        emotion: 'Confused', emoji: '😕',
+        words: [
+          { word: 'Puzzled', intensity: 'Mild', meaning: 'Unable to understand something.', examples: ['I was puzzled by the strange instructions.', 'She gave me a puzzled look when I asked the question.'] },
+          { word: 'Perplexed', intensity: 'Moderate', meaning: 'Confused and unable to find an answer.', examples: ['He was perplexed by the sudden change in plans.', 'The results left the scientists perplexed.'] },
+          { word: 'Baffled', intensity: 'Strong', meaning: 'Completely unable to understand.', examples: ['The detectives were baffled by the missing evidence.', "I'm baffled by how the machine stopped working."] },
+          { word: 'Bewildered', intensity: 'Strong', meaning: 'Deeply confused and disoriented.', examples: ['The tourists looked bewildered in the busy station.', 'She was bewildered by the conflicting advice she received.'] },
+        ],
+      },
+    ];
+
+    const INTENSITY_STYLES = {
+      Mild: 'bg-emerald2-light text-emerald2-dark',
+      Moderate: 'bg-amber2-light text-amber2-dark',
+      Strong: 'bg-rose2-light text-rose2-dark',
+    };
+
+    function renderEmotions() {
+      const content = document.getElementById('emotions-content');
+      content.innerHTML = EMOTIONS.map(group => `
+        <section>
+          <h2 class="font-display text-3xl text-ink mb-1 flex items-center gap-3">
+            <span>${group.emoji}</span>${group.emotion}
+          </h2>
+          <div class="w-12 h-0.5 bg-gold rounded-full mb-5"></div>
+          <div class="grid gap-4 md:grid-cols-2">
+            ${group.words.map(w => `
+              <div class="bg-white rounded-xl border border-mist p-5 card-hover">
+                <div class="flex items-center justify-between gap-3 mb-2">
+                  <span class="font-semibold text-lg text-ink">${w.word}</span>
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${INTENSITY_STYLES[w.intensity]}">${w.intensity}</span>
+                </div>
+                <p class="text-sm text-slate mb-3">${w.meaning}</p>
+                <ul class="space-y-1.5">
+                  ${w.examples.map(ex => `
+                    <li class="text-xs text-slate italic flex gap-2">
+                      <span class="text-gold not-italic">›</span><span>"${ex}"</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      `).join('');
+    }
+
     // ─── Event Listeners ────────────────────────────────────────────────
     // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -469,6 +602,7 @@
     // Initialize
     setupFilterButtons();
     renderWordList();
+    renderEmotions();
   </script>
 </body>
 </html>
